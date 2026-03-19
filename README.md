@@ -40,6 +40,16 @@ It's not another todo list. It's the system underneath your life.
 
 <br />
 
+## Screenshots
+
+<p align="center">
+  <img src=".github/screenshots/mobile-dashboard.jpg" alt="Dashboard" width="300" />
+  &nbsp;&nbsp;&nbsp;
+  <img src=".github/screenshots/mobile-ai-chat.jpg" alt="AI Companion" width="300" />
+</p>
+
+<br />
+
 ## Features
 
 ### **Command Center**
