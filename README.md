@@ -1,4 +1,8 @@
-<h1 align="center">⚡ LifeOS</h1>
+<p align="center">
+  <img src="public/icon-512.png" alt="LifeOS" width="120" />
+</p>
+
+<h1 align="center">LifeOS</h1>
 
 <p align="center">
   <strong>Your life is the game. Level up for real.</strong>
