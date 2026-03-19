@@ -215,7 +215,7 @@ MIT — use it, fork it, build on it.
 ---
 
 <p align="center">
-  <strong>Built in Melbourne, Australia</strong>
+  <strong>Built in Melbourne, Australia — with <a href="https://claude.ai/code">Claude Code</a></strong>
   <br />
   <a href="https://teddyscleaning.com.au">Teddy's Cleaning Systems</a> · <a href="https://app.runlifeos.com">Try LifeOS</a>
 </p>
