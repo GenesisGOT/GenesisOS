@@ -25,5 +25,14 @@ screenshots/
 # Tauri
 src-tauri/target/
 
+# Python
+__pycache__/
+*.pyc
+
+# SQLite
+*.db
+*.db-wal
+*.db-shm
+
 # Temporary
 CC-PROMPT.md

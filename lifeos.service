@@ -1,0 +1,22 @@
+[Unit]
+Description=LifeOS Command Center
+After=network.target graphical.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=tewedros
+Group=tewedros
+WorkingDirectory=/mnt/data/tmp/lifeos
+ExecStart=/usr/bin/python3 /mnt/data/tmp/lifeos/backend/serve.py --no-open --port 8080
+Restart=on-failure
+RestartSec=5
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+Environment=HOME=/home/tewedros
+Environment=PYTHONUNBUFFERED=1
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=lifeos
+
+[Install]
+WantedBy=multi-user.target

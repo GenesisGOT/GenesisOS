@@ -1367,21 +1367,8 @@ def life_context():
     })
 
 
-# ═══════════════════════════════════════════════════════════════
-# Static Files — Production Frontend
-# ═══════════════════════════════════════════════════════════════
-
-DIST_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'dist')
-
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def serve_frontend(path):
-    """Serve built React frontend in production."""
-    if path and os.path.exists(os.path.join(DIST_DIR, path)):
-        return send_from_directory(DIST_DIR, path)
-    if os.path.exists(os.path.join(DIST_DIR, 'index.html')):
-        return send_from_directory(DIST_DIR, 'index.html')
-    return jsonify({"status": "LifeOS API running", "docs": "/api/context"}), 200
+# Note: Static file serving is handled by serve.py's patch_app_for_static().
+# When running app.py directly (dev mode), only API endpoints are available.
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -1561,8 +1548,12 @@ def academy_nature():
 
 @app.route('/api/academy/lesson', methods=['GET'])
 def academy_lesson():
-    """Read a lesson markdown file. ?path=/mnt/data/tmp/academy/01-foundations/python/01-intro.md"""
+    """Read a lesson markdown file. ?path=01-foundations/python/01-intro.md (relative to academy root)
+    Also accepts absolute paths for backwards compatibility."""
     path = request.args.get('path', '')
+    # If the path is relative (doesn't start with /), prepend academy root
+    if path and not os.path.isabs(path):
+        path = os.path.join(ACADEMY_ROOT, path)
     # Security: only allow reading from academy, lifeos assets, or lifeos data dirs
     allowed_roots = [ACADEMY_ROOT, LIFEOS_ASSETS, LIFEOS_DATA]
     real_path = os.path.realpath(path)

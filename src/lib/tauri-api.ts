@@ -43,7 +43,7 @@ async function getTauriInvoke() {
 
 const API_BASE = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_BASE_URL)
   ? `${import.meta.env.VITE_API_BASE_URL}/api`
-  : 'http://localhost:8080/api';
+  : '/api';
 
 // ─── Types ───────────────────────────────────────────────────────────
 

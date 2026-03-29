@@ -101,7 +101,7 @@ export default defineConfig(({ mode }) => {
       brotliSize: true,
     }),
   ],
-  base: isDesktop ? './' : '/app/',
+  base: isDesktop ? './' : '/',
   server: {
     // Serve academy content files for dev mode
     fs: {
