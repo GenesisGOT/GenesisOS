@@ -7,7 +7,7 @@
  */
 
 import { create } from 'zustand';
-import { supabase } from '../lib/supabase';
+import { db as supabase } from '../lib/data-access';
 import { showToast } from '../components/Toast';
 import { isOnline } from '../lib/offline';
 import { localGetAll, localInsert, localUpdate, localDelete, getLocalUserId, getEffectiveUserId } from '../lib/local-db';

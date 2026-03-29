@@ -8,7 +8,7 @@
  */
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { useUserStore } from '../stores/useUserStore';
 import { useScheduleStore } from '../stores/useScheduleStore';
 import { useGoalsStore, type GoalNode } from '../stores/useGoalsStore';
@@ -246,7 +246,7 @@ export function useScheduleOptimizer(selectedDate: Date): UseScheduleOptimizerRe
       setResult(aiResult);
       setCachedResult(dateStr, aiResult);
       setDismissedIds(new Set());
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('[ScheduleOptimizer] Analysis failed:', err);
       setError(err.message || 'Analysis failed');
     } finally {
@@ -266,8 +266,8 @@ export function useScheduleOptimizer(selectedDate: Date): UseScheduleOptimizerRe
         title: suggestion.title,
         startTime: suggestion.startTime,
         endTime: suggestion.endTime,
-        eventType: suggestion.eventType as any,
-        scheduleLayer: suggestion.scheduleLayer as any,
+        eventType: suggestion.eventType as string,
+        scheduleLayer: suggestion.scheduleLayer as string,
         description: suggestion.description,
         source: 'system',
       });

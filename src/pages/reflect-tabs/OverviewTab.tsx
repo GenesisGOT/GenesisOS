@@ -3,7 +3,7 @@ import {
   FileText, BarChart3, Inbox as InboxIcon, Flame, BookMarked, ChevronRight,
 } from 'lucide-react';
 import { useJournalStore } from '../../stores/useJournalStore';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { useUserStore } from '../../stores/useUserStore';
 import type { ReflectTab } from './types';
 

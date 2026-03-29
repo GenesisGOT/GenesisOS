@@ -1,6 +1,6 @@
 // BookForge Integration — Auto-chronicle journal entries
 
-import { supabase } from './supabase';
+import { db as supabase } from './data-access';
 import { logger } from '../utils/logger';
 
 const BOOKFORGE_API_URL = import.meta.env.VITE_BOOKFORGE_API_URL || '';
@@ -19,7 +19,7 @@ interface ProcessJournalParams {
 
 interface BookForgeResponse {
   success: boolean;
-  entry?: any;
+  entry?: Record<string, unknown>;
   message?: string;
   error?: string;
 }
@@ -52,7 +52,7 @@ export async function processJournalEntries(params: ProcessJournalParams): Promi
 
     const data = await response.json();
     return data;
-  } catch (err: any) {
+  } catch (err: unknown) {
     logger.error('[BookForge] Error processing journal:', err);
     return { success: false, error: err.message || 'Network error' };
   }

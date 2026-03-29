@@ -15,7 +15,7 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { useUserStore } from '../../stores/useUserStore';
 import { type PhaseConfig, type PhaseId, calculatePhaseCoverage } from '../../lib/onboarding-phases';
 import { callLLMProxy } from '../../lib/llm-proxy';
@@ -390,7 +390,7 @@ export function SetupDialogue({ phase, onComplete, initialData }: SetupDialogueP
         model: 'google/gemini-2.0-flash-001',
       });
 
-      let parsed: any;
+      let parsed: Record<string, unknown>;
       try {
         let jsonStr = llmResponse.content.trim();
         if (jsonStr.startsWith('```')) {

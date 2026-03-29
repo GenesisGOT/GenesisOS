@@ -18,7 +18,7 @@ import { genId } from '../../utils/date';
 import { getEffectiveUserId } from '../../lib/local-db';
 import { logger } from '../../utils/logger';
 // Tasks are now assigned due_dates programmatically — no separate schedule_events needed.
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import './NLPDecomposer.css';
 
 interface NLPDecomposerProps {

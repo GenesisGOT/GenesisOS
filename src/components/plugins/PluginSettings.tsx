@@ -7,7 +7,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Plug, Copy, Check, ExternalLink, AlertCircle, CheckCircle2 } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { useUserStore } from '../../stores/useUserStore';
 import { listPlugins, type PluginConfig } from '../../lib/plugins';
 import { logger } from '../../utils/logger';

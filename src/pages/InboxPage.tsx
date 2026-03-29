@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { createScheduleEvent } from '../lib/schedule-events';
 import { useUserStore } from '../stores/useUserStore';
 import {

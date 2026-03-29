@@ -80,7 +80,7 @@ export function SetupList({ open, onClose }: SetupListProps) {
                 key={card.id}
                 className={`setup-list-card ${done ? 'complete' : ''}`}
                 onClick={() => handleNavigate(card.route)}
-                style={{ '--phase-color': phase.color, cursor: 'pointer' } as any}
+                style={{ '--phase-color': phase.color, cursor: 'pointer' } as React.CSSProperties}
               >
                 <img className="setup-list-card-icon" src={assetPath(card.npcImg)} alt={card.npcName} />
                 <div className="setup-list-card-info">

@@ -203,7 +203,7 @@ export async function processOnboardingMessage(
     });
     const text = response.content;
 
-    let parsed: any;
+    let parsed: Record<string, unknown>;
     try {
       let jsonStr = text.trim();
       // Strip markdown code fences

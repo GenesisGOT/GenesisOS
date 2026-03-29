@@ -1,6 +1,6 @@
 // ═══ Junction Data Hook — core tradition/figure/XP state ═══
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { getErrorMessage } from '../utils/error';
 import { useUserStore } from '../stores/useUserStore';
 import { logger } from '../utils/logger';
@@ -36,7 +36,7 @@ export function useJunction() {
         return;
       }
 
-      const traditionsProcessed: JunctionTradition[] = (tradData || []).map((t: any) => ({
+      const traditionsProcessed: JunctionTradition[] = (tradData || []).map((t: Record<string, unknown>) => ({
         id: t.id,
         name: t.name,
         slug: t.slug,
@@ -45,7 +45,7 @@ export function useJunction() {
         color: t.color || '#A855F7',
         background_gradient: t.background_gradient,
         available: t.is_active ?? true,
-        paths: Array.isArray(t.paths) ? t.paths.map((p: any, i: number) => ({
+        paths: Array.isArray(t.paths) ? t.paths.map((p: Record<string, unknown>, i: number) => ({
           id: p.id || `path-${i}`,
           name: p.name || `Path ${i + 1}`,
           description: p.description || '',
@@ -87,7 +87,7 @@ export function useJunction() {
           .order('sort_order', { ascending: true });
 
         const junctionXP = uj.junction_xp;
-        const processedFigures: JunctionFigure[] = (figData || []).map((f: any) => ({
+        const processedFigures: JunctionFigure[] = (figData || []).map((f: Record<string, unknown>) => ({
           id: f.id,
           tradition_id: f.tradition_id,
           name: f.name,

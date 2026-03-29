@@ -393,7 +393,7 @@ export class RealmEngine {
 
     // Companion bond XP: +1 every 300 frames of active play (~5 seconds)
     if (this.playerMoving && this.frameCount % 300 === 0 && this.multiplayer) {
-      const uid = (this.multiplayer as any).userId as string | undefined;
+      const uid = (this.multiplayer as unknown as { userId?: string }).userId as string | undefined;
       if (uid) updateCompanionBond(uid, 1);
     }
 

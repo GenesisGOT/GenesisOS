@@ -876,11 +876,11 @@ async function gatherAchievementStats(
   const goals = goalsRes.data || [];
   const health = healthRes.data || [];
 
-  const doneTasks = tasks.filter((t: any) => t.status === 'done');
-  const doneGoals = goals.filter((g: any) => g.progress >= 1);
+  const doneTasks = tasks.filter((t: { status: string }) => t.status === 'done');
+  const doneGoals = goals.filter((g: { progress?: number }) => (g.progress || 0) >= 1);
 
   // Calculate days active from xp_events
-  const activeDays = new Set(xpEvents.map((e: any) => e.created_at?.split('T')[0]));
+  const activeDays = new Set(xpEvents.map((e: { created_at?: string }) => e.created_at?.split('T')[0]));
 
   // Tasks per day for max
   const tasksByDay: Record<string, number> = {};
@@ -897,31 +897,31 @@ async function gatherAchievementStats(
   const tasksToday = tasksByDay[today] || 0;
 
   // Income sources
-  const sources = new Set((incomeRes.data || []).map((i: any) => i.source).filter(Boolean));
+  const sources = new Set((incomeRes.data || []).map((i: { source?: string }) => i.source).filter(Boolean));
 
   // Total income
-  const totalIncome = (incomeRes.data || []).reduce((s: number, i: any) => s + (i.amount || 0), 0);
+  const totalIncome = (incomeRes.data || []).reduce((s: number, i: { amount?: number }) => s + (i.amount || 0), 0);
 
   // Health stats
-  const waterDays = health.filter((h: any) => h.water_glasses && h.water_glasses >= 8).length;
-  const goodSleepDays = health.filter((h: any) => h.sleep_hours && h.sleep_hours >= 7).length;
-  const moodDays = health.filter((h: any) => h.mood_score != null).length;
-  const weightDays = health.filter((h: any) => h.weight_kg != null).length;
+  const waterDays = health.filter((h: { water_glasses?: number }) => h.water_glasses && h.water_glasses >= 8).length;
+  const goodSleepDays = health.filter((h: { sleep_hours?: number }) => h.sleep_hours && h.sleep_hours >= 7).length;
+  const moodDays = health.filter((h: { mood_score?: number }) => h.mood_score != null).length;
+  const weightDays = health.filter((h: { weight_kg?: number }) => h.weight_kg != null).length;
 
   // Early bird actions (before 6am)
-  const earlyActions = xpEvents.filter((e: any) => {
+  const earlyActions = xpEvents.filter((e: { created_at?: string; multiplier?: number; action_type?: string }) => {
     const hour = new Date(e.created_at).getHours();
     return hour < 6;
   });
 
   // Night owl
-  const nightActions = xpEvents.filter((e: any) => {
+  const nightActions = xpEvents.filter((e: { created_at?: string; multiplier?: number; action_type?: string }) => {
     const hour = new Date(e.created_at).getHours();
     return hour >= 0 && hour < 4;
   });
 
   // Mega combo check
-  const megaCombo = xpEvents.some((e: any) => e.multiplier >= 2);
+  const megaCombo = xpEvents.some((e: { multiplier?: number }) => (e.multiplier || 0) >= 2);
 
   // Longest streak (simplified — based on consecutive active days)
   const sortedDays = [...activeDays].sort();
@@ -939,7 +939,7 @@ async function gatherAchievementStats(
   }
 
   // Journal streak
-  const journalDates = (journalRes.data || []).map((j: any) => j.date).sort().reverse();
+  const journalDates = (journalRes.data || []).map((j: { date: string }) => j.date).sort().reverse();
   let jStreak = 0;
   for (let i = 0; i < 365; i++) {
     const d = new Date();
@@ -965,15 +965,15 @@ async function gatherAchievementStats(
     longestStreak: longest,
     currentStreak: cStreak,
     tasksCompleted: doneTasks.length,
-    goalsCompleted: doneGoals.filter((g: any) => !g.category || g.category === 'goal').length,
-    epicsCompleted: doneGoals.filter((g: any) => g.category === 'epic').length,
-    objectivesCompleted: doneGoals.filter((g: any) => g.category === 'objective').length,
+    goalsCompleted: doneGoals.filter((g: { category?: string }) => !g.category || g.category === 'goal').length,
+    epicsCompleted: doneGoals.filter((g: { category?: string }) => g.category === 'epic').length,
+    objectivesCompleted: doneGoals.filter((g: { category?: string }) => g.category === 'objective').length,
     habitsCreated: habitsRes.count || 0,
     incomeLogged: incomeRes.count || 0,
     expensesLogged: expensesRes.count || 0,
     journalEntries: journalRes.count || 0,
     journalStreak: jStreak,
-    aiMessages: xpEvents.filter((e: any) => e.action_type === 'ai_message').length,
+    aiMessages: xpEvents.filter((e: { action_type?: string }) => e.action_type === 'ai_message').length,
     healthLogs: health.length,
     systemsConnected: 0, // Would need a systems table query
     eventsCreated: eventsRes.count || 0,

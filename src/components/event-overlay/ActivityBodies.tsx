@@ -7,7 +7,7 @@ import {
   Dumbbell, BookOpen, Droplets,
   StickyNote, Zap, Wind, RotateCcw, AlertCircle,
 } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import type { ActiveEvent } from './types';
 
 // ═══════════════════════════════════════════════════════════
@@ -168,10 +168,10 @@ export function WorkoutOverlayBody({ event }: { event: ActiveEvent }) {
                 <span className="eo-detail-value">{currentExercise.weight_kg} kg</span>
               </div>
             )}
-            {(currentExercise as any).equipment && (
+            {(currentExercise as unknown as { equipment?: string }).equipment && (
               <div className="eo-detail-item">
                 <span className="eo-detail-label">Equipment</span>
-                <span className="eo-detail-value">{(currentExercise as any).equipment}</span>
+                <span className="eo-detail-value">{(currentExercise as unknown as { equipment?: string }).equipment}</span>
               </div>
             )}
             <div className="eo-detail-item">

@@ -131,7 +131,7 @@ export function VisionTree({ goals, tasks, allTasks = [], onCreateNode, onSelect
         key={node.id}
         className={`vp-node cat-${cat} ${isFocused ? 'focused' : ''} ${isCompressed ? 'compressed' : ''} depth-${depth}`}
         onClick={onClick}
-        style={{ '--node-color': color } as any}
+        style={{ '--node-color': color } as React.CSSProperties}
       >
         {/* Compressed: just icon + abbreviated */}
         {isCompressed ? (

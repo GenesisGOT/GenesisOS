@@ -23,7 +23,7 @@ import {
   type MealSuggestionsResult,
 } from '../../lib/llm/meal-suggestions';
 import { createScheduleEvent } from '../../lib/schedule-events';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { canAccess } from '../../lib/feature-gates';
 import { useSubscription } from '../../hooks/useSubscription';
 import { logger } from '../../utils/logger';
@@ -102,7 +102,7 @@ export function AIMealSuggestions({ compact = false, maxSuggestions }: AIMealSug
     try {
       const data = await generateMealSuggestions({ forceRefresh: force });
       setResult(data);
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('[AIMealSuggestions]', err);
       setError(err.message || 'Failed to generate suggestions');
     } finally {
@@ -365,7 +365,7 @@ export function AIMealSuggestions({ compact = false, maxSuggestions }: AIMealSug
             <div
               key={suggestion.id}
               className={`ai-meal-card glass-card ${isExpanded ? 'expanded' : ''} ${compact ? 'compact' : ''}`}
-              style={{ '--meal-accent': mealColor } as any}
+              style={{ '--meal-accent': mealColor } as React.CSSProperties}
             >
               {/* Compact Header */}
               <div

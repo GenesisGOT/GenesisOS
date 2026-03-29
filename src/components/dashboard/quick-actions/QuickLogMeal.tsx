@@ -6,7 +6,7 @@ import { useState, useRef, useEffect } from 'react';
 import { UtensilsCrossed, Send, Sunrise, Sun, Moon, Cookie } from 'lucide-react';
 import { BottomSheet } from '../../BottomSheet';
 import { useUserStore } from '../../../stores/useUserStore';
-import { supabase } from '../../../lib/supabase';
+import { supabase } from '../../../lib/data-access';
 import { localDateStr } from '../../../utils/date';
 import { showToast } from '../../Toast';
 

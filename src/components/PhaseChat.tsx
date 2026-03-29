@@ -9,7 +9,7 @@
  */
 import { useState, useRef, useEffect } from 'react';
 import { Send, Loader2, ArrowLeft, Rocket, X } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { useUserStore } from '../stores/useUserStore';
 import { type PhaseConfig, calculatePhaseCoverage } from '../lib/onboarding-phases';
 import { genId } from '../utils/date';
@@ -113,7 +113,7 @@ export function PhaseChat({ phase, onComplete, onBack, onSkip, initialData }: Ph
     if (percent >= 75) setReadyToFinalize(true);
   }, []);
 
-  const saveProgress = async (latestData: Record<string, any>, latestPercent: number, _latestMessages?: ChatMsg[], _latestHistory?: any[]) => {
+  const saveProgress = async (latestData: Record<string, any>, latestPercent: number, _latestMessages?: ChatMsg[], _latestHistory?: ChatMsg[]) => {
     if (!user?.id) return;
     try {
       // Read current prefs to avoid overwriting other phases
@@ -182,7 +182,7 @@ export function PhaseChat({ phase, onComplete, onBack, onSkip, initialData }: Ph
       const llmResponse = await callLLMProxy(proxyMessages, { timeoutMs: 30000 });
       const rawText = llmResponse.content;
 
-      let parsed: any;
+      let parsed: Record<string, unknown>;
       try {
         let jsonStr = rawText.trim();
         if (jsonStr.startsWith('```')) {

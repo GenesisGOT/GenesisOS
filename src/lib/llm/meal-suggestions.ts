@@ -7,7 +7,7 @@
  * Caches suggestions daily in localStorage to avoid redundant LLM calls.
  */
 
-import { supabase } from '../supabase';
+import { supabase } from '../data-access';
 import { callLLMJson } from '../llm-proxy';
 import { logger } from '../../utils/logger';
 
@@ -174,7 +174,7 @@ export async function generateMealSuggestions(
   const ctx = await collectMealContext(userId);
 
   // Extract plan ID for cache key (null if no active plan)
-  const planId = ctx.activePlan ? String((ctx.activePlan as any).id || 'active') : null;
+  const planId = ctx.activePlan ? String((ctx.activePlan as Record<string, unknown>).id || 'active') : null;
 
   // Check cache (unless force-refreshing)
   if (!options.forceRefresh) {

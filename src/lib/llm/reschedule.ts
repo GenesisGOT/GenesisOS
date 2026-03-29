@@ -8,7 +8,7 @@
  */
 
 import { callLLMJson } from '../llm-proxy';
-import { supabase } from '../supabase';
+import { supabase } from '../data-access';
 import { localUpdate } from '../local-db';
 import { localDateStr } from '../../utils/date';
 import type { OverdueTask, MissedEvent } from '../../hooks/useOverdueItems';
@@ -83,11 +83,11 @@ export async function getAIRescheduleSuggestions(
       .limit(20),
   ]);
 
-  const upcomingEvents = (eventsRes.data || []).map((e: any) =>
+  const upcomingEvents = (eventsRes.data || []).map((e: { title: string; start_time: string; event_type?: string }) =>
     `• ${e.title} — ${new Date(e.start_time).toLocaleDateString('en-AU', { weekday: 'short', month: 'short', day: 'numeric' })} ${new Date(e.start_time).toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit', hour12: true })}${e.end_time ? ` to ${new Date(e.end_time).toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit', hour12: true })}` : ''}`
   ).join('\n');
 
-  const upcomingTasks = (tasksRes.data || []).map((t: any) =>
+  const upcomingTasks = (tasksRes.data || []).map((t: { title: string; due_date?: string; priority?: string; status: string; updated_at?: string }) =>
     `• [${t.priority}] ${t.title} — due ${t.due_date}`
   ).join('\n');
 
@@ -101,14 +101,14 @@ export async function getAIRescheduleSuggestions(
   ).join('\n');
 
   // Build reschedule history — tasks where updated_at significantly differs from created_at
-  const rescheduledTasks = (recentlyRescheduledRes.data || []).filter((t: any) => {
+  const rescheduledTasks = (recentlyRescheduledRes.data || []).filter((t: { title: string; due_date?: string; updated_at?: string }) => {
     if (!t.updated_at || !t.created_at) return false;
     const updated = new Date(t.updated_at).getTime();
     const created = new Date(t.created_at).getTime();
     return (updated - created) > 86400000; // updated > 1 day after creation
   });
   const rescheduleHistory = rescheduledTasks.length > 0
-    ? rescheduledTasks.map((t: any) => `• "${t.title}" — due ${t.due_date}, last updated ${new Date(t.updated_at).toLocaleDateString('en-AU', { month: 'short', day: 'numeric' })}`).join('\n')
+    ? rescheduledTasks.map((t: { title: string; due_date?: string; updated_at: string }) => `• "${t.title}" — due ${t.due_date}, last updated ${new Date(t.updated_at).toLocaleDateString('en-AU', { month: 'short', day: 'numeric' })}`).join('\n')
     : '';
 
   const prompt = `You are LifeOS, helping a user reschedule their overdue tasks and missed events.
@@ -172,7 +172,7 @@ Return JSON:
       suggestions: validSuggestions,
       summary: result.summary || `Suggested new dates for ${validSuggestions.length} items.`,
     };
-  } catch (err: any) {
+  } catch (err: unknown) {
     logger.error('[reschedule] AI suggestion failed:', err);
     return {
       suggestions: [],
@@ -226,7 +226,7 @@ export async function applyReschedule(
         newEnd = new Date(newStart.getTime() + durationMs);
       }
 
-      const updateData: any = {
+      const updateData: Record<string, unknown> = {
         start_time: newStart.toISOString(),
         updated_at: new Date().toISOString(),
       };
@@ -246,7 +246,7 @@ export async function applyReschedule(
     }
 
     return { success: true };
-  } catch (err: any) {
+  } catch (err: unknown) {
     return { success: false, error: err?.message || 'Unknown error' };
   }
 }

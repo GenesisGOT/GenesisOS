@@ -269,7 +269,7 @@ interface BaseRecord {
   updated_at: string;
   deleted_at?: string | null;
   user_id?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**
@@ -407,7 +407,7 @@ export async function localGetAll<T = any>(table: TableName): Promise<T[]> {
   return new Promise<T[]>((resolve, reject) => {
     const req = store.getAll();
     req.onsuccess = () => {
-      const results = req.result.filter((r: any) =>
+      const results = req.result.filter((r: Record<string, unknown>) =>
         !r.user_id || r.user_id === userId
       );
       resolve(results as T[]);
@@ -422,7 +422,7 @@ export async function localGetAll<T = any>(table: TableName): Promise<T[]> {
 export async function localQuery<T = any>(
   table: TableName,
   indexName: string,
-  value: any
+  value: unknown
 ): Promise<T[]> {
   const db = await openLocalDB();
   const tx = db.transaction(table, 'readonly');
@@ -450,7 +450,7 @@ export async function localGetUnsynced<T = any>(table: TableName): Promise<T[]> 
     const req = store.getAll();
     req.onsuccess = () => {
       // Match both boolean false and numeric 0 for backwards compat
-      const results = req.result.filter((r: any) => !r.synced);
+      const results = req.result.filter((r: Record<string, unknown>) => !r.synced);
       resolve(results as T[]);
     };
     req.onerror = () => reject(req.error);
@@ -508,7 +508,7 @@ export async function localBulkUpsert<T extends BaseRecord>(
     // Protect unsynced local edits: if local version has unpushed changes
     // AND is newer than the server record, skip overwriting it
     const keyPath = store.keyPath as string;
-    const key = (fullRecord as any)[keyPath];
+    const key = (fullRecord as Record<string, unknown>)[keyPath];
     if (!key) {
       // Record missing the keyPath field — skip to avoid IDB DataError
       logger.warn(`[local-db] Skipping record in ${table} — missing keyPath '${keyPath}'`);
@@ -683,7 +683,7 @@ export async function getDBStats(): Promise<Record<string, number>> {
 
 // Expose to window for debugging
 if (typeof window !== 'undefined') {
-  (window as any).localDB = {
+  (window as unknown as Record<string, unknown>).localDB = {
     getStats: getDBStats,
     exportData: exportLocalData,
     clearAll: clearLocalDB,

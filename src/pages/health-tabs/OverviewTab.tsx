@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { ProgressRing, SparkLine } from '../../components/charts';
 import { InsightsBanner, SnapCard } from './components';
-import { MOOD_COLORS, calculateHealthScore, type Meal, type WorkoutTemplate, type CSSVarStyle } from './types';
+import { MOOD_COLORS, calculateHealthScore, type Meal, type WorkoutTemplate, type CSSVarStyle, type OverviewTabProps, type ExerciseLog, type MeditationLog, type GratitudeEntry, type BodyMarker, type HealthMetrics } from './types';
 import { EmptyState } from '../../components/EmptyState';
 
 // ── Emoji Mood Scale config ──
@@ -16,37 +16,37 @@ const MOOD_EMOJI_COLORS = ['#EF4444', '#F43F5E', '#FACC15', '#6BCB77', '#39FF14'
 const ENERGY_EMOJIS = ['😴', '🥱', '😐', '💪', '⚡'];
 const ENERGY_EMOJI_COLORS = ['#EF4444', '#F43F5E', '#FACC15', '#39FF14', '#00D4FF'];
 
-export function OverviewTab({ metrics, exerciseLogs, meditationLogs, gratitudeEntries, templates, markers, allMetrics, onUpdateMetrics, meals, onTabChange }: any) {
+export function OverviewTab({ metrics, exerciseLogs, meditationLogs, gratitudeEntries, templates, markers, allMetrics, onUpdateMetrics, meals, onTabChange }: OverviewTabProps) {
   const today = new Date().toISOString().split('T')[0];
-  const todayWorkouts = exerciseLogs.filter((l: any) => l.date === today && l.completed);
-  const todayMeditation = meditationLogs.filter((l: any) => l.date === today);
-  const todayGratitude = gratitudeEntries.filter((e: any) => e.date === today);
+  const todayWorkouts = exerciseLogs.filter((l: ExerciseLog) => l.date === today && l.completed);
+  const todayMeditation = meditationLogs.filter((l: MeditationLog) => l.date === today);
+  const todayGratitude = gratitudeEntries.filter((e: GratitudeEntry) => e.date === today);
   const todayMeals = (meals || []).filter((m: Meal) => m.date === today);
-  const activeMarkers = markers.filter((m: any) => !m.resolved);
-  const meditationMins = todayMeditation.reduce((s: any, m: any) => s + (m.duration_min || 0), 0);
-  const todayCalories = todayMeals.reduce((s: any, m: any) => s + (m.calories || 0), 0);
+  const activeMarkers = markers.filter((m: BodyMarker) => !m.resolved);
+  const meditationMins = todayMeditation.reduce((s: number, m: MeditationLog) => s + (m.duration_min || 0), 0);
+  const todayCalories = todayMeals.reduce((s: number, m: Meal) => s + (m.calories || 0), 0);
 
-  const latestWeightEntry = allMetrics.find((m: any) => m.weight_kg);
+  const latestWeightEntry = allMetrics.find((m: HealthMetrics) => m.weight_kg);
   const weekStart = new Date(); weekStart.setDate(weekStart.getDate() - 6);
   const weekStartStr = weekStart.toISOString().split('T')[0];
   const weekWorkoutDays = new Set(
-    exerciseLogs.filter((l: any) => l.completed && l.date >= weekStartStr).map((l: any) => l.date)
+    exerciseLogs.filter((l: ExerciseLog) => l.completed && l.date >= weekStartStr).map((l: ExerciseLog) => l.date)
   ).size;
   const todayPlanned = templates.filter((t: WorkoutTemplate) => t.day_of_week.includes(new Date().getDay())).length;
 
   const healthScore = calculateHealthScore(metrics, todayWorkouts.length, meditationMins, todayGratitude.length);
 
-  const last7 = Array.from({ length: 7 }, (_, i: any) => {
+  const last7 = Array.from({ length: 7 }, (_, i: number) => {
     const d = new Date(); d.setDate(d.getDate() - (6 - i));
     return d.toISOString().split('T')[0];
   });
-  const moodSpark = last7.map((date: any) => allMetrics.find((m: any) => m.date === date)?.mood_score || 0);
-  const energySpark = last7.map((date: any) => allMetrics.find((m: any) => m.date === date)?.energy_score || 0);
+  const moodSpark = last7.map((date: string) => allMetrics.find((m: HealthMetrics) => m.date === date)?.mood_score || 0);
+  const energySpark = last7.map((date: string) => allMetrics.find((m: HealthMetrics) => m.date === date)?.energy_score || 0);
 
   const lowSleep = (metrics?.sleep_hours || 0) > 0 && (metrics?.sleep_hours || 0) < 7;
   const noWorkout = todayPlanned > 0 && todayWorkouts.length === 0;
   const weightTrend = useMemo(() => {
-    const withWeight = allMetrics.filter((m: any) => m.weight_kg).slice(0, 14);
+    const withWeight = allMetrics.filter((m: HealthMetrics) => m.weight_kg).slice(0, 14);
     if (withWeight.length < 2) return null;
     const first = withWeight[withWeight.length - 1].weight_kg;
     const last = withWeight[0].weight_kg;
@@ -257,7 +257,7 @@ export function OverviewTab({ metrics, exerciseLogs, meditationLogs, gratitudeEn
             <div className="hv2-card-header"><AlertTriangle size={14} className="text-rose-500" />
               <span>{activeMarkers.length} active issue{activeMarkers.length > 1 ? 's' : ''}</span>
             </div>
-            {activeMarkers.slice(0, 3).map((m: any) => (
+            {activeMarkers.slice(0, 3).map((m: BodyMarker) => (
               <div key={m.id} className="hv2-bodycheck-item" onClick={() => onTabChange('body')}>
                 <span className="severity-pip s{m.severity}" />
                 <span>{m.body_part.replace(/_/g, ' ')}</span>
@@ -273,13 +273,13 @@ export function OverviewTab({ metrics, exerciseLogs, meditationLogs, gratitudeEn
         <div className="hv2-trend-row">
           <div className="hv2-trend-label"><Zap size={12} /> Mood</div>
           <div className="hv2-trend-bar">
-            {moodSpark.some((v: any) => v > 0) ? <SparkLine data={moodSpark} color="#F43F5E" width="100%" height={24} filled /> : <span className="hv2-empty-trend">No data</span>}
+            {moodSpark.some((v: number) => v > 0) ? <SparkLine data={moodSpark} color="#F43F5E" width="100%" height={24} filled /> : <span className="hv2-empty-trend">No data</span>}
           </div>
         </div>
         <div className="hv2-trend-row">
           <div className="hv2-trend-label"><Flame size={12} /> Energy</div>
           <div className="hv2-trend-bar">
-            {energySpark.some((v: any) => v > 0) ? <SparkLine data={energySpark} color="#FACC15" width="100%" height={24} filled /> : <span className="hv2-empty-trend">No data</span>}
+            {energySpark.some((v: number) => v > 0) ? <SparkLine data={energySpark} color="#FACC15" width="100%" height={24} filled /> : <span className="hv2-empty-trend">No data</span>}
           </div>
         </div>
         <div className="hv2-trend-row">

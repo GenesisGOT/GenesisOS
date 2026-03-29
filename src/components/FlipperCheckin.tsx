@@ -145,7 +145,7 @@ export function FlipperCheckin() {
         user_id: userId,
         timestamp: startTime.toISOString(),
         end_timestamp: now.toISOString(),
-        type: selectedActivity.type as any,
+        type: selectedActivity.type as string,
         title: `${selectedActivity.emoji} ${selectedActivity.label}`,
         details: {
           notes: notes || undefined,

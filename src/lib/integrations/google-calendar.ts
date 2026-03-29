@@ -5,7 +5,7 @@
  * which holds the provider token securely.
  */
 
-import { supabase } from '../supabase';
+import { supabase } from '../data-access';
 import { useUserStore } from '../../stores/useUserStore';
 import { logger } from '../../utils/logger';
 

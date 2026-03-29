@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, lazy, Suspense } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { useUserStore } from '../stores/useUserStore';
 import { useFinanceStore } from '../stores/useFinanceStore';
 import { useGoalsStore } from '../stores/useGoalsStore';
@@ -154,7 +154,7 @@ export function Finances() {
     setCategories(finStore.categories as unknown as ExpenseCategory[]);
     setTransactions(txData);
     setBudgets(finStore.budgets as unknown as { id?: string; month: string; category_id: string; amount: number }[]);
-    setTasks(schedStore.tasks.filter((t: any) => t.financial_amount != null) as unknown as FinanceTask[]);
+    setTasks(schedStore.tasks.filter((t: { financial_amount?: number }) => t.financial_amount != null) as unknown as FinanceTask[]);
     setGoals(goalStore.goals as unknown as FinanceGoal[]);
     const months: { month: string; income: number; expenses: number }[] = [];
     for (let i = 5; i >= 0; i--) {

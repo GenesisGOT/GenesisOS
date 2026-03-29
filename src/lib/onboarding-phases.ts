@@ -587,15 +587,15 @@ export function calculatePhaseCoverage(phaseId: PhaseId, data: Record<string, an
   return { coverage, percent: Math.round((filled / total) * 100) };
 }
 
-export function getPhasePercents(prefs: Record<string, any> | null): Record<PhaseId, number> {
+export function getPhasePercents(prefs: Record<string, unknown> | null): Record<PhaseId, number> {
   return {
-    life: (prefs as any)?.onboarding_percent || 0,
-    health: (prefs as any)?.health_onboarding_percent || 0,
-    finance: (prefs as any)?.finance_onboarding_percent || 0,
+    life: (typeof prefs?.onboarding_percent === 'number' ? prefs.onboarding_percent : 0),
+    health: (typeof prefs?.health_onboarding_percent === 'number' ? prefs.health_onboarding_percent : 0),
+    finance: (typeof prefs?.finance_onboarding_percent === 'number' ? prefs.finance_onboarding_percent : 0),
   };
 }
 
-export function getOverallPercent(prefs: Record<string, any> | null): number {
+export function getOverallPercent(prefs: Record<string, unknown> | null): number {
   const p = getPhasePercents(prefs);
   return Math.round((p.life + p.health + p.finance) / 3);
 }

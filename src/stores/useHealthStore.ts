@@ -5,7 +5,7 @@
  */
 
 import { create } from 'zustand';
-import { supabase } from '../lib/supabase';
+import { db as supabase } from '../lib/data-access';
 import { localDateStr } from '../utils/date';
 import { isOnline } from '../lib/offline';
 import { localQuery } from '../lib/local-db';

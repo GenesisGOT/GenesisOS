@@ -118,7 +118,7 @@ No markdown, no explanation, just the JSON array.`;
           status: 'active',
           progress: 0,
           target_date: targetDate || null,
-        } as any);
+        } as React.CSSProperties);
         if (ok) created++;
       }
 

@@ -59,8 +59,31 @@ const MUSCLE_GROUP_COLORS: Record<string, string> = {
 
 // ═══ Component ═══
 
+interface WorkoutTemplateInput {
+  name: string;
+  description: string;
+  color: string;
+  icon: string;
+  workout_type: string;
+  estimated_duration_min: number;
+  day_of_week: number[];
+  preferred_time: string;
+  is_active: boolean;
+  exercises: {
+    name: string;
+    muscle_group: string;
+    sets: number;
+    reps: number;
+    weight_kg?: number;
+    duration_min?: number;
+    rest_seconds: number;
+    equipment?: string;
+    sort_order: number;
+  }[];
+}
+
 interface WorkoutGeneratorProps {
-  onSaveTemplates: (templates: any[], workout?: GeneratedWorkout) => Promise<void>;
+  onSaveTemplates: (templates: WorkoutTemplateInput[], workout?: GeneratedWorkout) => Promise<void>;
   onStartWorkout?: (workout: GeneratedWorkout) => void;
   onClose: () => void;
 }
@@ -86,7 +109,7 @@ export function WorkoutGenerator({ onSaveTemplates, onStartWorkout, onClose }: W
       const workout = await generateAIWorkout(prefs);
       setGeneratedWorkout(workout);
       setStep('preview');
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('[WorkoutGenerator] AI generation failed, using fallback:', err);
       // Fall back to local generation
       try {
@@ -208,7 +231,7 @@ export function WorkoutGenerator({ onSaveTemplates, onStartWorkout, onClose }: W
               <button
                 key={preset.id}
                 className="wg-quick-card"
-                style={{ '--qc-color': preset.color } as any}
+                style={{ '--qc-color': preset.color } as React.CSSProperties}
                 onClick={() => handleQuickPreset(preset)}
               >
                 <div className="wg-quick-top">
@@ -219,7 +242,7 @@ export function WorkoutGenerator({ onSaveTemplates, onStartWorkout, onClose }: W
                 <p>{preset.description}</p>
                 <div className="wg-quick-muscles">
                   {[...new Set(preset.exercises.map(e => e.muscle_group))].slice(0, 4).map(mg => (
-                    <span key={mg} className="wg-muscle-badge" style={{ '--mg-color': MUSCLE_GROUP_COLORS[mg] || '#64748B' } as any}>
+                    <span key={mg} className="wg-muscle-badge" style={{ '--mg-color': MUSCLE_GROUP_COLORS[mg] || '#64748B' } as React.CSSProperties}>
                       {mg}
                     </span>
                   ))}
@@ -244,7 +267,7 @@ export function WorkoutGenerator({ onSaveTemplates, onStartWorkout, onClose }: W
                 <button key={g.id}
                   className={`wg-goal-btn ${prefs.goal === g.id ? 'active' : ''}`}
                   onClick={() => setPrefs(p => ({ ...p, goal: g.id }))}
-                  style={{ '--goal-color': g.color } as any}
+                  style={{ '--goal-color': g.color } as React.CSSProperties}
                 >
                   {g.icon}
                   <span>{g.label}</span>
@@ -350,7 +373,7 @@ export function WorkoutGenerator({ onSaveTemplates, onStartWorkout, onClose }: W
           )}
 
           {/* Workout Header */}
-          <div className="wg-workout-header" style={{ '--wk-color': generatedWorkout.color } as any}>
+          <div className="wg-workout-header" style={{ '--wk-color': generatedWorkout.color } as React.CSSProperties}>
             <span className="wg-workout-icon">{generatedWorkout.icon}</span>
             <div className="wg-workout-title">
               <h4>{generatedWorkout.name}</h4>
@@ -369,7 +392,7 @@ export function WorkoutGenerator({ onSaveTemplates, onStartWorkout, onClose }: W
           {/* Muscle groups targeted */}
           <div className="wg-targeted-muscles">
             {(generatedWorkout.muscle_groups_targeted || [...new Set(generatedWorkout.exercises.map(e => e.muscle_group))]).map(mg => (
-              <span key={mg} className="wg-muscle-badge" style={{ '--mg-color': MUSCLE_GROUP_COLORS[mg] || '#64748B' } as any}>
+              <span key={mg} className="wg-muscle-badge" style={{ '--mg-color': MUSCLE_GROUP_COLORS[mg] || '#64748B' } as React.CSSProperties}>
                 {mg}
               </span>
             ))}
@@ -389,7 +412,7 @@ export function WorkoutGenerator({ onSaveTemplates, onStartWorkout, onClose }: W
               <div
                 key={i}
                 className={`wg-exercise-card ${expandedExercise === i ? 'expanded' : ''}`}
-                style={{ '--ex-color': MUSCLE_GROUP_COLORS[ex.muscle_group] || '#64748B' } as any}
+                style={{ '--ex-color': MUSCLE_GROUP_COLORS[ex.muscle_group] || '#64748B' } as React.CSSProperties}
                 onClick={() => setExpandedExercise(expandedExercise === i ? null : i)}
               >
                 <div className="wg-ex-main">

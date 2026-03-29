@@ -5,7 +5,7 @@
 
 import { useState, useEffect } from 'react';
 import { Check, Moon, Sun } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { showToast } from '../Toast';
 import type { ScheduleEvent } from '../../types/database';
 

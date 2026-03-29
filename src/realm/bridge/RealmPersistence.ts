@@ -9,7 +9,7 @@
  * - Logging significant realm events
  */
 
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { logger } from '../../utils/logger';
 
 export interface RealmStateRow {

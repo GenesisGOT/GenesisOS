@@ -10,7 +10,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Brain, Sparkles, Target, ChevronDown, ChevronUp, Loader2, Check, X, RefreshCw, AlertTriangle, TrendingDown, Pause, Rocket, Clock } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { useUserStore } from '../../stores/useUserStore';
 import { useScheduleStore } from '../../stores/useScheduleStore';
 import { useSubscription } from '../../hooks/useSubscription';

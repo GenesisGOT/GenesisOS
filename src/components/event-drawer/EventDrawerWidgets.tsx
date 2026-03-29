@@ -8,7 +8,7 @@ import {
   Edit3, Trash2, Save, Loader2,
   Check,
 } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import type { ScheduleEvent } from '../../hooks/useCurrentEvent';
 import { useLiveActivityStore } from '../../stores/useLiveActivityStore';
 import type { DailyPulse } from './hooks';

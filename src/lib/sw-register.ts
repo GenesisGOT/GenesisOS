@@ -70,7 +70,7 @@ export function isAppInstalled(): boolean {
   // Check if running as PWA (cross-browser)
   try {
     return window.matchMedia('(display-mode: standalone)').matches ||
-      (window.navigator as any).standalone === true; // iOS Safari standalone mode
+      (window.navigator as unknown as Record<string, unknown>).standalone === true; // iOS Safari standalone mode
   } catch {
     return false;
   }

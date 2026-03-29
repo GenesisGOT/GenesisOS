@@ -1,7 +1,7 @@
 // ═══ EventOverlay Context & Provider ═══
 
 import { useState, useEffect, useCallback, createContext, useContext } from 'react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import type { ActiveEvent, OverlayState, EventOverlayContextValue } from './types';
 
 const EventOverlayContext = createContext<EventOverlayContextValue | null>(null);

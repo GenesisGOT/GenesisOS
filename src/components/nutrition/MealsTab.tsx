@@ -336,19 +336,19 @@ function renderMealsByType(
                 <div className="mcf-detail fade-in" onClick={e => e.stopPropagation()}>
                   {/* Macros */}
                   <div className="mcf-macros-row">
-                    <div className="mcf-macro" style={{ '--mc': '#39FF14' } as any}>
+                    <div className="mcf-macro" style={{ '--mc': '#39FF14' } as React.CSSProperties}>
                       <span className="mcf-macro-val">{meal.protein_g}g</span>
                       <span className="mcf-macro-label">Protein</span>
                     </div>
-                    <div className="mcf-macro" style={{ '--mc': '#3B82F6' } as any}>
+                    <div className="mcf-macro" style={{ '--mc': '#3B82F6' } as React.CSSProperties}>
                       <span className="mcf-macro-val">{meal.carbs_g}g</span>
                       <span className="mcf-macro-label">Carbs</span>
                     </div>
-                    <div className="mcf-macro" style={{ '--mc': '#F59E0B' } as any}>
+                    <div className="mcf-macro" style={{ '--mc': '#F59E0B' } as React.CSSProperties}>
                       <span className="mcf-macro-val">{meal.fat_g}g</span>
                       <span className="mcf-macro-label">Fat</span>
                     </div>
-                    <div className="mcf-macro" style={{ '--mc': '#F43F5E' } as any}>
+                    <div className="mcf-macro" style={{ '--mc': '#F43F5E' } as React.CSSProperties}>
                       <span className="mcf-macro-val">{meal.calories}</span>
                       <span className="mcf-macro-label">Calories</span>
                     </div>

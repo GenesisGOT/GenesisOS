@@ -7,7 +7,7 @@ import {
   Clock, Dumbbell, BookOpen, Trophy, Target,
   StickyNote, Zap, Wind, AlertCircle,
 } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { useEventOverlay } from './EventOverlayContext';
 import { detectEventType } from './types';
 import type { ActiveEvent, OverlayEventType, OverlayTab } from './types';
@@ -104,7 +104,7 @@ function OverlayPanel({ event, eventType, onMinimize, onClose }: {
   return (
     <div className="eo-panel">
       {/* Header */}
-      <div className="eo-header" style={{ '--eo-color': event.color || '#00D4FF' } as any}>
+      <div className="eo-header" style={{ '--eo-color': event.color || '#00D4FF' } as React.CSSProperties}>
         <div className="eo-header-info">
           <div className="eo-header-icon">
             {eventType === 'workout' && <Dumbbell size={18} />}

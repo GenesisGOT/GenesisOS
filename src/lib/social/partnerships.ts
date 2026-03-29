@@ -1,6 +1,6 @@
 // LifeOS Social — Partnership / Accountability Partner Operations
 
-import { supabase } from '../supabase';
+import { supabase } from '../data-access';
 import { sendMessage } from './messaging';
 import type { Partnership, PartnerWithProfile, PartnerActivity } from './types';
 import { logger } from '../../utils/logger';

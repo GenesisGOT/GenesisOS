@@ -13,7 +13,7 @@ import {
   Brain, Heart, ChevronDown, ChevronUp, RefreshCw, Loader2,
   Send, Sparkles, Apple, Dumbbell, Activity,
 } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { useUserStore } from '../../stores/useUserStore';
 import { useSubscription } from '../../hooks/useSubscription';
 import { callLLMSimple } from '../../lib/llm-proxy';
@@ -100,7 +100,7 @@ async function loadHealthSnapshot(userId: string): Promise<HealthSnapshot> {
 
   // Build compact summaries
   const recentMetrics = metrics.length > 0
-    ? metrics.map((m: any) => {
+    ? metrics.map((m: { date: string; mood_score?: number; energy_score?: number; sleep_hours?: number; sleep_quality?: number; water_glasses?: number; weight_kg?: number }) => {
         const parts: string[] = [];
         if (m.mood_score) parts.push(`mood:${m.mood_score}/5`);
         if (m.energy_score) parts.push(`energy:${m.energy_score}/5`);
@@ -111,20 +111,20 @@ async function loadHealthSnapshot(userId: string): Promise<HealthSnapshot> {
       }).join('\n')
     : 'No health metrics logged this week.';
 
-  const completedWorkouts = exercises.filter((e: any) => e.completed);
+  const completedWorkouts = exercises.filter((e: { completed: boolean }) => e.completed);
   const exerciseSummary = exercises.length > 0
-    ? `${completedWorkouts.length} workouts completed this week. ${exercises.filter((e: any) => !e.completed).length} skipped. Recent: ${completedWorkouts.slice(0, 3).map((e: any) => `${e.title || 'Workout'} (${e.duration_min || '?'}min)`).join(', ') || 'none'}`
+    ? `${completedWorkouts.length} workouts completed this week. ${exercises.filter((e: { completed: boolean }) => !e.completed).length} skipped. Recent: ${completedWorkouts.slice(0, 3).map((e: { title?: string; duration_min?: number }) => `${e.title || 'Workout'} (${e.duration_min || '?'}min)`).join(', ') || 'none'}`
     : 'No exercise logged this week.';
 
-  const totalMedMin = meditations.reduce((s: number, m: any) => s + (m.duration_min || 0), 0);
+  const totalMedMin = meditations.reduce((s: number, m: { duration_min?: number }) => s + (m.duration_min || 0), 0);
   const meditationSummary = meditations.length > 0
     ? `${meditations.length} meditation sessions this week, ${totalMedMin} total minutes.`
     : 'No meditation logged this week.';
 
-  const totalCals = meals.reduce((s: number, m: any) => s + (m.calories || 0), 0);
-  const totalProtein = meals.reduce((s: number, m: any) => s + (m.protein_g || 0), 0);
+  const totalCals = meals.reduce((s: number, m: { calories?: number }) => s + (m.calories || 0), 0);
+  const totalProtein = meals.reduce((s: number, m: { protein_g?: number }) => s + (m.protein_g || 0), 0);
   const nutritionSummary = meals.length > 0
-    ? `${meals.length} meals logged this week. ~${Math.round(totalCals / Math.max(1, new Set(meals.map((m: any) => m.date)).size))} cal/day avg. ~${Math.round(totalProtein / Math.max(1, new Set(meals.map((m: any) => m.date)).size))}g protein/day avg.`
+    ? `${meals.length} meals logged this week. ~${Math.round(totalCals / Math.max(1, new Set(meals.map((m: { date: string }) => m.date)).size))} cal/day avg. ~${Math.round(totalProtein / Math.max(1, new Set(meals.map((m: { date: string }) => m.date)).size))}g protein/day avg.`
     : 'No meals logged this week.';
 
   return { recentMetrics, exerciseSummary, nutritionSummary, meditationSummary };

@@ -7,7 +7,7 @@ import { BookOpen, Send } from 'lucide-react';
 import { BottomSheet } from '../../BottomSheet';
 import { useUserStore } from '../../../stores/useUserStore';
 import { useJournalStore } from '../../../stores/useJournalStore';
-import { supabase } from '../../../lib/supabase';
+import { supabase } from '../../../lib/data-access';
 import { localDateStr } from '../../../utils/date';
 import { showToast } from '../../Toast';
 import { localInsert, localUpdate } from '../../../lib/local-db';

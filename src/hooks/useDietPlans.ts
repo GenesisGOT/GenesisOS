@@ -2,7 +2,7 @@
 // Diet Plans & Meals Hooks
 // ═══════════════════════════════════════════════════════════
 import { useEffect, useState, useCallback } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { logger } from '../utils/logger';
 import type { DietPlan, DietMeal } from './useNutritionTypes';
 

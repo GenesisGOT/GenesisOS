@@ -4,37 +4,37 @@ import { Brain, Play, Pause, Plus, Flame } from 'lucide-react';
 import { EmojiIcon } from '../../lib/emoji-icon';
 import { ProgressRing, AreaChart } from '../../components/charts';
 import { MOOD_ICONS_EL, BreathingCircle } from './components';
-import { MOOD_COLORS, MOOD_LABELS, type CSSVarStyle } from './types';
+import { MOOD_COLORS, MOOD_LABELS, type CSSVarStyle, type MindTabProps, type MeditationLog, type GratitudeEntry, type HealthMetrics } from './types';
 
-export function MindTab({ meditationLogs, gratitudeEntries, onLogMeditation, onAddGratitude, todayMetrics, onUpdateMetrics, allMetrics }: any) {
+export function MindTab({ meditationLogs, gratitudeEntries, onLogMeditation, onAddGratitude, todayMetrics, onUpdateMetrics, allMetrics }: MindTabProps) {
   const [meditating, setMeditating] = useState(false);
   const [timer, setTimer] = useState(0);
   const [gratitudeText, setGratitudeText] = useState('');
   const [gratCategory, setGratCategory] = useState('other');
   const today = new Date().toISOString().split('T')[0];
-  const todayMeditations = meditationLogs.filter((l: any) => l.date === today);
-  const todayGratitude = gratitudeEntries.filter((e: any) => e.date === today);
-  const totalMins = todayMeditations.reduce((s: any, m: any) => s + m.duration_min, 0);
+  const todayMeditations = meditationLogs.filter((l: MeditationLog) => l.date === today);
+  const todayGratitude = gratitudeEntries.filter((e: GratitudeEntry) => e.date === today);
+  const totalMins = todayMeditations.reduce((s: number, m: MeditationLog) => s + m.duration_min, 0);
 
-  const last14 = Array.from({ length: 14 }, (_, i: any) => {
+  const last14 = Array.from({ length: 14 }, (_, i: number) => {
     const d = new Date(); d.setDate(d.getDate() - (13 - i));
     return d.toISOString().split('T')[0];
   });
-  const moodData = last14.map((date: any) => allMetrics.find((m: any) => m.date === date)?.mood_score || 0);
-  const energyData = last14.map((date: any) => allMetrics.find((m: any) => m.date === date)?.energy_score || 0);
-  const chartLabels = last14.map((d: any, i: any) => i % 2 === 0 ? new Date(d + 'T12:00:00').toLocaleDateString('en-AU', { day: 'numeric', month: 'short' }) : '');
+  const moodData = last14.map((date: string) => allMetrics.find((m: HealthMetrics) => m.date === date)?.mood_score || 0);
+  const energyData = last14.map((date: string) => allMetrics.find((m: HealthMetrics) => m.date === date)?.energy_score || 0);
+  const chartLabels = last14.map((d: string, i: number) => i % 2 === 0 ? new Date(d + 'T12:00:00').toLocaleDateString('en-AU', { day: 'numeric', month: 'short' }) : '');
 
   const meditationGoalMins = 15;
   const meditationPct = Math.min((totalMins / meditationGoalMins) * 100, 100);
 
   // ── Mindfulness Streak Calculation ──
   const { streak, last14Active } = useMemo(() => {
-    const meditationDates = new Set(meditationLogs.map((l: any) => l.date));
-    const gratitudeDates = new Set(gratitudeEntries.map((e: any) => e.date));
+    const meditationDates = new Set(meditationLogs.map((l: MeditationLog) => l.date));
+    const gratitudeDates = new Set(gratitudeEntries.map((e: GratitudeEntry) => e.date));
     const metricDates = new Set(
       allMetrics
-        .filter((m: any) => m.mood_score || m.energy_score)
-        .map((m: any) => m.date)
+        .filter((m: HealthMetrics) => m.mood_score || m.energy_score)
+        .map((m: HealthMetrics) => m.date)
     );
 
     const isActiveDay = (dateStr: string) =>
@@ -221,7 +221,7 @@ export function MindTab({ meditationLogs, gratitudeEntries, onLogMeditation, onA
           <button aria-label="Add gratitude entry" className="btn-glow-sm" onClick={addGrat}><Plus size={14} /></button>
         </div>
         <div className="hv2-grat-entries">
-          {todayGratitude.map((g: any, i: any) => (
+          {todayGratitude.map((g: GratitudeEntry, i: number) => (
             <div key={g.id} className="hv2-grat-entry h-fade-up" style={{ animationDelay: `${i * 0.06}s` }}>
               <span className="hv2-grat-dot text-purple-400">✦</span>
               <span>{g.entry}</span>

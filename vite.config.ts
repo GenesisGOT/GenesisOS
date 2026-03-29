@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { visualizer } from 'rollup-plugin-visualizer'
-import { writeFileSync, readdirSync } from 'fs'
+import { writeFileSync, readdirSync, existsSync } from 'fs'
 import { resolve } from 'path'
 import { readFileSync } from 'fs'
 
@@ -32,6 +32,56 @@ function versionJsonPlugin() {
   }
 }
 
+/** Dev middleware: serve /academy/* files from the academy content directory */
+function academyServePlugin() {
+  const ACADEMY_ROOT = '/mnt/data/tmp/academy'
+  return {
+    name: 'academy-serve',
+    configureServer(server: any) {
+      server.middlewares.use('/academy', (req: any, res: any, next: any) => {
+        const filePath = resolve(ACADEMY_ROOT, decodeURIComponent(req.url || '').replace(/^\//, ''))
+        if (existsSync(filePath)) {
+          const content = readFileSync(filePath)
+          const ext = filePath.split('.').pop()?.toLowerCase() || ''
+          const mimeTypes: Record<string, string> = {
+            'md': 'text/markdown; charset=utf-8',
+            'mp3': 'audio/mpeg',
+            'json': 'application/json',
+            'txt': 'text/plain; charset=utf-8',
+          }
+          res.setHeader('Content-Type', mimeTypes[ext] || 'application/octet-stream')
+          res.setHeader('Access-Control-Allow-Origin', '*')
+          // For audio, support range requests
+          if (ext === 'mp3') {
+            const stat = require('fs').statSync(filePath)
+            const range = req.headers.range
+            if (range) {
+              const parts = range.replace(/bytes=/, '').split('-')
+              const start = parseInt(parts[0], 10)
+              const end = parts[1] ? parseInt(parts[1], 10) : stat.size - 1
+              res.writeHead(206, {
+                'Content-Range': `bytes ${start}-${end}/${stat.size}`,
+                'Accept-Ranges': 'bytes',
+                'Content-Length': end - start + 1,
+                'Content-Type': 'audio/mpeg',
+              })
+              const stream = require('fs').createReadStream(filePath, { start, end })
+              stream.pipe(res)
+              return
+            }
+            res.setHeader('Content-Length', stat.size)
+            res.setHeader('Accept-Ranges', 'bytes')
+          }
+          res.end(content)
+        } else {
+          res.statusCode = 404
+          res.end('Not found')
+        }
+      })
+    },
+  }
+}
+
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const isDesktop = mode === 'desktop' || !!process.env.TAURI_ENV_PLATFORM;
@@ -42,6 +92,7 @@ export default defineConfig(({ mode }) => {
   plugins: [
     tailwindcss(),
     react(),
+    academyServePlugin(),
     versionJsonPlugin(),
     visualizer({
       filename: './dist/stats.html',
@@ -51,6 +102,12 @@ export default defineConfig(({ mode }) => {
     }),
   ],
   base: isDesktop ? './' : '/app/',
+  server: {
+    // Serve academy content files for dev mode
+    fs: {
+      allow: ['.', '/mnt/data/tmp/academy'],
+    },
+  },
   esbuild: {
     drop: process.env.NODE_ENV === 'production' ? ['debugger'] : [],
   },

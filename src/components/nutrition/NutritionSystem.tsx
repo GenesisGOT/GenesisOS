@@ -60,7 +60,7 @@ export function NutritionSystem() {
 
         if (templateMeals && templateMeals.length > 0) {
           await supabase.from('diet_meals').insert(
-            templateMeals.map((m: any) => ({
+            templateMeals.map((m: Record<string, unknown>) => ({
               user_id: user.user.id,
               diet_plan_id: cloned.id,
               name: m.name,
@@ -107,7 +107,7 @@ export function NutritionSystem() {
     refreshActive();
   }, [refreshPlans, refreshActive]);
 
-  const handleLogMeal = useCallback(async (meal: any) => {
+  const handleLogMeal = useCallback(async (meal: Record<string, unknown>) => {
     await logMeal(meal);
   }, [logMeal]);
 
@@ -120,7 +120,7 @@ export function NutritionSystem() {
     }
   }, [activeMeals, refreshActive]);
 
-  const tabs: { id: NutritionTab; label: string; icon: any; badge?: string }[] = [
+  const tabs: { id: NutritionTab; label: string; icon: React.ReactNode; badge?: string }[] = [
     { id: 'diet', label: 'Diet Plan', icon: Apple },
     { id: 'meals', label: 'Meals', icon: UtensilsCrossed, badge: activeMeals.length > 0 ? String(activeMeals.length) : undefined },
     { id: 'grocery', label: 'Grocery', icon: ShoppingCart },

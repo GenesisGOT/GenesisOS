@@ -7,7 +7,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import type { FaunaSpecies, UserCompanion } from '../data/companions';
 import { logger } from '../../utils/logger';
 

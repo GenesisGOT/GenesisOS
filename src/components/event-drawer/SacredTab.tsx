@@ -6,7 +6,7 @@ import {
   Flame, BarChart3,
   CheckCircle2, ChevronDown,
 } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { usePrayerTimes } from '../../hooks/usePrayerTimes';
 import { useFasting, formatFastingDuration } from '../../hooks/useFasting';
 import { useUserStore } from '../../stores/useUserStore';

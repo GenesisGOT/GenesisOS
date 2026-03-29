@@ -8,7 +8,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Plug, RefreshCw, ArrowRight } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { useUserStore } from '../../stores/useUserStore';
 import type { PluginActivityRow } from '../../lib/plugins/types';
 

@@ -6,7 +6,7 @@
  */
 
 import { create } from 'zustand';
-import { supabase } from '../lib/supabase';
+import { db as supabase } from '../lib/data-access';
 import { localDateStr, genId } from '../utils/date';
 import { isOnline } from '../lib/offline';
 import { showToast } from '../components/Toast';

@@ -11,7 +11,7 @@
  * - Smart scheduling (morning/evening/anytime based on context)
  */
 
-import { supabase } from './supabase';
+import { supabase } from './data-access';
 
 // ═══════════════════════════════════════════════════════════════
 // TYPES

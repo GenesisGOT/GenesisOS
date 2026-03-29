@@ -1,5 +1,5 @@
 // Lightweight error reporting — logs to Supabase error_logs table
-import { supabase } from './supabase';
+import { db as supabase } from './data-access';
 import { logger } from '../utils/logger';
 
 interface ErrorReport {

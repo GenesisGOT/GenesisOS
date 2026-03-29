@@ -4,7 +4,7 @@
 // ═══════════════════════════════════════════════════════════
 
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { useUserStore } from '../stores/useUserStore';
 import { useScheduleStore } from '../stores/useScheduleStore';
 import { useHabitsStore } from '../stores/useHabitsStore';
@@ -73,13 +73,13 @@ export function useSmartSuggestions(enabled: boolean): { suggestions: Suggestion
           .lte('tier_required', currentTier);
 
         if (practices?.length) {
-          const loggedPracticeIds = new Set((junctionLogRes.data || []).map((l: any) => l.practice_id));
+          const loggedPracticeIds = new Set((junctionLogRes.data || []).map((l: { practice_id: string }) => l.practice_id));
           // Find practices for current time that haven't been logged today
-          const timePractices = practices.filter((p: any) =>
+          const timePractices = practices.filter((p: { id: string; time_of_day?: string }) =>
             p.time_of_day?.toLowerCase() === timeContext && !loggedPracticeIds.has(p.id)
           );
           // Also get any unlogged practices as fallback
-          const anyUnlogged = practices.filter((p: any) => !loggedPracticeIds.has(p.id));
+          const anyUnlogged = practices.filter((p: { id: string; time_of_day?: string }) => !loggedPracticeIds.has(p.id));
           const bestPractice = timePractices[0] || anyUnlogged[0];
 
           if (bestPractice) {

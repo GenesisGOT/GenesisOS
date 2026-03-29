@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { useUserStore } from '../stores/useUserStore';
 import { useJournalStore } from '../stores/useJournalStore';
 import { logUnifiedEvent } from '../lib/events';

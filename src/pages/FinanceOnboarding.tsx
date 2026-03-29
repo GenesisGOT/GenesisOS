@@ -6,7 +6,7 @@
  */
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { useUserStore } from '../stores/useUserStore';
 import { PHASES } from '../lib/onboarding-phases';
 import { SetupDialogue } from '../components/setup/SetupDialogue';
@@ -26,7 +26,7 @@ export function FinanceOnboarding() {
     if (!user) { setLoading(false); return; }
     supabase.from('user_profiles').select('preferences').eq('user_id', user.id).single()
       .then(({ data: profile }) => {
-        const prefs = profile?.preferences as any;
+        const prefs = profile?.preferences as Record<string, unknown>;
         if (prefs?.finance_onboarding_data) {
           setSavedData(prefs.finance_onboarding_data);
         }

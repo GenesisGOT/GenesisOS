@@ -142,7 +142,7 @@ export const useAssetsStore = create<AssetsState>((set, get) => ({
 
       // Background sync
       if (!options?.skipSync) bgSync();
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('[assets] fetch error:', err);
       set({ loading: false, error: err?.message || 'Failed to fetch assets' });
     }
@@ -177,7 +177,7 @@ export const useAssetsStore = create<AssetsState>((set, get) => ({
       set(s => ({ assets: [created, ...s.assets] }));
       bgSync();
       return created;
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('[assets] addAsset error:', err);
       return null;
     }
@@ -189,7 +189,7 @@ export const useAssetsStore = create<AssetsState>((set, get) => ({
     try {
       await localUpdate('assets', id, updates);
       bgSync();
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('[assets] updateAsset error:', err);
       set({ assets: prev });
     }
@@ -201,7 +201,7 @@ export const useAssetsStore = create<AssetsState>((set, get) => ({
     try {
       await localDelete('assets', id);
       bgSync();
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('[assets] deleteAsset error:', err);
       set({ assets: prev });
     }
@@ -216,7 +216,7 @@ export const useAssetsStore = create<AssetsState>((set, get) => ({
     try {
       await localUpdate('assets', id, { is_equipped: newVal });
       bgSync();
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('[assets] toggleEquipped error:', err);
       set({ assets: prev });
     }
@@ -248,7 +248,7 @@ export const useAssetsStore = create<AssetsState>((set, get) => ({
       set(s => ({ maintenance: [created, ...s.maintenance] }));
       bgSync();
       return created;
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('[assets] addMaintenance error:', err);
       return null;
     }
@@ -260,7 +260,7 @@ export const useAssetsStore = create<AssetsState>((set, get) => ({
     try {
       await localUpdate('asset_maintenance', id, updates);
       bgSync();
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('[assets] updateMaintenance error:', err);
       set({ maintenance: prev });
     }
@@ -302,7 +302,7 @@ export const useAssetsStore = create<AssetsState>((set, get) => ({
     try {
       await localDelete('asset_maintenance', id);
       bgSync();
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('[assets] deleteMaintenance error:', err);
       set({ maintenance: prev });
     }
@@ -333,7 +333,7 @@ export const useAssetsStore = create<AssetsState>((set, get) => ({
       set(s => ({ bills: [created, ...s.bills] }));
       bgSync();
       return created;
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('[assets] addBill error:', err);
       return null;
     }
@@ -345,7 +345,7 @@ export const useAssetsStore = create<AssetsState>((set, get) => ({
     try {
       await localUpdate('asset_bills', id, updates);
       bgSync();
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('[assets] updateBill error:', err);
       set({ bills: prev });
     }
@@ -357,7 +357,7 @@ export const useAssetsStore = create<AssetsState>((set, get) => ({
     try {
       await localDelete('asset_bills', id);
       bgSync();
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('[assets] deleteBill error:', err);
       set({ bills: prev });
     }
@@ -385,7 +385,7 @@ export const useAssetsStore = create<AssetsState>((set, get) => ({
       set(s => ({ documents: [created, ...s.documents] }));
       bgSync();
       return created;
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('[assets] addDocument error:', err);
       return null;
     }
@@ -397,7 +397,7 @@ export const useAssetsStore = create<AssetsState>((set, get) => ({
     try {
       await localUpdate('asset_documents', id, updates);
       bgSync();
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('[assets] updateDocument error:', err);
       set({ documents: prev });
     }
@@ -409,7 +409,7 @@ export const useAssetsStore = create<AssetsState>((set, get) => ({
     try {
       await localDelete('asset_documents', id);
       bgSync();
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('[assets] deleteDocument error:', err);
       set({ documents: prev });
     }

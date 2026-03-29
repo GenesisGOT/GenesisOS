@@ -581,7 +581,7 @@ export async function agentExecuteAction(userId: string, action: AgentAction): P
         );
         if (overdue.length === 0) return { success: true, message: 'No overdue tasks to reschedule.' };
         const suggestions = await getAIRescheduleSuggestions(userId, overdue, []);
-        const summary = suggestions.map((s: any) => `• ${s.title} → ${s.suggested_date}`).join('\n');
+        const summary = suggestions.map((s: { title: string; suggested_date: string }) => `• ${s.title} → ${s.suggested_date}`).join('\n');
         return { success: true, message: `Reschedule suggestions:\n${summary}\n\nPlease confirm before applying.` };
       }
 

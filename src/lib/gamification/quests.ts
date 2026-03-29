@@ -428,7 +428,7 @@ export async function generateEpicQuests(
     return existing as ActiveQuest[];
   }
 
-  const existingIds = new Set((existing || []).map((q: any) => q.quest_data?.id));
+  const existingIds = new Set((existing || []).map((q: { quest_data?: { id?: string } }) => q.quest_data?.id));
   const newQuests = EPIC_QUESTS.filter(q => !existingIds.has(q.id));
 
   // Epic quests never expire (far future)

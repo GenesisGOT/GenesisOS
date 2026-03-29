@@ -34,8 +34,8 @@ export const WorkTab = React.memo(function WorkTab() {
 
     // Recurring income normalized to monthly
     const recurringMonthly = income
-      .filter(i => i.is_recurring && (i as any).recurrence_rule)
-      .reduce((s, i) => s + normalizeToMonthly(i.amount, (i as any).recurrence_rule || 'monthly'), 0);
+      .filter(i => i.is_recurring && (i as unknown as { recurrence_rule?: string }).recurrence_rule)
+      .reduce((s, i) => s + normalizeToMonthly(i.amount, (i as unknown as { recurrence_rule?: string }).recurrence_rule || 'monthly'), 0);
 
     // Active clients × their rates (assume ~4 jobs/month per client if rate is per-clean)
     const activeClients = clients.filter(c => c.is_active);

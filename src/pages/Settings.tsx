@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { useUserStore } from '../stores/useUserStore';
 import { getErrorMessage } from '../utils/error';
 import { logger } from '../utils/logger';
@@ -83,8 +83,8 @@ export function Settings() {
   const [showClassRoleModal, setShowClassRoleModal] = useState(false);
 
   // Class & Role
-  const userClass: ClassKey | null = (profile?.preferences as any)?.class || null;
-  const userRole: RoleKey | null = (profile?.preferences as any)?.role || null;
+  const userClass: ClassKey | null = (profile?.preferences as Record<string, unknown> | undefined)?.class || null;
+  const userRole: RoleKey | null = (profile?.preferences as Record<string, unknown> | undefined)?.role || null;
 
   // Form
   const [displayName, setDisplayName] = useState('');
@@ -231,7 +231,7 @@ export function Settings() {
         onboarding_complete: false,
         preferences: {
           _history: [
-            ...((existingPrefs as any)?._history || []),
+            ...((existingPrefs as Record<string, unknown> | undefined)?._history || []),
             { redo_at: new Date().toISOString(), previous: existingPrefs }
           ]
         },

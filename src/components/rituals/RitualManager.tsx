@@ -11,7 +11,7 @@
 import { useState, useCallback } from 'react';
 import { Plus, RefreshCw, ChevronDown, Trash2, Edit2, Loader2, Check } from 'lucide-react';
 import { useUserStore } from '../../stores/useUserStore';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { EVENT_TYPE_COLORS, type EventType } from '../../lib/schedule-events';
 import {
   type Ritual,

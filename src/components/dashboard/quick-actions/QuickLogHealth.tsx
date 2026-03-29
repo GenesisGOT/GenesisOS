@@ -7,7 +7,7 @@ import { Activity, Send } from 'lucide-react';
 import { BottomSheet } from '../../BottomSheet';
 import { useUserStore } from '../../../stores/useUserStore';
 import { useHealthStore } from '../../../stores/useHealthStore';
-import { supabase } from '../../../lib/supabase';
+import { supabase } from '../../../lib/data-access';
 import { localDateStr } from '../../../utils/date';
 import { showToast } from '../../Toast';
 

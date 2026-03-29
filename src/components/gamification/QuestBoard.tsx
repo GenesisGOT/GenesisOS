@@ -18,7 +18,7 @@ import {
 } from '../../lib/gamification/quest-engine-v2';
 import { completeQuest } from '../../lib/gamification/quest-completion';
 import type { QuestCompletionResult } from '../../lib/gamification/quest-completion';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import './gamification.css';
 import { logger } from '../../utils/logger';
 

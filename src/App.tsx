@@ -14,7 +14,7 @@ import { useAssetsStore } from './stores/useAssetsStore';
 import { useJournalStore } from './stores/useJournalStore';
 import { useLiveActivityStore } from './stores/useLiveActivityStore';
 // Profile comes from useUserStore now
-import { supabase } from './lib/supabase';
+import { supabase } from './lib/data-access';
 // sync-engine is dynamically imported after auth to reduce initial bundle
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { UpdateBanner } from './components/UpdateBanner';
@@ -71,6 +71,7 @@ const CharacterHub = lazyRetry(() => import('./pages/CharacterHub').then(m => ({
 const ReflectHub = lazyRetry(() => import('./pages/ReflectHub').then(m => ({ default: m.ReflectHub })));
 const Story = lazyRetry(() => import('./pages/Story').then(m => ({ default: m.Story })));
 const AssetDetail = lazyRetry(() => import('./pages/AssetDetail').then(m => ({ default: m.AssetDetail })));
+const Academy = lazyRetry(() => import('./pages/Academy'));
 const LazyFeedbackButton = lazyRetry(() => import('./components/FeedbackButton').then(m => ({ default: m.FeedbackButton })));
 const LazyFlipperCheckin = lazyRetry(() => import('./components/FlipperCheckin').then(m => ({ default: m.FlipperCheckin })));
 const LazyLifePulseModal = lazyRetry(() => import('./components/LifePulseModal').then(m => ({ default: m.LifePulseModal })));
@@ -346,6 +347,7 @@ function AppRoutes() {
             <Route path="/story" element={<Navigate to="/reflect?tab=story" replace />} />
             <Route path="/realm" element={<Navigate to="/character?tab=realm" replace />} />
 
+            <Route path="/academy" element={<PageErrorBoundary pageName="Academy"><Suspense fallback={<PageSkeleton />}><Academy /></Suspense></PageErrorBoundary>} />
             <Route path="/settings" element={<PageErrorBoundary pageName="Settings"><Settings /></PageErrorBoundary>} />
             <Route path="/work" element={<PageErrorBoundary pageName="Work"><Suspense fallback={<WorkSkeleton />}><WorkPage /></Suspense></PageErrorBoundary>} />
             <Route path="/work/*" element={<PageErrorBoundary pageName="Work"><Suspense fallback={<WorkSkeleton />}><WorkPage /></Suspense></PageErrorBoundary>} />

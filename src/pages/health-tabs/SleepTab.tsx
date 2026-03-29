@@ -4,8 +4,8 @@ import { Check, AlertTriangle, Frown, Meh, Smile, Moon, Calendar, RefreshCw, Edi
 import { ProgressRing, BarChart, AreaChart } from '../../components/charts';
 import { DataTooltip } from '../../components/ui/DataTooltip';
 import type { DataTooltipData } from '../../components/ui/DataTooltip';
-import type { CSSVarStyle } from './types';
-import { supabase } from '../../lib/supabase';
+import type { CSSVarStyle, SleepTabProps, HealthMetrics } from './types';
+import { supabase } from '../../lib/data-access';
 import { createScheduleEvent } from '../../lib/schedule-events';
 import { validateHealth } from '../../utils/health-validation';
 
@@ -63,16 +63,16 @@ function isWeekend(dayOfWeek: number): boolean {
 
 // ── Sleep Score Calculation ──
 function computeSleepScore(
-  metrics: any[],
+  metrics: HealthMetrics[],
   schedule: SleepSchedulePrefs | null
 ): { score: number; durationPts: number; qualityPts: number; consistencyPts: number; trend: 'up' | 'down' | 'flat' } {
-  const last7 = metrics.filter((m: any) => m.sleep_hours).slice(0, 7);
-  const prev7 = metrics.filter((m: any) => m.sleep_hours).slice(7, 14);
+  const last7 = metrics.filter((m: HealthMetrics) => m.sleep_hours).slice(0, 7);
+  const prev7 = metrics.filter((m: HealthMetrics) => m.sleep_hours).slice(7, 14);
 
   if (last7.length === 0) return { score: 0, durationPts: 0, qualityPts: 0, consistencyPts: 0, trend: 'flat' };
 
   // Duration score (40 pts): 7-9hrs = full marks
-  const avgHours = last7.reduce((s: number, m: any) => s + (m.sleep_hours || 0), 0) / last7.length;
+  const avgHours = last7.reduce((s: number, m: HealthMetrics) => s + (m.sleep_hours || 0), 0) / last7.length;
   let durationPts: number;
   if (avgHours >= 7 && avgHours <= 9) {
     durationPts = 40;
@@ -87,15 +87,15 @@ function computeSleepScore(
   }
 
   // Quality score (30 pts): 1-5 → 6-30
-  const qualityEntries = last7.filter((m: any) => m.sleep_quality);
+  const qualityEntries = last7.filter((m: HealthMetrics) => m.sleep_quality);
   const qualityPts = qualityEntries.length > 0
-    ? (qualityEntries.reduce((s: number, m: any) => s + (m.sleep_quality || 0), 0) / qualityEntries.length) * 6
+    ? (qualityEntries.reduce((s: number, m: HealthMetrics) => s + (m.sleep_quality || 0), 0) / qualityEntries.length) * 6
     : 15; // neutral if no data
 
   // Consistency score (30 pts): low variance in sleep hours = high score
   let consistencyPts = 15;
   if (last7.length >= 3) {
-    const sleepHours = last7.map((m: any) => m.sleep_hours || 0);
+    const sleepHours = last7.map((m: HealthMetrics) => m.sleep_hours || 0);
     const mean = sleepHours.reduce((a: number, b: number) => a + b, 0) / sleepHours.length;
     const variance = sleepHours.reduce((s: number, h: number) => s + Math.pow(h - mean, 2), 0) / sleepHours.length;
     const stdDev = Math.sqrt(variance);
@@ -108,7 +108,7 @@ function computeSleepScore(
   // Trend: compare to previous week
   let trend: 'up' | 'down' | 'flat' = 'flat';
   if (prev7.length >= 3) {
-    const prevAvg = prev7.reduce((s: number, m: any) => s + (m.sleep_hours || 0), 0) / prev7.length;
+    const prevAvg = prev7.reduce((s: number, m: HealthMetrics) => s + (m.sleep_hours || 0), 0) / prev7.length;
     if (avgHours > prevAvg + 0.3) trend = 'up';
     else if (avgHours < prevAvg - 0.3) trend = 'down';
   }
@@ -124,7 +124,7 @@ function adherenceColor(scheduled: number, actual: number): string {
   return '#F43F5E'; // red
 }
 
-export function SleepTab({ metrics, allMetrics, onUpdateMetrics }: any) {
+export function SleepTab({ metrics, allMetrics, onUpdateMetrics }: SleepTabProps) {
   const [hours, setHours] = useState(metrics?.sleep_hours?.toString() || '');
   const [quality, setQuality] = useState(metrics?.sleep_quality || 0);
 
@@ -135,30 +135,30 @@ export function SleepTab({ metrics, allMetrics, onUpdateMetrics }: any) {
   const [syncing, setSyncing] = useState(false);
   const [syncMsg, setSyncMsg] = useState('');
 
-  const sleepHistory = allMetrics.filter((m: any) => m.sleep_hours).slice(0, 14).reverse();
+  const sleepHistory = allMetrics.filter((m: HealthMetrics) => m.sleep_hours).slice(0, 14).reverse();
   const avgSleep = sleepHistory.length > 0
-    ? sleepHistory.reduce((s: any, m: any) => s + (m.sleep_hours || 0), 0) / sleepHistory.length
+    ? sleepHistory.reduce((s: number, m: HealthMetrics) => s + (m.sleep_hours || 0), 0) / sleepHistory.length
     : null;
 
   const sleepPct = metrics?.sleep_hours ? Math.min((metrics.sleep_hours / 9) * 100, 100) : 0;
   const sleepColor = (metrics?.sleep_hours || 0) >= 7 ? '#39FF14' : (metrics?.sleep_hours || 0) >= 6 ? '#FACC15' : '#F43F5E';
 
   const last7Sleep = sleepHistory.slice(-7);
-  const barLabels = last7Sleep.map((m: any) =>
+  const barLabels = last7Sleep.map((m: HealthMetrics) =>
     new Date(m.date + 'T12:00:00').toLocaleDateString('en-AU', { weekday: 'short' })
   );
 
-  const last14 = Array.from({ length: 14 }, (_: any, i: any) => {
+  const last14 = Array.from({ length: 14 }, (_, i: number) => {
     const d = new Date(); d.setDate(d.getDate() - (13 - i));
     return d.toISOString().split('T')[0];
   });
-  const qualityData = last14.map((date: any) => allMetrics.find((m: any) => m.date === date)?.sleep_quality || 0);
-  const sleepHoursData = last14.map((date: any) => allMetrics.find((m: any) => m.date === date)?.sleep_hours || 0);
-  const chart14Labels = last14.map((d: any, i: any) => i % 3 === 0 ? new Date(d + 'T12:00:00').toLocaleDateString('en-AU', { day: 'numeric', month: 'short' }) : '');
+  const qualityData = last14.map((date: string) => allMetrics.find((m: HealthMetrics) => m.date === date)?.sleep_quality || 0);
+  const sleepHoursData = last14.map((date: string) => allMetrics.find((m: HealthMetrics) => m.date === date)?.sleep_hours || 0);
+  const chart14Labels = last14.map((d: string, i: number) => i % 3 === 0 ? new Date(d + 'T12:00:00').toLocaleDateString('en-AU', { day: 'numeric', month: 'short' }) : '');
 
   // ── Sleep Score ──
   const sleepScore = useMemo(() => computeSleepScore(
-    allMetrics.filter((m: any) => m.sleep_hours || m.sleep_quality),
+    allMetrics.filter((m: HealthMetrics) => m.sleep_hours || m.sleep_quality),
     schedule
   ), [allMetrics, schedule]);
 
@@ -175,7 +175,7 @@ export function SleepTab({ metrics, allMetrics, onUpdateMetrics }: any) {
       const dow = d.getDay();
       const prefs = isWeekend(dow) ? schedule.weekend : schedule.weekday;
       const scheduledHrs = calcDurationHours(prefs.bedtime, prefs.wake);
-      const entry = allMetrics.find((m: any) => m.date === dateStr);
+      const entry = allMetrics.find((m: HealthMetrics) => m.date === dateStr);
       const actualHrs = entry?.sleep_hours || 0;
       result.push({
         date: dateStr,
@@ -299,7 +299,7 @@ export function SleepTab({ metrics, allMetrics, onUpdateMetrics }: any) {
       // Dispatch refresh event
       window.dispatchEvent(new CustomEvent('lifeos-refresh'));
       setSyncMsg(`✅ ${created} sleep blocks added to calendar`);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setSyncMsg(`❌ ${err.message || 'Sync failed'}`);
     }
     setSyncing(false);
@@ -319,7 +319,7 @@ export function SleepTab({ metrics, allMetrics, onUpdateMetrics }: any) {
 
   // Build actual bar series for last 7 nights
   const barSeries = last7Sleep.length > 0 ? [{
-    data: last7Sleep.map((m: any) => m.sleep_hours as number),
+    data: last7Sleep.map((m: HealthMetrics) => m.sleep_hours as number),
     color: '#818CF8',
     label: 'Hours',
   }] : [];

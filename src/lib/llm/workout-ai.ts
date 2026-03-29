@@ -7,7 +7,7 @@
  */
 
 import { callLLMJson } from '../llm-proxy';
-import { supabase } from '../supabase';
+import { supabase } from '../data-access';
 import { logger } from '../../utils/logger';
 
 // ── TYPES ──────────────────────────────────────────────────
@@ -76,10 +76,10 @@ async function getRecentWorkoutHistory(days: number = 7): Promise<RecentWorkoutS
 
   if (!logs) return [];
 
-  return logs.map((log: any) => {
+  return logs.map((log: { sets?: Array<{ completed: boolean; muscle_group?: string; exercise_name: string }> }) => {
     const sets = log.exercise_log_sets || [];
-    const muscleGroups = [...new Set(sets.filter((s: any) => s.completed && s.muscle_group).map((s: any) => s.muscle_group))] as string[];
-    const exercises = [...new Set(sets.filter((s: any) => s.completed).map((s: any) => s.exercise_name))] as string[];
+    const muscleGroups = [...new Set(sets.filter((s: { completed: boolean; muscle_group?: string }) => s.completed && s.muscle_group).map((s: { muscle_group?: string }) => s.muscle_group))] as string[];
+    const exercises = [...new Set(sets.filter((s: { completed: boolean }) => s.completed).map((s: { exercise_name: string }) => s.exercise_name))] as string[];
     return {
       date: log.date,
       muscle_groups: muscleGroups,

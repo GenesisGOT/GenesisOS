@@ -16,7 +16,7 @@ import {
   ArrowRight, Zap, Sun, Moon, CloudSun, ChevronRight, ChevronDown,
 } from 'lucide-react';
 import { useUserStore } from '../../stores/useUserStore';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { generateMorningBrief, type LLMMorningBrief } from '../../lib/llm/morning-brief';
 import { callLLMSimple } from '../../lib/llm-proxy';
 import { agentChat, agentHealthCheck } from '../../lib/zeroclaw-client';

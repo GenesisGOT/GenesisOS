@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { useUserStore } from '../stores/useUserStore';
 import { useHabitsStore } from '../stores/useHabitsStore';
 import type { Habit, HabitLog } from '../stores/useHabitsStore';

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Plus, MessageCircle, Globe, Users, CheckCircle2, TrendingUp, Award, Calendar } from 'lucide-react';
 import { CategoryIcon, GUILD_ICON_OPTIONS } from './CategoryIcon';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import {
   getGroups,
   getUserGroups,
@@ -57,7 +57,7 @@ function GroupChat({
   const [progressAmount, setProgressAmount] = useState('');
   const [progressNote, setProgressNote] = useState('');
   const [loggingProgress, setLoggingProgress] = useState(false);
-  const [members, setMembers] = useState<Array<{ user_id: string; profile: any; role: string }>>([]);
+  const [members, setMembers] = useState<Array<{ user_id: string; profile: Record<string, unknown>; role: string }>>([]);
 
   useEffect(() => {
     const load = async () => {
@@ -69,7 +69,7 @@ function GroupChat({
         getGuildMembers(group.id),
       ]);
       setMessages(msgs);
-      setLeaderboard(lb as any);
+      setLeaderboard(lb as unknown[]);
       setGuildProgress(progress);
       setMembers(mems);
       setLoading(false);
@@ -118,7 +118,7 @@ function GroupChat({
         getGuildLeaderboard(group.id),
         getGuildProgress(group.id),
       ]);
-      setLeaderboard(lb as any);
+      setLeaderboard(lb as unknown[]);
       setGuildProgress(progress);
     }
     setLoggingProgress(false);

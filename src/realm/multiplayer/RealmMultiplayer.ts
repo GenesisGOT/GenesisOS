@@ -5,7 +5,7 @@
  * and broadcast for zone chat. No database writes.
  */
 
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import {
   EMOTE_COMMANDS,

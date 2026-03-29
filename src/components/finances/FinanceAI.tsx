@@ -7,7 +7,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Sparkles, Send, X, Check, Edit2, Loader2, TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { useUserStore } from '../../stores/useUserStore';
 import { useFinanceStore } from '../../stores/useFinanceStore';
 import { genId, todayStr, fmtCurrency } from '../../utils/date';

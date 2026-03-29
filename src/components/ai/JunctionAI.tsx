@@ -13,7 +13,7 @@ import {
   Compass, Sparkles, ChevronDown, ChevronUp, RefreshCw, Loader2,
   Send, BookOpen, Zap,
 } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { useUserStore } from '../../stores/useUserStore';
 import { useSubscription } from '../../hooks/useSubscription';
 import { callLLMSimple } from '../../lib/llm-proxy';
@@ -139,7 +139,7 @@ async function loadJunctionSnapshot(userId: string): Promise<JunctionSnapshot> {
 
   // Find next figure
   const currentXP = uj.junction_xp || 0;
-  const nextFigure = allFigures.find((f: any) => f.xp_required > currentXP);
+  const nextFigure = allFigures.find((f: { xp_required: number }) => f.xp_required > currentXP);
   const nextFigureXP = nextFigure?.xp_required || currentXP;
   const progressPercent = nextFigureXP > 0 ? Math.min(Math.round((currentXP / nextFigureXP) * 100), 100) : 100;
 
@@ -148,7 +148,7 @@ async function loadJunctionSnapshot(userId: string): Promise<JunctionSnapshot> {
   );
 
   const recentPractices = practiceLogs.length > 0
-    ? `${practiceLogs.length} recent practice logs. Total XP earned recently: ${practiceLogs.reduce((s: number, p: any) => s + (p.xp_earned || 0), 0)}.`
+    ? `${practiceLogs.length} recent practice logs. Total XP earned recently: ${practiceLogs.reduce((s: number, p: { xp_earned?: number }) => s + (p.xp_earned || 0), 0)}.`
     : 'No practice logs yet.';
 
   return {

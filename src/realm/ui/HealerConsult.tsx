@@ -7,7 +7,7 @@ import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { HealthService } from '../../lib/services/health-service';
 import { createScheduleEvent } from '../../lib/schedule-events';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { useGamification } from '../../hooks/useGamification';
 import { useUserStore } from '../../stores/useUserStore';
 
@@ -213,7 +213,7 @@ export function HealerConsult({ greetingLines, onClose }: HealerConsultProps) {
       }
 
       await handleFarewell();
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(err?.message || 'The remedy faltered... Try again.');
       setStep('remedy');
     }

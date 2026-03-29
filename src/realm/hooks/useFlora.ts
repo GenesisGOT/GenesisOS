@@ -6,7 +6,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import type { FloraSpecies } from '../data/flora';
 import { logger } from '../../utils/logger';
 

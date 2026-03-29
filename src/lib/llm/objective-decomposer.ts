@@ -119,7 +119,7 @@ Rules:
 
 Return ONLY the JSON object, no explanation.`;
 
-    const raw = await callLLMJson<any>(prompt, { timeoutMs: 25000 });
+    const raw = await callLLMJson<Record<string, unknown>>(prompt, { timeoutMs: 25000 });
     return validateAndSanitize(raw, input);
   } catch (err) {
     logger.warn('[objective-decomposer] LLM failed, using fallback:', err);
@@ -129,7 +129,7 @@ Return ONLY the JSON object, no explanation.`;
 
 // ── Validation ──
 
-function validateAndSanitize(raw: any, originalInput: string): DecomposedHierarchy {
+function validateAndSanitize(raw: unknown, originalInput: string): DecomposedHierarchy {
   if (!raw || typeof raw !== 'object') {
     throw new Error('Invalid response: not an object');
   }
@@ -204,14 +204,14 @@ function validateAndSanitize(raw: any, originalInput: string): DecomposedHierarc
   return { objective, epics };
 }
 
-function sanitizeIcon(icon: any): string {
+function sanitizeIcon(icon: unknown): string {
   if (!icon || typeof icon !== 'string') return '🎯';
   // Take first emoji character (handles multi-codepoint emoji)
   const match = String(icon).match(/\p{Extended_Pictographic}/u);
   return match ? match[0] : '🎯';
 }
 
-function sanitizeDate(date: any): string | null {
+function sanitizeDate(date: unknown): string | null {
   if (!date || date === 'null') return null;
   const str = String(date).trim();
   if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;

@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { useUserStore } from '../stores/useUserStore';
 import { logger } from '../utils/logger';
 import {
@@ -156,7 +156,7 @@ export function TelegramConnect() {
     setSaving(false);
   };
 
-  const updatePref = (key: keyof TelegramPreferences, value: any) => {
+  const updatePref = (key: keyof TelegramPreferences, value: string | boolean | number) => {
     setPrefs(prev => ({ ...prev, [key]: value }));
   };
 

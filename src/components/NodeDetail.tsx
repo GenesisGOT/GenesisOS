@@ -194,7 +194,7 @@ export function NodeDetail({ nodeId, allGoals, allTasks, onClose, onNavigate, on
   const { updateTask: storeUpdateTask, createTask: storeCreateTask } = useScheduleStore.getState();
 
   const saveField = async (field: string, value: string | number | null) => {
-    await updateGoal(nodeId, { [field]: value } as any);
+    await updateGoal(nodeId, { [field]: value } as React.CSSProperties);
   };
 
   const saveTitle = async () => {
@@ -218,7 +218,7 @@ export function NodeDetail({ nodeId, allGoals, allTasks, onClose, onNavigate, on
   const toggleTask = async (taskId: string, currentStatus: string) => {
     const newStatus = currentStatus === 'done' ? 'todo' : 'done';
     await storeUpdateTask(taskId, {
-      status: newStatus as any,
+      status: newStatus as string,
       completed_at: newStatus === 'done' ? new Date().toISOString() : undefined,
     });
   };
@@ -244,7 +244,7 @@ export function NodeDetail({ nodeId, allGoals, allTasks, onClose, onNavigate, on
         icon: childIcon,
         color: childColor,
         sort_order: children.length,
-      } as any);
+      } as React.CSSProperties);
     }
     setNewChildTitle('');
     setShowAddChild(false);

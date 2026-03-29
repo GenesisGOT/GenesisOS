@@ -4,7 +4,7 @@
  */
 import { useState, useEffect } from 'react';
 import { X, Send, Bug, Lightbulb, Heart, HelpCircle, Loader2, Check } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { useUserStore } from '../stores/useUserStore';
 import './FeedbackButton.css';
 import { logger } from '../utils/logger';

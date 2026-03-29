@@ -13,7 +13,7 @@ import {
   type IntentResult, type IntentContext, type RateLimitInfo,
 } from '../lib/intent-engine';
 import { executeTool, detectToolIntent, type OrchestratorToolName } from '../lib/llm/orchestrator';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { streamText, type StreamController } from '../lib/streaming';
 import { genId } from '../utils/date';
 import { safeScrollIntoView } from '../utils/scroll';

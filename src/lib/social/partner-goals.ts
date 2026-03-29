@@ -1,6 +1,6 @@
 // LifeOS Social — Accountability Partner Goal Features
 
-import { supabase } from '../supabase';
+import { db as supabase } from '../data-access';
 import type { PartnerGoal, GoalComment, WeeklyProgress } from './types';
 import { logger } from '../../utils/logger';
 
@@ -68,7 +68,7 @@ export async function getGoalComments(goalId: string): Promise<GoalComment[]> {
 
   return comments.map(c => ({
     ...c,
-    user_profile: (profileMap.get(c.user_id) as any) || null,
+    user_profile: (profileMap.get(c.user_id) as Record<string, unknown> | undefined) || null,
   }));
 }
 

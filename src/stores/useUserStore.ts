@@ -6,7 +6,7 @@
  */
 
 import { create } from 'zustand';
-import { supabase } from '../lib/supabase';
+import { db as supabase } from '../lib/data-access';
 import { getLocalUserId, migrateLocalUserToSupabase, localGet, localInsert } from '../lib/local-db';
 import { triggerSync, setInitialSyncPromise } from '../lib/sync-engine';
 import type { User, Session } from '@supabase/supabase-js';

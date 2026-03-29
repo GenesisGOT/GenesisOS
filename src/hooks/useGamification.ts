@@ -1,6 +1,6 @@
 // LifeOS Gamification Hook — provides all gamification state + actions
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { useUserStore } from '../stores/useUserStore';
 import {
   awardXP as doAwardXP,
@@ -133,7 +133,7 @@ export function useGamification(): GamificationState & GamificationActions {
 
       const achData = Array.isArray(achievementsRes.data) ? achievementsRes.data : [];
       const recentData = Array.isArray(recentXPRes.data) ? recentXPRes.data : [];
-      const unlockedCount = achData.filter((a: any) => a.unlocked_at).length;
+      const unlockedCount = achData.filter((a: { unlocked_at?: string }) => a.unlocked_at).length;
 
       setState({
         level: info.level,
@@ -143,7 +143,7 @@ export function useGamification(): GamificationState & GamificationActions {
         title: info.title,
         stats: (xpData?.stats as UserStats) || DEFAULT_STATS,
         levelInfo: info,
-        achievements: achData.map((a: any) => ({
+        achievements: achData.map((a: { code: string; unlocked_at?: string; xp_reward: number }) => ({
           achievementId: a.achievement_id,
           unlockedAt: a.unlocked_at,
           progress: a.progress,
@@ -152,7 +152,7 @@ export function useGamification(): GamificationState & GamificationActions {
         dailyQuests: Array.isArray(quests.daily) ? quests.daily : [],
         weeklyQuests: Array.isArray(quests.weekly) ? quests.weekly : [],
         epicQuests: Array.isArray(quests.epic) ? quests.epic : [],
-        recentXP: recentData.map((e: any) => ({
+        recentXP: recentData.map((e: { action_type: string; xp_amount: number; created_at: string }) => ({
           action: e.action_type,
           amount: e.xp_amount,
           description: e.description,

@@ -69,7 +69,7 @@ export function DashboardLifePulse() {
   }, [data]);
 
   const save = useCallback(async (updates: Record<string, unknown>) => {
-    await upsertToday(updates as any);
+    await upsertToday(updates as Record<string, unknown>);
     if (!xpRef.current) {
       awardXP('health_log', { description: 'Life Pulse check-in' });
       xpRef.current = true;

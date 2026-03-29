@@ -2,7 +2,7 @@
 // Health Metrics Hook — daily metrics (mood, energy, water, sleep, weight)
 // ═══════════════════════════════════════════════════════════
 import { useEffect, useState, useCallback } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { useHealthStore } from '../stores/useHealthStore';
 import { logger } from '../utils/logger';
 import type { HealthMetrics } from './useHealthTypes';

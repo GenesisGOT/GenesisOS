@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useUserStore } from '../stores/useUserStore';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { Zap, WifiOff } from 'lucide-react';
 import './Login.css';
 import { getErrorMessage } from '../utils/error';

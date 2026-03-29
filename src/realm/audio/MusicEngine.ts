@@ -23,22 +23,22 @@ export class MusicEngine {
   private volume = 0.4;
 
   // Tone.js nodes
-  private droneSynth: any = null;
-  private melodySynth: any = null;
-  private rhythmSynth: any = null;
-  private ambientSynth: any = null;
+  private droneSynth: OscillatorNode | null = null;
+  private melodySynth: OscillatorNode | null = null;
+  private rhythmSynth: OscillatorNode | null = null;
+  private ambientSynth: OscillatorNode | null = null;
 
-  private droneGain: any = null;
-  private melodyGain: any = null;
-  private rhythmGain: any = null;
-  private ambientGain: any = null;
+  private droneGain: GainNode | null = null;
+  private melodyGain: GainNode | null = null;
+  private rhythmGain: GainNode | null = null;
+  private ambientGain: GainNode | null = null;
 
-  private melodyLoop: any = null;
-  private rhythmLoop: any = null;
-  private ambientLoop: any = null;
+  private melodyLoop: ReturnType<typeof setInterval> | null = null;
+  private rhythmLoop: ReturnType<typeof setInterval> | null = null;
+  private ambientLoop: ReturnType<typeof setInterval> | null = null;
 
-  private masterFilter: any = null;
-  private masterGain: any = null;
+  private masterFilter: BiquadFilterNode | null = null;
+  private masterGain: GainNode | null = null;
 
   /**
    * Lazily load Tone.js and set up all synth layers.

@@ -8,7 +8,7 @@
 import { useState } from 'react';
 import { Zap, Loader2, Check, X, Edit2, Sparkles } from 'lucide-react';
 import { generateTasksFromGoal, type GeneratedTask } from '../../lib/goal-task-engine';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { showToast } from '../Toast';
 import { getEffectiveUserId } from '../../lib/local-db';
 import { useScheduleStore } from '../../stores/useScheduleStore';

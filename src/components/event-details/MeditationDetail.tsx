@@ -5,7 +5,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Play, Pause, Square, Check, Brain } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { showToast } from '../Toast';
 import type { ScheduleEvent } from '../../types/database';
 

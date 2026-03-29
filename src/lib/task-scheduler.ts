@@ -160,8 +160,8 @@ export async function scheduleAllPendingTasks(
         .gte('start_time', `${todayStr}T00:00:00`);
 
       const slots = computeSmartSchedule(
-        smartTasks as any[],
-        (existingEvents || []) as any[],
+        smartTasks as Record<string, unknown>[],
+        (existingEvents || []) as Record<string, unknown>[],
       );
 
       for (const slot of slots) {

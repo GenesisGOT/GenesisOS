@@ -8,7 +8,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { CheckCircle2, Clock, Timer, X } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { useUserStore } from '../stores/useUserStore';
 import { showToast } from './Toast';
 import type { ScheduleEvent } from '../hooks/useCurrentEvent';

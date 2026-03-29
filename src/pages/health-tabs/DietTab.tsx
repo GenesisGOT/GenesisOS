@@ -2,7 +2,8 @@
 import { lazy, Suspense, useState, useEffect, useCallback } from 'react';
 import { Sparkles, Loader2, UtensilsCrossed } from 'lucide-react';
 import { DonutChart } from '../../components/charts';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
+import type { DietTabProps, Meal } from './types';
 
 const NutritionSystem = lazy(() => import('../../components/nutrition/NutritionSystem').then(m => ({ default: m.NutritionSystem })));
 const AIMealSuggestions = lazy(() => import('../../components/nutrition/AIMealSuggestions').then(m => ({ default: m.AIMealSuggestions })));
@@ -14,10 +15,10 @@ interface MacroData {
   isEstimated: boolean;
 }
 
-export function DietTab({ meals, allMetrics: _allMetrics }: any) {
+export function DietTab({ meals, allMetrics: _allMetrics }: DietTabProps) {
   const today = new Date().toISOString().split('T')[0];
-  const todayMeals = (meals || []).filter((m: any) => m.date === today);
-  const totalCals = todayMeals.reduce((s: number, m: any) => s + (m.calories || 0), 0);
+  const todayMeals = (meals || []).filter((m: Meal) => m.date === today);
+  const totalCals = todayMeals.reduce((s: number, m: Meal) => s + (m.calories || 0), 0);
 
   const [macros, setMacros] = useState<MacroData>({ protein: 0, carbs: 0, fat: 0, isEstimated: true });
   const [showQuickAI, setShowQuickAI] = useState(false);
@@ -35,14 +36,14 @@ export function DietTab({ meals, allMetrics: _allMetrics }: any) {
       .eq('date', today)
       .eq('is_deleted', false);
 
-    const logProtein = (nlogs || []).reduce((s: number, l: any) => s + (l.protein_g || 0), 0);
-    const logCarbs = (nlogs || []).reduce((s: number, l: any) => s + (l.carbs_g || 0), 0);
-    const logFat = (nlogs || []).reduce((s: number, l: any) => s + (l.fat_g || 0), 0);
+    const logProtein = (nlogs || []).reduce((s: number, l: { protein_g?: number }) => s + (l.protein_g || 0), 0);
+    const logCarbs = (nlogs || []).reduce((s: number, l: { carbs_g?: number }) => s + (l.carbs_g || 0), 0);
+    const logFat = (nlogs || []).reduce((s: number, l: { fat_g?: number }) => s + (l.fat_g || 0), 0);
 
     // 2) Also check meals table for macros (newly added columns)
-    const mealProtein = todayMeals.reduce((s: number, m: any) => s + (m.protein_g || 0), 0);
-    const mealCarbs = todayMeals.reduce((s: number, m: any) => s + (m.carbs_g || 0), 0);
-    const mealFat = todayMeals.reduce((s: number, m: any) => s + (m.fat_g || 0), 0);
+    const mealProtein = todayMeals.reduce((s: number, m: Meal) => s + (m.protein_g || 0), 0);
+    const mealCarbs = todayMeals.reduce((s: number, m: Meal) => s + (m.carbs_g || 0), 0);
+    const mealFat = todayMeals.reduce((s: number, m: Meal) => s + (m.fat_g || 0), 0);
 
     const totalProtein = logProtein + mealProtein;
     const totalCarbs = logCarbs + mealCarbs;
@@ -92,7 +93,7 @@ export function DietTab({ meals, allMetrics: _allMetrics }: any) {
             <div className="hv2-macro-inner">
               <DonutChart segments={macroSegments} size={120} strokeWidth={18} centerLabel="kcal" centerValue={`${totalCals}`} />
               <div className="hv2-macro-legend">
-                {macroSegments.map((m: any) => (
+                {macroSegments.map((m: { label: string; value: number; color: string; pct: number }) => (
                   <div key={m.label} className="hv2-macro-item">
                     <span className="hv2-legend-dot" style={{ background: m.color }} />
                     <span className="hv2-macro-label">{m.label}</span>
@@ -140,7 +141,7 @@ export function DietTab({ meals, allMetrics: _allMetrics }: any) {
           <div className="hv2-section-label">TODAY'S MEALS</div>
           <div className="glass-card hv2-meal-timeline">
             {mealTimelineTypes.map(type => {
-              const typeMeals = todayMeals.filter((m: any) => m.meal_type === type);
+              const typeMeals = todayMeals.filter((m: Meal) => m.meal_type === type);
               if (typeMeals.length === 0) return null;
               return (
                 <div key={type} className="hv2-meal-group">
@@ -148,7 +149,7 @@ export function DietTab({ meals, allMetrics: _allMetrics }: any) {
                     <span className="hv2-meal-type-dot" style={{ background: mealTypeColors[type] }} />
                     {type.charAt(0).toUpperCase() + type.slice(1)}
                   </div>
-                  {typeMeals.map((meal: any) => (
+                  {typeMeals.map((meal: Meal) => (
                     <div key={meal.id} className="hv2-meal-item">
                       <span className="hv2-meal-desc">{meal.description}</span>
                       {meal.calories && <span className="hv2-meal-cals" style={{ color: mealTypeColors[type] }}>{meal.calories} kcal</span>}

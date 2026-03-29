@@ -366,7 +366,7 @@ export function Dashboard() {
               <FeatureErrorBoundary feature="Stats" compact>
                 <DashboardStatsRow dayTasks={dayTasks} dayDoneTasks={dayDoneTasks} dayActiveTasks={dayActiveTasks}
                   dayHabitsDone={dayHabitsDone} totalHabits={habits.length} dayEvents={dayEvents} dayBills={dayBills} net={net}
-                  onScrollToTasks={() => scrollTo(tasksRef)} onScrollToHabits={() => scrollTo(habitsRef)} onSetTaskFilter={f => setTaskFilter(f as any)} />
+                  onScrollToTasks={() => scrollTo(tasksRef)} onScrollToHabits={() => scrollTo(habitsRef)} onSetTaskFilter={f => setTaskFilter(f as string)} />
               </FeatureErrorBoundary>
             </div>
             <div className="dash-secondary-col">

@@ -54,7 +54,7 @@ export type BusEventMap = {
 
 export type BusEventKey = keyof BusEventMap
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AnyListener = (data: any) => void
+type AnyListener = (data: unknown) => void
 
 // ── SystemBus Class ────────────────────────────────────────────────────────
 class SystemBus {

@@ -2,7 +2,7 @@
 // Meals & Grocery Hooks — meal tracking, grocery lists
 // ═══════════════════════════════════════════════════════════
 import { useEffect, useState, useCallback } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { logger } from '../utils/logger';
 import type { Meal, GroceryList, GroceryItem } from './useHealthTypes';
 

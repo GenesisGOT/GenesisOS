@@ -31,7 +31,7 @@ import { useHabitsStore } from '../../stores/useHabitsStore';
 import { useGoalsStore } from '../../stores/useGoalsStore';
 import { useScheduleStore } from '../../stores/useScheduleStore';
 import { useCharacterAppearanceStore } from '../../stores/useCharacterAppearanceStore';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { useUserStore } from '../../stores/useUserStore';
 import { awardXP } from '../../lib/gamification';
 import { getClassInfo } from '../../rpg/data/classes';

@@ -5,7 +5,7 @@
  */
 import { create } from 'zustand';
 import { logger } from '../utils/logger';
-import { supabase } from '../lib/supabase';
+import { db as supabase } from '../lib/data-access';
 import {
   agentChat,
   agentChatStream,

@@ -8,7 +8,7 @@ import { RealmEventBus } from '../../realm/bridge/RealmEventBus';
 
 interface PendingNotification {
   type: 'level_up' | 'achievement' | 'quest_complete' | 'xp_gain';
-  data: any;
+  data: Record<string, unknown>;
   id: string;
 }
 
@@ -29,7 +29,7 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
   const gamification = useGamification();
   const [notifications, setNotifications] = useState<PendingNotification[]>([]);
 
-  const addNotification = useCallback((type: PendingNotification['type'], data: any) => {
+  const addNotification = useCallback((type: PendingNotification['type'], data: Record<string, unknown>) => {
     const id = `notif-${++notifCounter}-${Date.now()}`;
     setNotifications(prev => [...prev, { type, data, id }]);
     // Auto-dismiss after 10s

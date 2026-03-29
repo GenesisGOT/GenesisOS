@@ -5,7 +5,7 @@
  * (exercise, meals, finances, journal, habits, etc.) flow through here.
  */
 
-import { supabase } from './supabase';
+import { supabase } from './data-access';
 import { logger } from '../utils/logger';
 import type { LucideIcon } from 'lucide-react';
 import {

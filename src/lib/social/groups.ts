@@ -1,6 +1,6 @@
 // LifeOS Social — Goal-based Group Chats
 
-import { supabase } from '../supabase';
+import { supabase } from '../data-access';
 import type { GoalGroup, GoalGroupMember, Message } from './types';
 import { logger } from '../../utils/logger';
 

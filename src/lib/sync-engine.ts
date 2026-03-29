@@ -14,7 +14,7 @@
  * - Manually (user clicks "Sync Now" button)
  */
 
-import { supabase } from './supabase';
+import { db as supabase } from './data-access';
 import { useUserStore } from '../stores/useUserStore';
 import { logger } from '../utils/logger';
 import {
@@ -241,7 +241,7 @@ async function sanitizeForSupabase(table: string, data: Record<string, unknown>)
  * Get the primary key value from a record using the table's keyPath.
  * Most tables use 'id', but user_xp uses 'user_id', etc.
  */
-function getRecordKey(table: TableName, record: any): string {
+function getRecordKey(table: TableName, record: Record<string, unknown>): string {
   const keyPath = getKeyPath(table);
   return record[keyPath];
 }
@@ -456,7 +456,7 @@ async function pushToSupabase(userId: string): Promise<number> {
   for (const retry of retries) {
     try {
       const unsynced = await localGetUnsynced(retry.table);
-      const record = unsynced.find((r: any) => getRecordKey(retry.table, r) === retry.recordId);
+      const record = unsynced.find((r: Record<string, unknown>) => getRecordKey(retry.table, r) === retry.recordId);
 
       if (!record) {
         // Record no longer exists or already synced, remove from queue
@@ -497,7 +497,7 @@ async function pushToSupabase(userId: string): Promise<number> {
           addToRetryQueue(retry.table, retry.recordId, 'push', error.message);
         }
       }
-    } catch (e: any) {
+    } catch (e: unknown) {
       addToRetryQueue(retry.table, retry.recordId, 'push', e.message || 'Unknown error');
     }
   }
@@ -512,8 +512,8 @@ async function pushToSupabase(userId: string): Promise<number> {
       const pkField = getKeyPath(table);
 
       // Separate into upserts vs soft deletes
-      const toUpsert: any[] = [];
-      const toDelete: any[] = [];
+      const toUpsert: Record<string, unknown>[] = [];
+      const toDelete: Record<string, unknown>[] = [];
       for (const record of unsynced) {
         const { synced, ...data } = record;
         if (record.deleted_at || record.is_deleted) {
@@ -583,7 +583,7 @@ async function pushToSupabase(userId: string): Promise<number> {
       }
 
       logger.log(`[sync] Pushed ${unsynced.length} records from ${table}`);
-    } catch (e: any) {
+    } catch (e: unknown) {
       logger.error(`[sync] Error pushing ${table}:`, e);
       // Table-level errors don't add to retry queue, they'll be retried on next sync
     }
@@ -669,7 +669,7 @@ async function pullFromSupabase(userId: string): Promise<number> {
       activeTables.map(async (table) => {
         try {
           return await pullTable(userId, table);
-        } catch (e: any) {
+        } catch (e: unknown) {
           logger.error(`[sync] Error pulling ${table}:`, e);
           addToRetryQueue(table, `__table_pull__`, 'pull', e.message || 'Unknown error');
           return 0;
@@ -793,7 +793,7 @@ async function _doSync(userId?: string): Promise<SyncStatus> {
 
     // Trigger UI refresh
     window.dispatchEvent(new Event('lifeos-refresh'));
-  } catch (e: any) {
+  } catch (e: unknown) {
     error = e.message || 'Unknown sync error';
     logger.error('[sync] Sync failed:', e);
   } finally {
@@ -922,7 +922,7 @@ export async function waitForInitialSync(): Promise<void> {
 
 // Expose to window for debugging
 if (typeof window !== 'undefined') {
-  (window as any).syncEngine = {
+  (window as unknown as Record<string, unknown>).syncEngine = {
     syncNow: syncNowImmediate,
     getStatus: getSyncStatus,
     startAuto: startAutoSync,

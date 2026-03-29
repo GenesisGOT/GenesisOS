@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { logger } from '../utils/logger';
+import type { ScheduleEvent, Task, Goal, Habit, Client } from '../types/database';
 
 export function useQuery<T>(table: string, options?: {
   column?: string;
@@ -44,29 +45,29 @@ export function useQuery<T>(table: string, options?: {
 }
 
 export function useTodayEvents() {
-  return useQuery<any>('schedule_events', {
+  return useQuery<ScheduleEvent>('schedule_events', {
     orderBy: 'start_time',
     ascending: true,
   });
 }
 
 export function useTasks() {
-  return useQuery<any>('tasks', { orderBy: 'created_at', ascending: false });
+  return useQuery<Task>('tasks', { orderBy: 'created_at', ascending: false });
 }
 
 export function useGoals() {
-  return useQuery<any>('goals', { orderBy: 'sort_order', ascending: true });
+  return useQuery<Goal>('goals', { orderBy: 'sort_order', ascending: true });
 }
 
 export function useHabits() {
-  return useQuery<any>('habits', {
+  return useQuery<Habit>('habits', {
     filter: { is_active: true },
     orderBy: 'created_at',
   });
 }
 
 export function useClients() {
-  return useQuery<any>('clients', {
+  return useQuery<Client>('clients', {
     filter: { is_active: true },
     orderBy: 'name',
   });

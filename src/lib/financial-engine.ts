@@ -12,7 +12,7 @@
  * 5. Onboarding data → financial tables population
  */
 
-import { supabase } from './supabase';
+import { supabase } from './data-access';
 
 // ═══════════════════════════════════════════════════════════════
 // TYPES
@@ -103,7 +103,7 @@ export async function getFinancialSnapshot(userId: string): Promise<FinancialSna
 
   // ── Income Calculation ──
   // For recurring income with recurrence_rule, calculate the monthly equivalent
-  const monthlyIncome = income.reduce((s: number, i: any) => {
+  const monthlyIncome = income.reduce((s: number, i: { amount?: number; is_recurring?: boolean }) => {
     if (i.is_recurring && i.recurrence_rule) {
       return s + normalizeToMonthly(i.amount || 0, i.recurrence_rule);
     }
@@ -114,7 +114,7 @@ export async function getFinancialSnapshot(userId: string): Promise<FinancialSna
   const incomeStreams: IncomeStream[] = [];
   
   // From recurring_transactions (positive amounts = income)
-  for (const rt of recurring.filter((r: any) => r.amount > 0)) {
+  for (const rt of recurring.filter((r: { amount: number }) => r.amount > 0)) {
     incomeStreams.push({
       name: rt.description,
       monthlyAmount: normalizeToMonthly(rt.amount, rt.frequency),
@@ -127,8 +127,8 @@ export async function getFinancialSnapshot(userId: string): Promise<FinancialSna
   // From businesses (if they have revenue this month)
   for (const biz of businesses) {
     const bizIncomeFromTable = income
-      .filter((i: any) => i.business_id === biz.id)
-      .reduce((s: number, i: any) => {
+      .filter((i: { business_id?: string }) => i.business_id === biz.id)
+      .reduce((s: number, i: { amount?: number; is_recurring?: boolean }) => {
         if (i.is_recurring && i.recurrence_rule) {
           return s + normalizeToMonthly(i.amount || 0, i.recurrence_rule);
         }
@@ -169,24 +169,24 @@ export async function getFinancialSnapshot(userId: string): Promise<FinancialSna
       : 0;
 
   // ── Bills ──
-  const unpaidBills = bills.filter((b: any) => b.status !== 'paid');
+  const unpaidBills = bills.filter((b: { status: string }) => b.status !== 'paid');
   const monthlyBills = unpaidBills
-    .filter((b: any) => {
+    .filter((b: { due_date?: string }) => {
       // Bills due this month
       const month = b.due_date?.substring(0, 7);
       return month === now.toISOString().substring(0, 7);
     })
-    .reduce((s: number, b: any) => s + (b.amount || 0), 0);
+    .reduce((s: number, b: { amount: number }) => s + (b.amount || 0), 0);
 
   // ── Subscriptions (recurring negative amounts) ──
   const monthlySubscriptions = recurring
-    .filter((r: any) => r.amount < 0 && (r.category || '').toLowerCase().includes('sub'))
-    .reduce((s: number, r: any) => s + normalizeToMonthly(Math.abs(r.amount), r.frequency), 0);
+    .filter((r: { amount: number; category?: string }) => r.amount < 0 && (r.category || '').toLowerCase().includes('sub'))
+    .reduce((s: number, r: { amount: number; frequency: string }) => s + normalizeToMonthly(Math.abs(r.amount), r.frequency), 0);
 
   // ── Recurring obligations ──
   const monthlyRecurring = recurring
-    .filter((r: any) => r.amount < 0)
-    .reduce((s: number, r: any) => s + normalizeToMonthly(Math.abs(r.amount), r.frequency), 0);
+    .filter((r: { amount: number }) => r.amount < 0)
+    .reduce((s: number, r: { amount: number; frequency: string }) => s + normalizeToMonthly(Math.abs(r.amount), r.frequency), 0);
 
   // ── Cost of Living ──
   // Bills + all recurring negatives + essential expense categories
@@ -194,7 +194,7 @@ export async function getFinancialSnapshot(userId: string): Promise<FinancialSna
   
   // From onboarding data if no actual bills recorded yet
   const onboardingExpenses = finProfile.fixed_expenses || [];
-  const onboardingCostOfLiving = onboardingExpenses.reduce((s: number, e: any) => {
+  const onboardingCostOfLiving = onboardingExpenses.reduce((s: number, e: { name?: string; amount?: string; frequency?: string }) => {
     const amt = parseFloat((e.amount || '0').toString().replace(/[^0-9.]/g, ''));
     return s + normalizeToMonthly(isNaN(amt) ? 0 : amt, e.frequency || 'monthly');
   }, 0);
@@ -202,13 +202,13 @@ export async function getFinancialSnapshot(userId: string): Promise<FinancialSna
   const effectiveCostOfLiving = costOfLiving > 0 ? costOfLiving : onboardingCostOfLiving;
 
   // ── Variable Expenses ──
-  const monthlyExpenses = expenses.reduce((s: number, e: any) => s + (e.amount || 0), 0);
+  const monthlyExpenses = expenses.reduce((s: number, e: { amount: number }) => s + (e.amount || 0), 0);
   const dailyBurnRate = dayOfMonth > 0 ? (monthlyExpenses + effectiveCostOfLiving) / Math.max(dayOfMonth, 1) : 0;
 
   // ── Goal Budgets ──
   const goalBudgets = goals
-    .filter((g: any) => g.budget_allocated && g.budget_allocated > 0)
-    .reduce((s: number, g: any) => s + (g.budget_allocated || 0), 0);
+    .filter((g: { budget_allocated?: number }) => g.budget_allocated && g.budget_allocated > 0)
+    .reduce((s: number, g: { budget_allocated?: number }) => s + (g.budget_allocated || 0), 0);
   
   // ── Disposable Income ──
   const totalMonthlyIncome = monthlyIncome > 0 
@@ -227,8 +227,8 @@ export async function getFinancialSnapshot(userId: string): Promise<FinancialSna
     ? parseFloat((finProfile.debt_total || '0').toString().replace(/[^0-9.]/g, ''))
     : 0;
   const monthlyDebtPayments = recurring
-    .filter((r: any) => r.amount < 0 && (r.category || '').toLowerCase().includes('debt'))
-    .reduce((s: number, r: any) => s + normalizeToMonthly(Math.abs(r.amount), r.frequency), 0);
+    .filter((r: { amount: number; category?: string }) => r.amount < 0 && (r.category || '').toLowerCase().includes('debt'))
+    .reduce((s: number, r: { amount: number; frequency: string }) => s + normalizeToMonthly(Math.abs(r.amount), r.frequency), 0);
 
   // ── Projections ──
   const projectedExpenses = dailyBurnRate * daysInMonth;
@@ -256,7 +256,7 @@ export async function getFinancialSnapshot(userId: string): Promise<FinancialSna
   else score -= 10;
   
   // Bills paid factor (+/- 10)
-  const overdueBills = unpaidBills.filter((b: any) => b.due_date && b.due_date < now.toISOString().split('T')[0]);
+  const overdueBills = unpaidBills.filter((b: { due_date?: string; amount: number }) => b.due_date && b.due_date < now.toISOString().split('T')[0]);
   if (overdueBills.length === 0) score += 10;
   else score -= overdueBills.length * 5;
   
@@ -272,7 +272,7 @@ export async function getFinancialSnapshot(userId: string): Promise<FinancialSna
   if (overdueBills.length > 0) {
     alerts.push({
       type: 'danger', icon: '⚠️',
-      message: `${overdueBills.length} overdue bill${overdueBills.length > 1 ? 's' : ''} totaling $${overdueBills.reduce((s: number, b: any) => s + b.amount, 0).toFixed(0)}`,
+      message: `${overdueBills.length} overdue bill${overdueBills.length > 1 ? 's' : ''} totaling $${overdueBills.reduce((s: number, b: { amount: number }) => s + b.amount, 0).toFixed(0)}`,
       action: 'Review bills',
     });
   }

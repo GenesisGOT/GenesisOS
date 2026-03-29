@@ -22,7 +22,7 @@ let _dbPromise: Promise<IDBDatabase> | null = null;
 
 interface CacheEntry {
   key: string;
-  data: any;
+  data: unknown;
   cachedAt: number;
 }
 
@@ -63,7 +63,7 @@ function openDB(): Promise<IDBDatabase> {
 /**
  * Save data to the offline cache with a timestamp.
  */
-export async function cacheData(key: string, data: any): Promise<void> {
+export async function cacheData(key: string, data: unknown): Promise<void> {
   try {
     const db = await openDB();
     const tx = db.transaction(STORE_NAME, 'readwrite');

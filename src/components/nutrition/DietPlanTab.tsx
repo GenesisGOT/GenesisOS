@@ -118,7 +118,7 @@ export function DietPlanTab({ plans, activePlan, activeMeals: _activeMeals, onAc
     <div className="diet-plan-tab fade-in">
       {/* Active Plan Summary */}
       {activePlan && (
-        <div className="active-plan-card glass-card" style={{ '--plan-color': DIET_COLORS[activePlan.type] || '#A855F7' } as any}>
+        <div className="active-plan-card glass-card" style={{ '--plan-color': DIET_COLORS[activePlan.type] || '#A855F7' } as React.CSSProperties}>
           <div className="apc-header">
             <span className="apc-icon">{activePlan.icon}</span>
             <div className="apc-info">
@@ -178,7 +178,7 @@ export function DietPlanTab({ plans, activePlan, activeMeals: _activeMeals, onAc
               <div
                 key={plan.id}
                 className={`diet-accordion-item ${isActive ? 'is-active-plan' : ''} ${isExpanded ? 'is-expanded' : ''}`}
-                style={{ '--plan-color': color } as any}
+                style={{ '--plan-color': color } as React.CSSProperties}
               >
                 {/* Header row — always visible */}
                 <button

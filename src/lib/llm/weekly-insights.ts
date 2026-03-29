@@ -7,7 +7,7 @@
  * Pattern follows morning-brief.ts and reschedule.ts
  */
 
-import { supabase } from '../supabase';
+import { supabase } from '../data-access';
 import { callLLMSimple } from '../llm-proxy';
 import { localDateStr } from '../../utils/date';
 import { logger } from '../../utils/logger';

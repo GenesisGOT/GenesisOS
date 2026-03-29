@@ -38,7 +38,7 @@ import {
   type WeeklyInsightsData,
 } from '../../lib/llm/weekly-insights';
 import { canAccess } from '../../lib/feature-gates';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { logger } from '../../utils/logger';
 
 // ── Mini Bar Chart ──
@@ -201,7 +201,7 @@ export function WeeklyInsightsCard({ weekStart, weekEnd }: WeeklyInsightsCardPro
       // Award XP on first view
       const awarded = await awardWeeklyInsightsXP(user.id, weekStart);
       if (awarded) setXpAwarded(true);
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('[WeeklyInsightsCard] Error:', err);
       setError(err?.message || 'Failed to generate insights');
     } finally {

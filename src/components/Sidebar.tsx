@@ -30,7 +30,7 @@ import './Sidebar.css';
 /** Map icon name strings from the feature registry to Lucide components. */
 const ICON_MAP: Record<string, LucideIcon> = {
   LayoutDashboard, Calendar, Target, Flame, Wallet, Heart,
-  BookOpen, Users, Swords, Settings, BarChart3,
+  BookOpen, Users, Swords, Settings, BarChart3, GraduationCap,
 };
 
 const NAV_ITEMS = getNavFeatures('sidebar').map(f => ({
@@ -129,7 +129,7 @@ export const Sidebar = React.memo(function Sidebar({ expanded = true, onToggle, 
               className={`sb-link ${active ? 'active' : ''}`}
               title={item.label}
             >
-              <div className="sb-icon-wrap" style={{ '--link-color': item.color } as any}>
+              <div className="sb-icon-wrap" style={{ '--link-color': item.color } as React.CSSProperties}>
                 <Icon size={18} />
               </div>
               <span className="sb-label">{item.label}</span>
@@ -166,7 +166,7 @@ export const Sidebar = React.memo(function Sidebar({ expanded = true, onToggle, 
                     className={`sb-link ${active ? 'active' : ''}`}
                     title={page.label}
                   >
-                    <div className="sb-icon-wrap" style={{ '--link-color': '#00D4FF' } as any}>
+                    <div className="sb-icon-wrap" style={{ '--link-color': '#00D4FF' } as React.CSSProperties}>
                       <span style={{ fontSize: 16, lineHeight: 1 }}>{page.icon}</span>
                     </div>
                     <span className="sb-label">{page.label}</span>
@@ -180,7 +180,7 @@ export const Sidebar = React.memo(function Sidebar({ expanded = true, onToggle, 
       {/* Footer */}
       <div className="sb-footer">
         <NavLink to="/settings" className="sb-link sb-settings-link" title="Settings">
-          <div className="sb-icon-wrap" style={{ '--link-color': '#64748B' } as any}>
+          <div className="sb-icon-wrap" style={{ '--link-color': '#64748B' } as React.CSSProperties}>
             <Settings size={18} />
           </div>
           <span className="sb-label">Settings</span>
@@ -190,7 +190,7 @@ export const Sidebar = React.memo(function Sidebar({ expanded = true, onToggle, 
           onClick={() => setTutorialListOpen(true)}
           title={`Tutorials (${tutorialProgress.done}/${tutorialProgress.total})`}
         >
-          <div className="sb-icon-wrap" style={{ '--link-color': '#D4AF37' } as any}>
+          <div className="sb-icon-wrap" style={{ '--link-color': '#D4AF37' } as React.CSSProperties}>
             <GraduationCap size={18} />
           </div>
           <span className="sb-label">Tutorials</span>
@@ -216,7 +216,7 @@ export const Sidebar = React.memo(function Sidebar({ expanded = true, onToggle, 
           )}
         </button>
         {(() => {
-          const prefs = (profile?.preferences || {}) as Record<string, any>;
+          const prefs = (profile?.preferences || {}) as Record<string, unknown>;
           const setupPercent = getOverallPercent(prefs);
           return (
             <button
@@ -224,7 +224,7 @@ export const Sidebar = React.memo(function Sidebar({ expanded = true, onToggle, 
               onClick={() => setSetupListOpen(true)}
               title={`Life Setup (${setupPercent}%)`}
             >
-              <div className="sb-icon-wrap" style={{ '--link-color': '#00D4FF' } as any}>
+              <div className="sb-icon-wrap" style={{ '--link-color': '#00D4FF' } as React.CSSProperties}>
                 <Sparkles size={18} />
               </div>
               <span className="sb-label">Life Setup</span>
@@ -274,7 +274,7 @@ export const Sidebar = React.memo(function Sidebar({ expanded = true, onToggle, 
           aria-label="Send feedback"
           title="Send feedback"
         >
-          <div className="sb-icon-wrap" style={{ '--link-color': '#8BA4BE' } as any}>
+          <div className="sb-icon-wrap" style={{ '--link-color': '#8BA4BE' } as React.CSSProperties}>
             <MessageSquarePlus size={18} />
           </div>
           <span className="sb-label">Feedback</span>

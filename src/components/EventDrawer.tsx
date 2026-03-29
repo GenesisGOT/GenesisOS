@@ -12,7 +12,7 @@ import {
   Flame, Plus,
   Eye, TreePine, Calendar, Shield,
 } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { useCurrentEvent, type ScheduleEvent } from '../hooks/useCurrentEvent';
 import { useSmartSuggestions } from '../hooks/useSmartSuggestions';
 import { useGamificationContext } from '../lib/gamification/context';

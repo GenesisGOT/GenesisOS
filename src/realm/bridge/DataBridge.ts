@@ -187,7 +187,7 @@ export function deriveWorldState(
   };
 
   // Merge: persisted unlocks take priority over computed
-  const persistedUnlocks = (rpgCharacter as any)?._persistedZoneUnlocks as Record<string, boolean> | undefined;
+  const persistedUnlocks = (rpgCharacter as Record<string, unknown> | undefined)?._persistedZoneUnlocks as Record<string, boolean> | undefined;
   const zoneUnlocks: Record<string, boolean> = {
     ...computedUnlocks,
     ...(persistedUnlocks || {}),
@@ -317,7 +317,7 @@ export function deriveWorldState(
       worldX: (3 + i * 2) * ts + ts / 2, // Spread near forge area (left side)
       worldY: 17 * ts + ts / 2,
       label: g.title?.slice(0, 20) || 'Goal',
-      color: (g as any).color || '#4A90D9',
+      color: (g as { color?: string }).color || '#4A90D9',
       alpha: 1,
       progress,
     };
@@ -455,8 +455,8 @@ export function deriveDialogueContext(
   return {
     moodScore: health?.mood_score ?? 3,
     energyScore: health?.energy_level ?? 3,
-    sleepHours: (health as any)?.sleep_hours ?? null,
-    exerciseMinutes: (health as any)?.exercise_minutes ?? null,
+    sleepHours: (health as { sleep_hours?: number } | undefined)?.sleep_hours ?? null,
+    exerciseMinutes: (health as { exercise_minutes?: number } | undefined)?.exercise_minutes ?? null,
     activeGoals,
     completedGoals,
     habits: habitList,

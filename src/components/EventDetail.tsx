@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Calendar, Clock, MapPin, Trash2, Save, Loader2, Edit3, Play, ExternalLink } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { showToast } from '../components/Toast';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { useEventOverlay } from './EventOverlay';

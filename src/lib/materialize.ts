@@ -14,7 +14,7 @@
  * - Workout sessions remain as schedule_events (linked to templates).
  */
 
-import { supabase } from './supabase';
+import { supabase } from './data-access';
 import { logger } from '../utils/logger';
 
 // ═══════════════════════════════════════════════════════════════
@@ -95,7 +95,7 @@ async function createWeeklyTasks(
   src: Record<string, string>, result: MaterializeResult
 ): Promise<void> {
   const today = new Date();
-  const rows: any[] = [];
+  const rows: Record<string, unknown>[] = [];
   for (let week = 0; week < WEEKS; week++) {
     const date = getNextDayOfWeek(today, dayOfWeek, week);
     if (date <= today) continue;
@@ -742,7 +742,7 @@ export async function materializeHealth(
         preferred_time: '06:00', is_active: true,
       }).select('id').single();
       if (!tmpl) continue;
-      const eventRows: any[] = [];
+      const eventRows: Record<string, unknown>[] = [];
       for (let week = 0; week < WEEKS; week++) {
         for (const dow of a.days) {
           const d = getNextDayOfWeek(today, dow, week);
@@ -979,7 +979,7 @@ export async function materializeFinance(
     if (data.fixedExpenses?.length) {
       const { data: ex, error: chk } = await supabase.from('recurring_transactions').select('description').eq('user_id', userId);
       if (!chk && ex !== null) {
-        const names = new Set(ex.map((r: any) => r.description?.toLowerCase()));
+        const names = new Set(ex.map((r: { description?: string }) => r.description?.toLowerCase()));
         for (const e of data.fixedExpenses) {
           if (names.has(e.name?.toLowerCase())) continue;
           const amt = parseFloat((e.amount || '').replace(/[^0-9.]/g, ''));
@@ -1126,17 +1126,17 @@ export function parseAIOutput(rawOutput: string): FoundationData {
 /**
  * Normalize whatever object shape the AI returned into FoundationData
  */
-function normalizeFoundationData(obj: any): FoundationData {
+function normalizeFoundationData(obj: Record<string, unknown>): FoundationData {
   return {
     name: obj.name || obj.user_name || obj.display_name || undefined,
     coreValues: extractArray(obj.coreValues || obj.core_values || obj.values),
     strengths: extractArray(obj.strengths || obj.skills),
     purpose: obj.purpose || obj.life_purpose || obj.vision || undefined,
     focusAreas: extractArray(obj.focusAreas || obj.focus_areas || obj.areas || obj.domains),
-    goals: extractArray(obj.goals?.map?.((g: any) => typeof g === 'string' ? g : g.title) || obj.goal_titles),
+    goals: extractArray(obj.goals?.map?.((g: unknown) => typeof g === 'string' ? g : g.title) || obj.goal_titles),
     goalDetails: (obj.goalDetails || obj.goal_details || obj.goals || [])
-      .filter((g: any) => g && typeof g === 'object' && g.title)
-      .map((g: any) => ({
+      .filter((g: unknown) => g && typeof g === 'object' && g !== null && 'title' in g)
+      .map((g: Record<string, unknown>) => ({
         title: g.title,
         type: g.type || g.timeframe || 'medium',
         description: g.description || g.desc || '',
@@ -1146,15 +1146,15 @@ function normalizeFoundationData(obj: any): FoundationData {
       })),
     goodHabits: extractArray(obj.goodHabits || obj.good_habits || obj.habits || obj.existing_habits),
     morningRoutine: (obj.morningRoutine || obj.morning_routine || [])
-      .filter((r: any) => r && (typeof r === 'string' || r.activity))
-      .map((r: any) => typeof r === 'string' ? { activity: r } : r),
+      .filter((r: unknown) => r && (typeof r === 'string' || (typeof r === 'object' && r !== null && 'activity' in r)))
+      .map((r: unknown) => typeof r === 'string' ? { activity: r } : r),
     eveningRoutine: (obj.eveningRoutine || obj.evening_routine || [])
-      .filter((r: any) => r && (typeof r === 'string' || r.activity))
-      .map((r: any) => typeof r === 'string' ? { activity: r } : r),
+      .filter((r: unknown) => r && (typeof r === 'string' || (typeof r === 'object' && r !== null && 'activity' in r)))
+      .map((r: unknown) => typeof r === 'string' ? { activity: r } : r),
   };
 }
 
-function extractArray(val: any): string[] {
+function extractArray(val: unknown): string[] {
   if (!val) return [];
   if (Array.isArray(val)) return val.filter(v => typeof v === 'string' && v.trim());
   if (typeof val === 'string') return val.split(',').map(s => s.trim()).filter(Boolean);

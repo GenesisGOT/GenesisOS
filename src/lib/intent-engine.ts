@@ -5,7 +5,7 @@
  * Provider-agnostic — the system prompt defines the schema, any LLM can execute it.
  */
 
-import { supabase } from './supabase';
+import { supabase } from './data-access';
 import { useUserStore } from '../stores/useUserStore';
 import { useScheduleStore } from '../stores/useScheduleStore';
 import { useGoalsStore } from '../stores/useGoalsStore';
@@ -905,7 +905,7 @@ export async function loadIntentContext(userId: string): Promise<IntentContext> 
     .filter(g => g.status === 'active')
     .map(g => ({
       id: g.id, title: g.title, category: g.category || 'goal',
-      domain: (g as any).domain || null, parent_goal_id: g.parent_goal_id || null,
+      domain: (g as { domain?: string }).domain || null, parent_goal_id: g.parent_goal_id || null,
       target_date: g.target_date || null, status: g.status || 'active',
     }));
 
@@ -922,7 +922,7 @@ export async function loadIntentContext(userId: string): Promise<IntentContext> 
     .filter(e => e.start_time && e.start_time >= nowIso && e.start_time <= weekAhead)
     .sort((a, b) => (a.start_time || '').localeCompare(b.start_time || ''))
     .slice(0, 15)
-    .map(e => ({ id: e.id, title: e.title, start_time: e.start_time || '', location: (e as any).location || null }));
+    .map(e => ({ id: e.id, title: e.title, start_time: e.start_time || '', location: (e as { location?: string }).location || null }));
 
   // Expenses from finance store (last 7 days)
   const recentExpenses = finStore.expenses
@@ -960,7 +960,7 @@ export async function loadIntentContext(userId: string): Promise<IntentContext> 
     recentTasks,
     recentEvents,
     recentExpenses,
-    activeGroceryLists: (groceryRes.data || []).map((l: any) => ({
+    activeGroceryLists: (groceryRes.data || []).map((l: { name: string; id: string; items?: { name: string; checked: boolean }[] }) => ({
       id: l.id, name: l.name, store: l.store,
       item_count: l.grocery_items?.length || 0,
     })),
@@ -2057,7 +2057,7 @@ export async function executeActions(actions: IntentAction[]): Promise<{
           createdCounts.epics = 1;
 
           // 3. Create goals under epic, with tasks under each goal
-          const createdTaskRows: any[] = [];
+          const createdTaskRows: Record<string, unknown>[] = [];
           const goals = plan.goals || [];
           for (let gi = 0; gi < goals.length; gi++) {
             const g = goals[gi];

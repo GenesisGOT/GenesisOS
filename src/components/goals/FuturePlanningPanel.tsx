@@ -26,7 +26,7 @@ import { EmojiIcon } from '../../lib/emoji-icon';
 import { computeSmartSchedule, DEFAULT_CONSTRAINTS, type ScheduleSlot } from '../../lib/smart-scheduler';
 import { SmartSchedulePanel } from './SmartSchedulePanel';
 import { scheduleTaskAtTime } from '../../lib/task-scheduler';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { showToast } from '../Toast';
 import type { Task } from '../../types/database';
 import './FuturePlanningPanel.css';

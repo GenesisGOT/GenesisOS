@@ -4,7 +4,7 @@
  */
 import { useState } from 'react';
 import { ArrowLeft, ArrowRight, Rocket, Loader2, X, Plus } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { useUserStore } from '../stores/useUserStore';
 import { type PhaseConfig, calculatePhaseCoverage } from '../lib/onboarding-phases';
 import { logger } from '../utils/logger';
@@ -311,7 +311,7 @@ export function PhaseForm({ phase, onComplete, onBack, onSkip, initialData }: Ph
           <div>
             <label style={s.label}>Regular Expenses</label>
             <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', marginBottom: 12 }}>Add your main recurring expenses</p>
-            {(data.fixedExpenses || []).map((exp: any, idx: number) => (
+            {(data.fixedExpenses || []).map((exp: { name?: string; amount?: string; frequency?: string }, idx: number) => (
               <div key={idx} style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
                 <input style={{ ...s.input, flex: 2 }} placeholder="Name (e.g. Rent)" value={exp.name || ''} onChange={e => {
                   const updated = [...(data.fixedExpenses || [])]; updated[idx] = { ...exp, name: e.target.value }; update({ fixedExpenses: updated });
@@ -319,14 +319,14 @@ export function PhaseForm({ phase, onComplete, onBack, onSkip, initialData }: Ph
                 <input style={{ ...s.input, flex: 1 }} placeholder="$" value={exp.amount || ''} onChange={e => {
                   const updated = [...(data.fixedExpenses || [])]; updated[idx] = { ...exp, amount: e.target.value }; update({ fixedExpenses: updated });
                 }} />
-                <select style={{ ...s.input, flex: 1, appearance: 'auto' as any }} value={exp.frequency || 'monthly'} onChange={e => {
+                <select style={{ ...s.input, flex: 1, appearance: 'auto' as const }} value={exp.frequency || 'monthly'} onChange={e => {
                   const updated = [...(data.fixedExpenses || [])]; updated[idx] = { ...exp, frequency: e.target.value }; update({ fixedExpenses: updated });
                 }}>
                   <option value="weekly">Weekly</option>
                   <option value="fortnightly">Fortnightly</option>
                   <option value="monthly">Monthly</option>
                 </select>
-                <button onClick={() => update({ fixedExpenses: (data.fixedExpenses || []).filter((_: any, i: number) => i !== idx) })} style={{ background: 'rgba(255,68,68,0.1)', border: 'none', borderRadius: 8, color: '#f44', padding: '8px', cursor: 'pointer' }}>
+                <button onClick={() => update({ fixedExpenses: (data.fixedExpenses || []).filter((_, i: number) => i !== idx) })} style={{ background: 'rgba(255,68,68,0.1)', border: 'none', borderRadius: 8, color: '#f44', padding: '8px', cursor: 'pointer' }}>
                   <X size={14} />
                 </button>
               </div>

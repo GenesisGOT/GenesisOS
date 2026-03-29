@@ -1,6 +1,6 @@
 // LifeOS Social — Public Profile Operations
 
-import { supabase } from '../supabase';
+import { supabase } from '../data-access';
 import { inferLadderFromCategories, getLadderRank } from '../gamification/ladder';
 import type { LadderKey } from '../gamification/ladder';
 import type { PublicProfile, PublicProfileUpdate } from './types';

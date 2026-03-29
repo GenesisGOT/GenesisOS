@@ -17,7 +17,7 @@ import {
   MapPin, Navigation, Car, Fuel, Clock, DollarSign,
   Gauge, Route, Loader2, AlertCircle, ChevronDown, ChevronUp,
 } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { useLocation, type LocationReason } from '../hooks/useLocation';
 import { useUserStore } from '../stores/useUserStore';
 import type { ScheduleEvent } from '../hooks/useCurrentEvent';
@@ -182,7 +182,7 @@ export function TravelDetailPanel({ event }: TravelDetailPanelProps) {
   useEffect(() => {
     if (!vehicle) return;
     // If we have odometer data from live event metadata, use that
-    const meta = (event as any).metadata;
+    const meta = (event as unknown as { metadata?: Record<string, unknown> }).metadata;
     if (meta?.odometer_start && meta?.odometer_end) {
       const km = meta.odometer_end - meta.odometer_start;
       const fuelCost = vehicle.avg_consumption_per_100km

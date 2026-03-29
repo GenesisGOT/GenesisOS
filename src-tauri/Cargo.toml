@@ -1,0 +1,31 @@
+[package]
+name = "lifeos-app"
+version = "0.1.0"
+description = "LifeOS — Command Center"
+authors = ["Tewedros"]
+license = ""
+repository = ""
+edition = "2021"
+rust-version = "1.77.2"
+
+[lib]
+name = "app_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.5.6" }
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+log = "0.4"
+tauri = { version = "2.10.3" }
+tauri-plugin-log = "2"
+rusqlite = { version = "0.32", features = ["bundled"] }
+uuid = { version = "1", features = ["v4"] }
+reqwest = { version = "0.12", features = ["json", "rustls-tls"], default-features = false }
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
+dirs = "5"
+chrono = "0.4"
+thiserror = "1"
+rand = "0.8"

@@ -25,7 +25,7 @@ export function RealmDrawerContent({ onClose }: RealmDrawerContentProps) {
   const navigate = useNavigate();
 
   // Gamification data (may not be in provider)
-  let gamification: any = null;
+  let gamification: Record<string, unknown> | null = null;
   try { gamification = useGamificationContext(); } catch { /* not in provider */ }
 
   const level = gamification?.level ?? 1;
@@ -85,7 +85,7 @@ function CharacterTab({ level, xp, xpProgress, xpToNext, title, tier, dailyQuest
   const habitsDoneToday = habits.filter(h => isHabitDoneForDate(h.id, today)).length;
 
   // Best streak from habits
-  const bestStreak = habits.reduce((max, h) => Math.max(max, (h as any).best_streak ?? (h as any).current_streak ?? 0), 0);
+  const bestStreak = habits.reduce((max, h) => Math.max(max, (h as unknown as { best_streak?: number }).best_streak ?? (h as unknown as { current_streak?: number }).current_streak ?? 0), 0);
 
   const activeQuestCount = [...dailyQuests, ...weeklyQuests, ...epicQuests].filter(q => !q.completed_at).length;
 

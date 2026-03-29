@@ -180,7 +180,7 @@ export interface WorkoutTemplate {
   day_of_week?: number;
   preferred_time?: string;
   duration_minutes?: number;
-  exercises?: any; // JSONB
+  exercises?: Record<string, unknown>[]; // JSONB
   is_active: boolean;
   created_at: string;
 }
@@ -286,7 +286,7 @@ export interface UserProfile {
   stripe_customer_id?: string;
   subscription_id?: string;
   subscription_expires_at?: string;
-  preferences?: any; // JSONB
+  preferences?: Record<string, unknown>; // JSONB
   onboarding_complete: boolean;
   created_at: string;
   updated_at?: string;
@@ -325,7 +325,7 @@ export interface ChatMessage {
   user_id: string;
   role: 'user' | 'assistant' | 'system';
   content: string;
-  attachments?: any[]; // JSONB
+  attachments?: Record<string, unknown>[]; // JSONB
   created_at: string;
 }
 
@@ -465,7 +465,7 @@ export interface Asset {
   purchase_price?: number | null;
   current_value?: number | null;
   currency: string;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
   created_at: string;
   updated_at: string;
 }

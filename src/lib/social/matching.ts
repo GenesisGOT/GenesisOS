@@ -1,6 +1,6 @@
 // LifeOS Social — Partner Matching Algorithm
 
-import { supabase } from '../supabase';
+import { supabase } from '../data-access';
 import { searchProfiles } from './profiles';
 import type { MatchResult, PublicProfile } from './types';
 

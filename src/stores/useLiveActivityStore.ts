@@ -6,7 +6,7 @@
  */
 
 import { create } from 'zustand';
-import { supabase } from '../lib/supabase';
+import { db as supabase } from '../lib/data-access';
 import { genId } from '../utils/date';
 import { logger } from '../utils/logger';
 import { isOnline } from '../lib/offline';

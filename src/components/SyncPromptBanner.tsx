@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Cloud, X, LogIn, UserPlus } from 'lucide-react';
 import { useUserStore } from '../stores/useUserStore';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { getErrorMessage } from '../utils/error';
 import './SyncPromptBanner.css';
 

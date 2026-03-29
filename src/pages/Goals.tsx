@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { useUserStore } from '../stores/useUserStore';
 import { useGoalsStore } from '../stores/useGoalsStore';
 import { useScheduleStore } from '../stores/useScheduleStore';
@@ -241,7 +241,7 @@ export function Goals() {
     if (createSuccessCriteria.trim()) row.success_criteria = createSuccessCriteria.trim();
     if (createFinType) row.financial_type = createFinType;
 
-    const newId = await useGoalsStore.getState().createGoal(row as any);
+    const newId = await useGoalsStore.getState().createGoal(row as Record<string, unknown>);
     if (newId) {
       resetCreateForm();
       setShowForm(false);
@@ -300,7 +300,7 @@ export function Goals() {
   };
 
   const cycleStatus = async (id: string, currentStatus: string) => {
-    const idx = STATUS_CYCLE.indexOf(currentStatus as any);
+    const idx = STATUS_CYCLE.indexOf(currentStatus as string);
     const nextStatus = STATUS_CYCLE[(idx + 1) % STATUS_CYCLE.length];
     const updates: Record<string, unknown> = { status: nextStatus };
     if (nextStatus === 'done') {

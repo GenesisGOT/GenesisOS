@@ -20,7 +20,7 @@ import {
   AlertTriangle, Calendar, Save, ArrowRight, RotateCcw,
   CheckCircle2, XCircle, RefreshCw, Star,
 } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { useUserStore } from '../../stores/useUserStore';
 import { useScheduleStore } from '../../stores/useScheduleStore';
 import { useHabitsStore } from '../../stores/useHabitsStore';

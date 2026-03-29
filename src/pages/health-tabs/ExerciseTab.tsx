@@ -9,12 +9,12 @@ import {
 import { EmojiIcon } from '../../lib/emoji-icon';
 import { DonutChart } from '../../components/charts';
 import { DatePicker } from './components';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { createScheduleEvent } from '../../lib/schedule-events';
 
 const WorkoutGenerator = lazy(() => import('../../components/WorkoutGenerator').then(m => ({ default: m.WorkoutGenerator })));
 import type { GeneratedWorkout } from '../../lib/llm/workout-ai';
-import { COMMON_EXERCISES, type WorkoutTemplate, type TemplateExercise, type ExerciseLogSet, type CSSVarStyle } from './types';
+import { COMMON_EXERCISES, type WorkoutTemplate, type TemplateExercise, type ExerciseLogSet, type ExerciseLog, type CSSVarStyle, type BodyMarker, type ExerciseTabProps } from './types';
 import { logger } from '../../utils/logger';
 
 /* ── Time Preset Picker ── */
@@ -35,7 +35,7 @@ interface SchedulePromptData {
   mode: 'start' | 'save';
 }
 
-export function ExerciseTab({ templates, logs, onSaveTemplate, onDeleteTemplate, onSyncToSchedule, onLogWorkout, onUpdateLog: _onUpdateLog, onDeleteLog, markers }: any) {
+export function ExerciseTab({ templates, logs, onSaveTemplate, onDeleteTemplate, onSyncToSchedule, onLogWorkout, onUpdateLog: _onUpdateLog, onDeleteLog, markers }: ExerciseTabProps) {
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [showNewTemplate, setShowNewTemplate] = useState(false);
   const [editingTemplate, setEditingTemplate] = useState<WorkoutTemplate | null>(null);
@@ -61,16 +61,16 @@ export function ExerciseTab({ templates, logs, onSaveTemplate, onDeleteTemplate,
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const selectedDayOfWeek = new Date(selectedDate + 'T12:00:00').getDay();
   const today = new Date().toISOString().split('T')[0];
-  const selectedDateTemplates = templates.filter((t: any) => t.day_of_week.includes(selectedDayOfWeek));
-  const selectedDateLogs = logs.filter((l: any) => l.date === selectedDate);
-  const workoutWarnings = markers.filter((m: any) => m.affects_workout && !m.resolved);
+  const selectedDateTemplates = templates.filter((t: WorkoutTemplate) => t.day_of_week.includes(selectedDayOfWeek));
+  const selectedDateLogs = logs.filter((l: ExerciseLog) => l.date === selectedDate);
+  const workoutWarnings = markers.filter((m: BodyMarker) => m.affects_workout && !m.resolved);
 
   const streak = useMemo(() => {
     let count = 0;
     const d = new Date();
     for (let i = 0; i < 30; i++) {
       const dateStr = d.toISOString().split('T')[0];
-      const hasLog = logs.some((l: any) => l.date === dateStr && l.completed);
+      const hasLog = logs.some((l: ExerciseLog) => l.date === dateStr && l.completed);
       if (hasLog) count++;
       else if (i > 0) break;
       d.setDate(d.getDate() - 1);
@@ -86,8 +86,8 @@ export function ExerciseTab({ templates, logs, onSaveTemplate, onDeleteTemplate,
         const date = new Date();
         date.setDate(date.getDate() - (w * 7) - (6 - d));
         const dateStr = date.toISOString().split('T')[0];
-        const dayLogs = logs.filter((l: any) => l.date === dateStr && l.completed);
-        const totalDuration = dayLogs.reduce((s: any, l: any) => s + (l.duration_min || 0), 0);
+        const dayLogs = logs.filter((l: ExerciseLog) => l.date === dateStr && l.completed);
+        const totalDuration = dayLogs.reduce((s: number, l: ExerciseLog) => s + (l.duration_min || 0), 0);
         week.push({ date: dateStr, intensity: totalDuration > 0 ? Math.min(totalDuration / 60, 1) : 0 });
       }
       weeks.push(week);
@@ -98,10 +98,10 @@ export function ExerciseTab({ templates, logs, onSaveTemplate, onDeleteTemplate,
   const muscleGroups = useMemo(() => {
     const weekStart = new Date(); weekStart.setDate(weekStart.getDate() - 6);
     const weekStartStr = weekStart.toISOString().split('T')[0];
-    const weekLogs = logs.filter((l: any) => l.date >= weekStartStr && l.completed);
+    const weekLogs = logs.filter((l: ExerciseLog) => l.date >= weekStartStr && l.completed);
     const groups: Record<string, number> = {};
-    weekLogs.forEach((log: any) => {
-      (log.sets || []).forEach((s: any) => {
+    weekLogs.forEach((log: ExerciseLog) => {
+      (log.sets || []).forEach((s: ExerciseLogSet) => {
         const g = s.muscle_group || 'other';
         groups[g] = (groups[g] || 0) + (s.completed ? 1 : 0);
       });
@@ -116,7 +116,7 @@ export function ExerciseTab({ templates, logs, onSaveTemplate, onDeleteTemplate,
   }, [logs]);
 
   const filteredCommonExercises = exerciseSearch
-    ? COMMON_EXERCISES.filter((e: any) => e.name.toLowerCase().includes(exerciseSearch.toLowerCase()) || e.muscle_group.includes(exerciseSearch.toLowerCase()))
+    ? COMMON_EXERCISES.filter((e: typeof COMMON_EXERCISES[number]) => e.name.toLowerCase().includes(exerciseSearch.toLowerCase()) || e.muscle_group.includes(exerciseSearch.toLowerCase()))
     : COMMON_EXERCISES;
 
   const addSetToLog = (exerciseName: string, muscleGroup?: string) => {
@@ -130,7 +130,7 @@ export function ExerciseTab({ templates, logs, onSaveTemplate, onDeleteTemplate,
   };
 
   const updateSet = (index: number, updates: Partial<ExerciseLogSet>) => {
-    setLogSets(prev => prev.map((s: any, i: any) => i === index ? { ...s, ...updates } : s));
+    setLogSets(prev => prev.map((s: ExerciseLogSet, i: number) => i === index ? { ...s, ...updates } : s));
   };
 
   const removeSet = (index: number) => {
@@ -198,7 +198,7 @@ export function ExerciseTab({ templates, logs, onSaveTemplate, onDeleteTemplate,
         ? `Workout scheduled for ${dayLabels} at ${scheduleTime}`
         : `Workout scheduled for ${scheduleTime}`;
       alert(msg); // Simple alert; could be a toast later
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('[ExerciseTab] Schedule error:', err);
       alert('Failed to schedule workout: ' + (err.message || 'Unknown error'));
     } finally {
@@ -247,7 +247,7 @@ export function ExerciseTab({ templates, logs, onSaveTemplate, onDeleteTemplate,
     setSchedulePrompt(null);
   };
 
-  const handleSaveAITemplates = async (tmplList: any[], workout?: GeneratedWorkout) => {
+  const handleSaveAITemplates = async (tmplList: WorkoutTemplate[], workout?: GeneratedWorkout) => {
     for (const tmpl of tmplList) await onSaveTemplate(tmpl);
     // Show schedule prompt for saved template
     if (workout) {
@@ -345,7 +345,7 @@ export function ExerciseTab({ templates, logs, onSaveTemplate, onDeleteTemplate,
           {workoutWarnings.length > 0 && (
             <div className="hv2-warning-card glass-card">
               <AlertTriangle size={14} />
-              <span>Issues affecting workouts: {workoutWarnings.map((m: any) => m.body_part.replace(/_/g, ' ')).join(', ')}</span>
+              <span>Issues affecting workouts: {workoutWarnings.map((m: BodyMarker) => m.body_part.replace(/_/g, ' ')).join(', ')}</span>
             </div>
           )}
         </div>
@@ -515,8 +515,8 @@ export function ExerciseTab({ templates, logs, onSaveTemplate, onDeleteTemplate,
 
         {selectedDateTemplates.length > 0 && (
           <div className="hv2-template-workouts">
-            {selectedDateTemplates.map((t: any) => {
-              const dayLog = selectedDateLogs.find((l: any) => l.template_id === t.id);
+            {selectedDateTemplates.map((t: WorkoutTemplate) => {
+              const dayLog = selectedDateLogs.find((l: ExerciseLog) => l.template_id === t.id);
               return (
                 <div key={t.id} className={`hv2-workout-card ${dayLog?.completed ? 'completed' : dayLog?.skipped ? 'skipped' : ''}`}
                   style={{ '--workout-color': t.color } as CSSVarStyle}>
@@ -551,11 +551,11 @@ export function ExerciseTab({ templates, logs, onSaveTemplate, onDeleteTemplate,
                   )}
                   {dayLog?.sets && dayLog.sets.length > 0 && (
                     <div className="hv2-logged-sets">
-                      {(Object.entries(dayLog.sets.reduce((acc: Record<string, any[]>, s: any) => {
+                      {(Object.entries(dayLog.sets.reduce((acc: Record<string, ExerciseLogSet[]>, s: ExerciseLogSet) => {
                         if (!acc[s.exercise_name]) acc[s.exercise_name] = [];
                         acc[s.exercise_name].push(s);
                         return acc;
-                      }, {} as Record<string, any[]>)) as [string, any][]).map(([name, sets]) => (
+                      }, {} as Record<string, ExerciseLogSet[]>)) as [string, ExerciseLogSet[]][]).map(([name, sets]) => (
                         <div key={name} className="hv2-ler">
                           <span className="hv2-ler-name">{name}</span>
                           <div className="hv2-ler-sets">
@@ -589,10 +589,10 @@ export function ExerciseTab({ templates, logs, onSaveTemplate, onDeleteTemplate,
           </div>
         )}
 
-        {selectedDateLogs.filter((l: any) => !l.template_id).length > 0 && (
+        {selectedDateLogs.filter((l: ExerciseLog) => !l.template_id).length > 0 && (
           <div className="hv2-free-workouts">
             <div className="hv2-section-label mt-3">CUSTOM WORKOUTS</div>
-            {selectedDateLogs.filter((l: any) => !l.template_id).map((log: any) => (
+            {selectedDateLogs.filter((l: ExerciseLog) => !l.template_id).map((log: ExerciseLog) => (
               <div key={log.id} className={`hv2-workout-card ${log.completed ? 'completed' : ''}`} style={{ '--workout-color': '#00D4FF' } as CSSVarStyle}>
                 <div className="hv2-wc-header">
                   <span className="hv2-wc-icon"><Dumbbell size={16} /></span>
@@ -654,7 +654,7 @@ export function ExerciseTab({ templates, logs, onSaveTemplate, onDeleteTemplate,
               {Object.entries(groupedSets).map(([name, sets]) => (
                 <div key={name} className="hv2-log-exercise-group">
                   <div className="hv2-leg-header">{name}</div>
-                  {sets.map((s: any) => (
+                  {sets.map((s: ExerciseLogSet) => (
                     <div key={s._idx} className="hv2-log-set-row">
                       <span className="hv2-lsr-num">Set {s.set_number}</span>
                       <input type="number" placeholder="kg" value={s.weight_kg || ''} step="0.5"
@@ -701,12 +701,12 @@ export function ExerciseTab({ templates, logs, onSaveTemplate, onDeleteTemplate,
       <div className="glass-card hv2-schedule-card">
         <div className="hv2-week-grid">
           {dayNames.map((day, i) => {
-            const dayTemplates = templates.filter((t: any) => t.day_of_week.includes(i));
+            const dayTemplates = templates.filter((t: WorkoutTemplate) => t.day_of_week.includes(i));
             const isCurrent = i === new Date().getDay();
             return (
               <div key={day} className={`hv2-week-day ${isCurrent ? 'today' : ''}`}>
                 <span className="hv2-wd-name">{day}</span>
-                {dayTemplates.length > 0 ? dayTemplates.map((t: any) => (
+                {dayTemplates.length > 0 ? dayTemplates.map((t: WorkoutTemplate) => (
                   <div key={t.id} className="hv2-wd-workout" style={{ background: t.color + '22', borderLeft: `2px solid ${t.color}60` }}>
                     {t.icon}
                   </div>
@@ -727,7 +727,7 @@ export function ExerciseTab({ templates, logs, onSaveTemplate, onDeleteTemplate,
           </div>
         </div>
         <div className="hv2-templates-grid">
-          {templates.map((t: any) => (
+          {templates.map((t: WorkoutTemplate) => (
             <div key={t.id} className="hv2-tmpl-card" style={{ '--t-color': t.color } as CSSVarStyle}>
               <div className="hv2-tmpl-top">
                 <span className="hv2-tmpl-icon">{t.icon}</span>
@@ -741,7 +741,7 @@ export function ExerciseTab({ templates, logs, onSaveTemplate, onDeleteTemplate,
                   {t.exercises.length > 3 && <span className="hv2-tmpl-more">+{t.exercises.length - 3}</span>}
                 </div>
               )}
-              <span className="hv2-tmpl-sched">{t.day_of_week.map((d: any) => dayNames[d]).join(', ')}</span>
+              <span className="hv2-tmpl-sched">{t.day_of_week.map((d: number) => dayNames[d]).join(', ')}</span>
               <span className="hv2-tmpl-dur">{t.estimated_duration_min}min @ {t.preferred_time}</span>
               <div className="hv2-tmpl-actions">
                 <button className="btn-icon-sm" onClick={() => startEditTemplate(t)} aria-label="Edit template"><Edit3 size={11} /></button>
@@ -826,7 +826,7 @@ export function ExerciseTab({ templates, logs, onSaveTemplate, onDeleteTemplate,
       {/* History */}
       <div className="hv2-section-label">RECENT HISTORY</div>
       <div className="glass-card hv2-history-card">
-        {logs.slice(0, 10).map((log: any) => (
+        {logs.slice(0, 10).map((log: ExerciseLog) => (
           <div key={log.id} className={`hv2-history-item ${log.completed ? '' : 'skipped'}`}>
             <div className="hv2-hi-date">{new Date(log.date + 'T12:00:00').toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' })}</div>
             <span className="hv2-hi-icon"><EmojiIcon emoji={log.template?.icon || '💪'} size={18} fallbackAsText /></span>

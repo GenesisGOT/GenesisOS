@@ -11,7 +11,7 @@
  *   syncUIStateFromSupabase()  → pull from Supabase, merge into localStorage (app load)
  */
 
-import { supabase } from '../lib/supabase';
+import { db as supabase } from '../lib/data-access';
 
 const LS_PREFIX = 'lifeos_ui_state_';
 

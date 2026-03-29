@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { useUserStore } from '../stores/useUserStore';
 import { useScheduleStore } from '../stores/useScheduleStore';
 import { useHabitsStore } from '../stores/useHabitsStore';
@@ -43,7 +43,7 @@ type ScheduleEvent = ScheduleEventType;
 const CATEGORIES = EVENT_TYPES.map(t => ({ id: t.id, label: t.label, color: t.color, layer: t.layer, icon: t.icon, emoji: t.emoji }));
 
 function getPreferredHourForTask(task: { title: string; domain?: string }): number {
-  const domain = (task as any).domain || inferDomainFromTitle(task.title);
+  const domain = (task as { domain?: string }).domain || inferDomainFromTitle(task.title);
   const defaults: Record<string, number> = {
     education: 6, exercise: 7, prayer: 5, meditation: 6,
     work: 10, financial: 14, health: 15, social: 18,
@@ -419,8 +419,8 @@ export function Schedule() {
       if (view === 'day') fetchDayEvents();
       else if (view === 'week') fetchWeekEvents();
       else fetchMonthEvents();
-    } catch (e: any) {
-      setError(e.message || 'Failed to create event');
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Failed to create event');
     }
     setSaving(false);
   };
@@ -452,8 +452,8 @@ export function Schedule() {
 
     // Show undo toast
     if (deletedEvent) {
-      setUndoStack(prev => [...prev, { id, title: (deletedEvent as any).title || 'Event' }]);
-      showToast(`Deleted "${(deletedEvent as any).title}"`, '🗑️', '#F43F5E');
+      setUndoStack(prev => [...prev, { id, title: deletedEvent.title || 'Event' }]);
+      showToast(`Deleted "${deletedEvent.title}"`, '🗑️', '#F43F5E');
     }
 
     // Background: persist soft delete
@@ -485,7 +485,7 @@ export function Schedule() {
   };
 
   const massDeleteDayEvents = async () => {
-    const dayEvs = filteredEvents.filter(e => !(e as any).is_google);
+    const dayEvs = filteredEvents.filter(e => e.source !== 'google');
     if (dayEvs.length === 0) return;
 
     // Optimistic: clear all from UI
@@ -875,7 +875,7 @@ export function Schedule() {
     // Collect task IDs that already have schedule events to avoid duplicates
     const scheduledTaskIds = new Set(
       filteredEvents
-        .map(ev => (ev as any).description?.match(/\[task:([^\]]+)\]/)?.[1])
+        .map(ev => ev.description?.match(/\[task:([^\]]+)\]/)?.[1])
         .filter(Boolean)
     );
 
@@ -884,10 +884,10 @@ export function Schedule() {
       .filter(t => !scheduledTaskIds.has(t.id))
       .map(t => {
         // Use scheduled_start if available, otherwise domain-preferred hour
-        const taskHour = (t as any).scheduled_start
-          ? new Date((t as any).scheduled_start).getHours()
+        const taskHour = t.scheduled_start
+          ? new Date(t.scheduled_start).getHours()
           : getPreferredHourForTask(t);
-        const duration = (t as any).estimated_duration || 30;
+        const duration = (t.estimated_duration as number) || 30;
         const startMin = taskHour * 60;
         const endMin = startMin + duration;
         return {
@@ -969,7 +969,7 @@ export function Schedule() {
       const continuesAfter = evEndDate > selDateStr;
 
       return { ...ev, startMin, endMin, col: 0, totalCols: 1, _type: 'event' as const, _continuesFromBefore: continuesFromBefore, _continuesAfter: continuesAfter };
-    }).filter(Boolean).sort((a: any, b: any) => a.startMin - b.startMin || (b.endMin - b.startMin) - (a.endMin - a.startMin)) as any[];
+    }).filter((x): x is NonNullable<typeof x> => x !== null).sort((a, b) => a.startMin - b.startMin || (b.endMin - b.startMin) - (a.endMin - a.startMin));
 
     for (let i = 0; i < blocks.length; i++) {
       const overlapping = blocks.filter((b, j) => j < i && b.endMin > blocks[i].startMin && b.startMin < blocks[i].endMin);
@@ -989,7 +989,7 @@ export function Schedule() {
   // Merge all blocks (events, tasks, habits) and recalculate columns
   const allBlocks = useMemo(() => {
     const merged = [...evBlocks, ...taskBlocks, ...habitBlocks]
-      .sort((a: any, b: any) => a.startMin - b.startMin || (b.endMin - b.startMin) - (a.endMin - a.startMin));
+      .sort((a, b) => a.startMin - b.startMin || (b.endMin - b.startMin) - (a.endMin - a.startMin));
 
     // Recalculate column positions for the merged set
     for (let i = 0; i < merged.length; i++) {
@@ -1017,23 +1017,23 @@ export function Schedule() {
       sacred: { label: 'Sacred', icon: '✝' },
     };
     return layers.map(layer => {
-      const blocks = allBlocks.filter((b: any) => {
-        if (b._type === 'event') return (b.schedule_layer || 'primary') === layer;
-        if (b._type === 'task') return layer === 'primary'; // tasks go to primary
-        if (b._type === 'habit') return layer === 'primary'; // habits go to primary
+      const blocks = allBlocks.filter(b => {
+        if (b._type === 'event') return ((b as typeof evBlocks[number]).schedule_layer || 'primary') === layer;
+        if (b._type === 'task') return layer === 'primary';
+        if (b._type === 'habit') return layer === 'primary';
         return false;
       });
       // Recalculate columns within each layer
       for (let i = 0; i < blocks.length; i++) {
-        const overlapping = blocks.filter((b: any, j: number) => j < i && b.endMin > blocks[i].startMin && b.startMin < blocks[i].endMin);
-        const usedCols = new Set(overlapping.map((b: any) => b.col));
+        const overlapping = blocks.filter((b, j) => j < i && b.endMin > blocks[i].startMin && b.startMin < blocks[i].endMin);
+        const usedCols = new Set(overlapping.map(b => b.col));
         let col = 0;
         while (usedCols.has(col)) col++;
         blocks[i] = { ...blocks[i], col };
       }
       for (const block of blocks) {
-        const group = blocks.filter((b: any) => b.endMin > block.startMin && b.startMin < block.endMin);
-        const maxCol = Math.max(...group.map((b: any) => b.col)) + 1;
+        const group = blocks.filter(b => b.endMin > block.startMin && b.startMin < block.endMin);
+        const maxCol = Math.max(...group.map(b => b.col)) + 1;
         for (const b of group) b.totalCols = Math.max(b.totalCols, maxCol);
       }
       return { layer, ...layerLabels[layer], blocks };
@@ -1064,21 +1064,18 @@ export function Schedule() {
     if (!liveBlock) return allBlocks;
 
     // Find scheduled items that overlap with the live event
-    const overlapping = allBlocks.filter((item: any) => {
-      // Don't count the live event itself if it shows up in scheduled events
+    const overlapping = allBlocks.filter(item => {
       if (item._type === 'event' && liveActiveEvent && item.id === liveActiveEvent.id) return false;
       return item.endMin > liveBlock.startMin && item.startMin < liveBlock.endMin;
     });
 
     if (overlapping.length === 0) return allBlocks;
 
-    // Reserve the right side for the live event: adjust overlapping items to left half
-    return allBlocks.map((item: any) => {
+    return allBlocks.map(item => {
       if (item._type === 'event' && liveActiveEvent && item.id === liveActiveEvent.id) {
-        // Hide the regular rendering of the live event (we render it separately)
         return { ...item, _hiddenByLive: true };
       }
-      const isOverlapping = overlapping.some((o: any) => o.id === item.id);
+      const isOverlapping = overlapping.some(o => o.id === item.id);
       if (isOverlapping) {
         return { ...item, col: item.col, totalCols: Math.max(item.totalCols, 2), _dimmable: true };
       }
@@ -1212,7 +1209,7 @@ export function Schedule() {
   }, [weekStart, todayStr]);
 
   const weekEventsByDay = useMemo(() => {
-    const map: Record<string, any[]> = {};
+    const map: Record<string, ScheduleEvent[]> = {};
     weekDays.forEach(day => {
       const dayStart = `${day.iso}T00:00:00`;
       const dayEnd = `${day.iso}T23:59:59`;
@@ -1536,18 +1533,18 @@ export function Schedule() {
                               Undo
                             </button>
                           )}
-                          <button className="sd-mass-action" onClick={() => confirmDelete('Clear all events', `Delete all ${filteredEvents.filter(e => !(e as any).is_google).length} events for this day?`, massDeleteDayEvents)} title="Delete all events for this day" style={{ fontSize: 10, padding: '2px 6px', background: 'rgba(244,63,94,0.08)', border: '1px solid rgba(244,63,94,0.2)', borderRadius: 4, color: '#F43F5E', cursor: 'pointer' }}>
+                          <button className="sd-mass-action" onClick={() => confirmDelete('Clear all events', `Delete all ${filteredEvents.filter(e => e.source !== 'google').length} events for this day?`, massDeleteDayEvents)} title="Delete all events for this day" style={{ fontSize: 10, padding: '2px 6px', background: 'rgba(244,63,94,0.08)', border: '1px solid rgba(244,63,94,0.2)', borderRadius: 4, color: '#F43F5E', cursor: 'pointer' }}>
                             Clear All
                           </button>
                         </div>
                       </div>
-                      {filteredEvents.slice(0, 10).map((ev: any) => (
+                      {filteredEvents.slice(0, 10).map((ev) => (
                         <div key={ev.id} className="sd-item sd-event" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                           <span className="sd-title" onClick={() => setDetailEvent(ev)} style={{ flex: 1, cursor: 'pointer', fontSize: 12 }}>{ev.title}</span>
                           <span style={{ fontSize: 10, color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
                             {ev.start_time ? new Date(ev.start_time).toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' }) : ''}
                           </span>
-                          {!(ev as any).is_google && (
+                          {ev.source !== 'google' && (
                             <button onClick={() => deleteEvent(ev.id)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: 2, opacity: 0.5 }} title="Delete">
                               <Trash2 size={12} />
                             </button>
@@ -1693,7 +1690,7 @@ export function Schedule() {
                 })()}
 
                 {/* Event, Task, and Habit blocks */}
-                {adjustedAllBlocks.map((item: any) => {
+                {adjustedAllBlocks.map((item) => {
                   // Skip if hidden by live event (rendered separately)
                   if (item._hiddenByLive) return null;
 

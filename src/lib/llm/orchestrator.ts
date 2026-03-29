@@ -340,7 +340,7 @@ async function executeOptimizeSchedule(
       gaps,
       conflicts,
       sacredBlockMinutes: [],
-    } as any);
+    } as Record<string, unknown>);
 
     let summary = `Schedule Analysis for ${targetDate}: ${result.summary}. `;
     summary += `${gaps.length} free slot(s), ${conflicts.length} conflict(s), ${result.suggestions.length} suggestion(s). `;
@@ -403,12 +403,12 @@ async function executeRescheduleOverdue(
         .order('start_time'),
     ]);
 
-    const overdueTasks = (overdueTasksRes.data || []).map((t: any) => ({
+    const overdueTasks = (overdueTasksRes.data || []).map((t: { id: string; title: string; due_date?: string; priority?: string; status: string }) => ({
       ...t,
       daysOverdue: Math.floor((Date.now() - new Date(t.due_date + 'T00:00:00').getTime()) / 86400000),
     }));
 
-    const missedEvents = (missedEventsRes.data || []).map((e: any) => ({
+    const missedEvents = (missedEventsRes.data || []).map((e: { id: string; title: string; start_time: string; event_type?: string }) => ({
       ...e,
       daysMissed: Math.floor((Date.now() - new Date(e.start_time).getTime()) / 86400000),
     }));

@@ -8,7 +8,7 @@
  * 4. Single point of configuration for provider/model changes
  */
 
-import { supabase } from './supabase';
+import { supabase } from './data-access';
 import { useUserStore } from '../stores/useUserStore';
 import { getErrorMessage, isAbortError } from '../utils/error';
 

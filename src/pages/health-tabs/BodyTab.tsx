@@ -5,7 +5,7 @@ import { SparkLine, AreaChart } from '../../components/charts';
 import { DataTooltip } from '../../components/ui/DataTooltip';
 import type { DataTooltipData } from '../../components/ui/DataTooltip';
 import { BodyMapSVG } from './components';
-import type { BodyMarker, CSSVarStyle } from './types';
+import type { BodyMarker, CSSVarStyle, BodyTabProps, HealthMetrics } from './types';
 import { logger } from '../../utils/logger';
 import { validateHealth } from '../../utils/health-validation';
 
@@ -41,7 +41,7 @@ function savePhotos(photos: BodyPhoto[]) {
   }
 }
 
-export function BodyTab({ metrics, allMetrics, markers, onUpdateMetrics, onAddMarker, onResolveMarker, onUpdateMarker, onDeleteMarker }: any) {
+export function BodyTab({ metrics, allMetrics, markers, onUpdateMetrics, onAddMarker, onResolveMarker, onUpdateMarker, onDeleteMarker }: BodyTabProps) {
   const [weight, setWeight] = useState(metrics?.weight_kg?.toString() || '');
   const [height, setHeight] = useState(metrics?.height_cm?.toString() || '');
   const [selectedPart, setSelectedPart] = useState<string | null>(null);
@@ -90,19 +90,19 @@ export function BodyTab({ metrics, allMetrics, markers, onUpdateMetrics, onAddMa
     setPhotos(updated);
   }, [photos]);
 
-  const weightHistory = allMetrics.filter((m: any) => m.weight_kg)
+  const weightHistory = allMetrics.filter((m: HealthMetrics) => m.weight_kg)
     .slice(0, weightRange === '30' ? 30 : 90).reverse();
 
   const weightSeries = weightHistory.length > 1 ? [{
-    data: weightHistory.map((m: any) => m.weight_kg as number),
+    data: weightHistory.map((m: HealthMetrics) => m.weight_kg as number),
     color: '#00D4FF', label: 'Weight (kg)', fillOpacity: 0.18,
   }] : [];
 
-  const weightLabels = weightHistory.map((m: any) =>
+  const weightLabels = weightHistory.map((m: HealthMetrics) =>
     new Date(m.date + 'T12:00:00').toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })
   );
 
-  const activeMarkers = markers.filter((m: any) => !m.resolved);
+  const activeMarkers = markers.filter((m: BodyMarker) => !m.resolved);
 
   const bmiCategory = metrics?.bmi
     ? metrics.bmi < 18.5 ? { label: 'Underweight', color: '#38BDF8' }
@@ -195,7 +195,7 @@ export function BodyTab({ metrics, allMetrics, markers, onUpdateMetrics, onAddMa
             {metrics?.weight_kg ? `${metrics.weight_kg}kg` : '—'}
           </div>
           {weightHistory.length > 1 && (
-            <SparkLine data={weightHistory.map((m: any) => m.weight_kg as number).slice(-7)} color="#00D4FF" width="100%" height={28} filled />
+            <SparkLine data={weightHistory.map((m: HealthMetrics) => m.weight_kg as number).slice(-7)} color="#00D4FF" width="100%" height={28} filled />
           )}
           <div className="hv2-mc-input">
             <input type="number" step="0.1" value={weight} onChange={e => setWeight(e.target.value)} placeholder="kg" />

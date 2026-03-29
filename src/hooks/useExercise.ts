@@ -2,7 +2,7 @@
 // Exercise Hooks — workout templates, exercise logs, body markers
 // ═══════════════════════════════════════════════════════════
 import { useEffect, useState, useCallback } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { createScheduleEvent } from '../lib/schedule-events';
 import { logUnifiedEvent } from '../lib/events';
 import { logger } from '../utils/logger';

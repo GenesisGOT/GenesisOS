@@ -1,6 +1,6 @@
 // ═══ Junction Action Hooks — practices, calendar, wisdom, logging ═══
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { useUserStore } from '../stores/useUserStore';
 import { logger } from '../utils/logger';
 import { getPracticeIconPath, getCalendarIconPath, getTimeContext } from './useJunctionHelpers';
@@ -35,7 +35,7 @@ export function useJunctionPractices(traditionId?: string, currentTier?: number)
         .lte('tier_required', currentTier ?? 0)
         .order('tier_required', { ascending: true });
 
-      setPractices((data || []).map((p: any) => ({
+      setPractices((data || []).map((p: Record<string, unknown>) => ({
         id: p.id,
         tradition_id: p.tradition_id,
         name: p.name,
@@ -78,7 +78,7 @@ export function useJunctionCalendar(traditionId?: string) {
         .eq('fixed_month', currentMonth)
         .eq('fixed_day', currentDay);
 
-      setEntries((data || []).map((e: any) => {
+      setEntries((data || []).map((e: Record<string, unknown>) => {
         const type = e.significance || e.date_type || 'observance';
         return {
           id: e.id,
@@ -122,7 +122,7 @@ export function useJunctionWisdom(traditionId?: string) {
 
       if (data && data.length > 0) {
         // Prefer entries with matching time context tag, fall back to any
-        const contextMatches = data.filter((w: any) => 
+        const contextMatches = data.filter((w: { context?: string }) => 
           Array.isArray(w.context_tags) && w.context_tags.includes(timeCtx)
         );
         const pool = contextMatches.length > 0 ? contextMatches : data;

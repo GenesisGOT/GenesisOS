@@ -5,7 +5,7 @@ import {
   Check, Clock, Target,
   StickyNote, Gauge, DollarSign, Edit3,
 } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { logger } from '../../utils/logger';
 import type { ActiveEvent } from './types';
 

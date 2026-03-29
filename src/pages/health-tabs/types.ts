@@ -1,6 +1,66 @@
-import type { HealthMetrics, WorkoutTemplate, TemplateExercise, BodyMarker, ExerciseLogSet, Meal } from '../../hooks/useHealth';
+import type { HealthMetrics, WorkoutTemplate, TemplateExercise, BodyMarker, ExerciseLogSet, ExerciseLog, Meal, MeditationLog, GratitudeEntry } from '../../hooks/useHealth';
+import type { GeneratedWorkout } from '../../lib/llm/workout-ai';
 
-export type { HealthMetrics, WorkoutTemplate, TemplateExercise, BodyMarker, ExerciseLogSet, Meal };
+export type { HealthMetrics, WorkoutTemplate, TemplateExercise, BodyMarker, ExerciseLogSet, ExerciseLog, Meal, MeditationLog, GratitudeEntry };
+
+// ── Prop interfaces for health tab components ──
+
+export interface ExerciseTabProps {
+  templates: WorkoutTemplate[];
+  logs: ExerciseLog[];
+  onSaveTemplate: (template: WorkoutTemplate) => Promise<void>;
+  onDeleteTemplate: (id: string) => Promise<void>;
+  onSyncToSchedule: (template: WorkoutTemplate) => Promise<void>;
+  onLogWorkout: (log: Partial<ExerciseLog>) => Promise<void>;
+  onUpdateLog: (id: string, updates: Partial<ExerciseLog>) => Promise<void>;
+  onDeleteLog: (id: string) => Promise<void>;
+  markers: BodyMarker[];
+}
+
+export interface SleepTabProps {
+  metrics: HealthMetrics | undefined;
+  allMetrics: HealthMetrics[];
+  onUpdateMetrics: (updates: Partial<HealthMetrics>) => Promise<void>;
+}
+
+export interface OverviewTabProps {
+  metrics: HealthMetrics | undefined;
+  exerciseLogs: ExerciseLog[];
+  meditationLogs: MeditationLog[];
+  gratitudeEntries: GratitudeEntry[];
+  templates: WorkoutTemplate[];
+  markers: BodyMarker[];
+  allMetrics: HealthMetrics[];
+  onUpdateMetrics: (updates: Partial<HealthMetrics>) => Promise<void>;
+  meals: Meal[];
+  onTabChange: (tab: HealthTab) => void;
+}
+
+export interface MindTabProps {
+  meditationLogs: MeditationLog[];
+  gratitudeEntries: GratitudeEntry[];
+  onLogMeditation: (log: Partial<MeditationLog>) => Promise<void>;
+  onAddGratitude: (entry: string) => Promise<void>;
+  todayMetrics: HealthMetrics | undefined;
+  onUpdateMetrics: (updates: Partial<HealthMetrics>) => Promise<void>;
+  allMetrics: HealthMetrics[];
+}
+
+export interface DietTabProps {
+  meals: Meal[];
+  allMetrics: HealthMetrics[];
+}
+
+export interface BodyTabProps {
+  metrics: HealthMetrics | undefined;
+  allMetrics: HealthMetrics[];
+  markers: BodyMarker[];
+  onUpdateMetrics: (updates: Partial<HealthMetrics>) => Promise<void>;
+  onAddMarker: (marker: Partial<BodyMarker>) => Promise<void>;
+  onResolveMarker: (id: string) => Promise<void>;
+  onUpdateMarker: (id: string, updates: Partial<BodyMarker>) => Promise<void>;
+  onDeleteMarker: (id: string) => Promise<void>;
+}
 
 export type HealthTab = 'overview' | 'body' | 'exercise' | 'diet' | 'mind' | 'sleep' | 'equipment';
 

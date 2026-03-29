@@ -7,11 +7,13 @@ import { useScheduleStore } from '../stores/useScheduleStore';
 import { useFinanceStore } from '../stores/useFinanceStore';
 import { useJournalStore } from '../stores/useJournalStore';
 import { useHealthStore } from '../stores/useHealthStore';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import {
   ChevronLeft, ChevronRight, Sparkles, ArrowLeft, Clock, BookOpen,
 } from 'lucide-react';
 import { localDateStr, genId } from '../utils/date';
+import type { Task, Goal, Habit, IncomeEntry, HealthMetric, JournalEntry } from '../types/database';
+import type { HabitLog } from '../stores/useHabitsStore';
 import { WeeklyInsightsCard } from '../components/review/WeeklyInsightsCard';
 import { GuidedReview } from '../components/review/GuidedReview';
 import { AIRescheduleSection } from '../components/review/AIRescheduleSection';
@@ -66,13 +68,13 @@ export function Review() {
   const [saving, setSaving] = useState(false);
 
   // Data
-  const [tasks, setTasks] = useState<any[]>([]);
-  const [goals, setGoals] = useState<any[]>([]);
-  const [habits, setHabits] = useState<any[]>([]);
-  const [habitLogs, setHabitLogs] = useState<any[]>([]);
-  const [incomes, setIncomes] = useState<any[]>([]);
-  const [healthLogs, setHealthLogs] = useState<any[]>([]);
-  const [journalEntries, setJournalEntries] = useState<any[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [goals, setGoals] = useState<Goal[]>([]);
+  const [habits, setHabits] = useState<Habit[]>([]);
+  const [habitLogs, setHabitLogs] = useState<HabitLog[]>([]);
+  const [incomes, setIncomes] = useState<IncomeEntry[]>([]);
+  const [healthLogs, setHealthLogs] = useState<HealthMetric[]>([]);
+  const [journalEntries, setJournalEntries] = useState<JournalEntry[]>([]);
 
   // Review state
   const [wins, setWins] = useState('');
@@ -117,14 +119,14 @@ export function Review() {
     const allIncome = useFinanceStore.getState().income;
     const allJournalEntries = useJournalStore.getState().entries;
 
-    setTasks(allTasks.filter(t => t.due_date && t.due_date >= weekStartStr && t.due_date <= weekEndStr) as any[]);
-    setGoals(useGoalsStore.getState().goals as any[]);
-    setHabits(useHabitsStore.getState().habits as any[]);
-    setHabitLogs(allHabitLogs.filter(l => l.date >= weekStartStr && l.date <= weekEndStr) as any[]);
-    setIncomes(allIncome.filter(i => i.date && i.date >= weekStartStr && i.date <= weekEndStr) as any[]);
+    setTasks(allTasks.filter(t => t.due_date && t.due_date >= weekStartStr && t.due_date <= weekEndStr) as Task[]);
+    setGoals(useGoalsStore.getState().goals as Goal[]);
+    setHabits(useHabitsStore.getState().habits as Habit[]);
+    setHabitLogs(allHabitLogs.filter(l => l.date >= weekStartStr && l.date <= weekEndStr) as HabitLog[]);
+    setIncomes(allIncome.filter(i => i.date && i.date >= weekStartStr && i.date <= weekEndStr) as IncomeEntry[]);
     const healthMetrics = useHealthStore.getState().todayMetrics;
-    setHealthLogs(healthMetrics ? [healthMetrics] as any[] : []);
-    setJournalEntries(allJournalEntries.filter(e => e.date >= weekStartStr && e.date <= weekEndStr) as any[]);
+    setHealthLogs(healthMetrics ? [healthMetrics] as HealthMetric[] : []);
+    setJournalEntries(allJournalEntries.filter(e => e.date >= weekStartStr && e.date <= weekEndStr) as JournalEntry[]);
 
     const { data: review } = await supabase.from('weekly_reviews').select('*')
       .eq('user_id', user.id)

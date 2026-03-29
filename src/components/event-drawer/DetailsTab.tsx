@@ -6,7 +6,7 @@ import {
   CalendarDays,
   Edit3, Trash2, Save, Loader2,
 } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import type { ScheduleEvent } from '../../hooks/useCurrentEvent';
 import type { WeeklyStats } from './hooks';
 import { formatTime, formatMinutes, resolveEventCategory } from './helpers';

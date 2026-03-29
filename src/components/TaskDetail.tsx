@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { X, ChevronRight, Circle, CheckCircle2, Calendar, Clock, Trash2, Plus, SkipForward, AlertTriangle, CheckCircle } from 'lucide-react';
 import { recalcProgression } from '../lib/progression';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { showToast } from '../components/Toast';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { useUserStore } from '../stores/useUserStore';
@@ -106,7 +106,7 @@ export function TaskDetail({ taskId, allGoals, allTasks, onClose, onNavigateToNo
 
   const changeStatus = async (newStatus: string) => {
     await updateTask(taskId, {
-      status: newStatus as any,
+      status: newStatus as string,
       completed_at: newStatus === 'done' ? new Date().toISOString() : undefined,
     });
     if (task.goal_id) await handleMilestones(task.goal_id);
@@ -114,7 +114,7 @@ export function TaskDetail({ taskId, allGoals, allTasks, onClose, onNavigateToNo
 
   const changePriority = async (level: 1 | 2 | 3 | 4) => {
     const dbValue = getPriorityDbValue(level);
-    await updateTask(taskId, { priority: dbValue as any });
+    await updateTask(taskId, { priority: dbValue as string });
     showToast('Priority updated', '🎯', '#00D4FF');
   };
 
@@ -138,7 +138,7 @@ export function TaskDetail({ taskId, allGoals, allTasks, onClose, onNavigateToNo
   const toggleSubtask = async (subtaskId: string, currentStatus: string) => {
     const newStatus = currentStatus === 'done' ? 'todo' : 'done';
     await updateTask(subtaskId, {
-      status: newStatus as any,
+      status: newStatus as string,
       completed_at: newStatus === 'done' ? new Date().toISOString() : undefined,
     });
     if (task.goal_id) await handleMilestones(task.goal_id);

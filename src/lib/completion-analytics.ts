@@ -83,7 +83,7 @@ function getDatesInRange(startDate: Date, endDate: Date): string[] {
   return dates;
 }
 
-function getCategoryFromGoal(goal: any): string {
+function getCategoryFromGoal(goal: Record<string, unknown>): string {
   return goal?.domain || goal?.category || 'default';
 }
 

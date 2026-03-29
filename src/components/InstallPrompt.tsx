@@ -18,7 +18,7 @@ function isIOSSafari(): boolean {
 /** Check if running as installed PWA (standalone mode) */
 function isStandalone(): boolean {
   return window.matchMedia('(display-mode: standalone)').matches
-    || (window.navigator as any).standalone === true;
+    || (window.navigator as unknown as Record<string, unknown>).standalone === true;
 }
 
 export function InstallPrompt() {

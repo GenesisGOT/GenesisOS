@@ -6,7 +6,7 @@
 import { useState, useCallback } from 'react';
 import { GoalService } from '../../lib/services/goal-service';
 import { createScheduleEvent } from '../../lib/schedule-events';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { useGamification } from '../../hooks/useGamification';
 import { useUserStore } from '../../stores/useUserStore';
 import { useHabitsStore } from '../../stores/useHabitsStore';
@@ -253,7 +253,7 @@ export function ScholarStudy({ greetingLines, onClose }: ScholarStudyProps) {
       });
 
       await handleFarewell();
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(err?.message || 'The scrolls faltered... Try again.');
       setStep('suggest');
     }

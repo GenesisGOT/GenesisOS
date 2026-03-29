@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LifeOS — Offline</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0a1628;
+      color: #8BA4BE;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .offline-container {
+      text-align: center;
+      max-width: 400px;
+    }
+    .offline-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+      opacity: 0.8;
+    }
+    h1 {
+      font-size: 24px;
+      color: #E2E8F0;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    p {
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+      color: #6B8299;
+    }
+    .retry-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: rgba(0, 212, 255, 0.1);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: 8px;
+      color: #00D4FF;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .retry-btn:hover {
+      background: rgba(0, 212, 255, 0.2);
+      border-color: rgba(0, 212, 255, 0.5);
+    }
+    .tips {
+      margin-top: 32px;
+      font-size: 12px;
+      color: #4A6580;
+    }
+    .tips li {
+      list-style: none;
+      padding: 4px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="offline-container">
+    <div class="offline-icon">📡</div>
+    <h1>You're Offline</h1>
+    <p>LifeOS needs an internet connection to sync your data. Your local changes are saved and will sync when you're back online.</p>
+    <button class="retry-btn" onclick="window.location.reload()">
+      🔄 Try Again
+    </button>
+    <ul class="tips">
+      <li>💡 Check your Wi-Fi or cellular connection</li>
+      <li>💡 Try moving to a location with better signal</li>
+      <li>💡 Your data is safe — it will sync automatically</li>
+    </ul>
+  </div>
+</body>
+</html>

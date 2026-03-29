@@ -6,7 +6,7 @@
  */
 
 import { create } from 'zustand';
-import { supabase } from '../lib/supabase';
+import { db as supabase } from '../lib/data-access';
 import { isOnline } from '../lib/offline';
 import { localGetAll, localInsert, localUpdate, localDelete, getEffectiveUserId } from '../lib/local-db';
 import { syncNow } from '../lib/sync-engine';

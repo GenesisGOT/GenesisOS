@@ -57,7 +57,7 @@ export function BlacksmithForge({ greetingLines, onClose }: BlacksmithForgeProps
 
   // Progress data
   const [activeGoals, setActiveGoals] = useState<any[]>([]);
-  const [goalStats, setGoalStats] = useState<any>(null);
+  const [goalStats, setGoalStats] = useState<Record<string, unknown> | null>(null);
 
   // Suggestions
   const [suggestions, setSuggestions] = useState<{ title: string; reason: string }[]>([]);
@@ -202,7 +202,7 @@ export function BlacksmithForge({ greetingLines, onClose }: BlacksmithForgeProps
         status: 'active',
         icon: '⚒️',
         color: '#F59E0B',
-      } as any);
+      } as React.CSSProperties);
 
       if (!goalId) throw new Error('Failed to create goal');
 
@@ -217,7 +217,7 @@ export function BlacksmithForge({ greetingLines, onClose }: BlacksmithForgeProps
       }
 
       setStep('forge_done');
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(err?.message || 'The forge sputtered out. Try again.');
       setStep('forge_confirm');
     }

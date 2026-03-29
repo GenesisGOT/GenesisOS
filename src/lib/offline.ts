@@ -56,7 +56,7 @@ interface QueuedMutation {
   id: string;
   table: string;
   operation: 'insert' | 'update' | 'delete' | 'upsert';
-  data: any;
+  data: Record<string, unknown>;
   match?: Record<string, any>;
   timestamp: number;
 }
@@ -177,10 +177,10 @@ export async function replayQueue(): Promise<{ replayed: number; failed: number 
 export async function offlineMutation(
   table: string,
   operation: 'insert' | 'update' | 'delete' | 'upsert',
-  data: any,
+  data: Record<string, unknown>,
   match?: Record<string, any>,
-  onlineAction?: () => Promise<{ error: any }>,
-): Promise<{ error: any; queued: boolean }> {
+  onlineAction?: () => Promise<{ error: unknown }>,
+): Promise<{ error: unknown; queued: boolean }> {
   // If online and we have an action, try it
   if (_isOnline && onlineAction) {
     try {

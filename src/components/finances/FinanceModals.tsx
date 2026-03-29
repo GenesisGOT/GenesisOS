@@ -8,7 +8,7 @@ import {
   X, Loader2, Plus, Save, RefreshCw, ScrollText, Car,
   ArrowUpCircle, ArrowDownCircle, Edit2, Sparkles,
 } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { useUserStore } from '../../stores/useUserStore';
 import { logUnifiedEvent } from '../../lib/events';
 import { useGamificationContext } from '../../lib/gamification/context';

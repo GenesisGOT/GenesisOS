@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { WifiOff, RefreshCw, X } from 'lucide-react';
 import { useUserStore } from '../stores/useUserStore';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 
 /**
  * ConnectionBanner — shown when token refresh fails or Supabase is unreachable.

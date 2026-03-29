@@ -1,5 +1,5 @@
 import type { RPGCharacter, CharacterStats, CharacterClass, CharacterAppearance } from './types';
-import { supabase } from '../../lib/supabase';
+import { db as supabase } from '../../lib/data-access';
 import { getLevelFromXP } from '../../lib/gamification/levels';
 import { logger } from '../../utils/logger';
 import { useCharacterAppearanceStore } from '../../stores/useCharacterAppearanceStore';

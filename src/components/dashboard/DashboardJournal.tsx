@@ -7,7 +7,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, ChevronRight } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { localDateStr } from '../../utils/date';
 
 const MOODS: Record<number, string> = { 1: '😫', 2: '😕', 3: '😐', 4: '🙂', 5: '😄' };

@@ -59,7 +59,7 @@ No markdown, no explanation, just the JSON array.`;
     }
     
     // Normalize and validate each task
-    return tasks.slice(0, 5).map((t: any) => ({
+    return tasks.slice(0, 5).map((t: { title: string; id: string; priority?: string; due_date?: string }) => ({
       title: String(t.title || '').trim(),
       priority: ['critical', 'high', 'medium', 'low'].includes(t.priority) ? t.priority : 'medium',
       estimated_minutes: Math.max(15, Math.min(480, parseInt(t.estimated_minutes) || 60)),

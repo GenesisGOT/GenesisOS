@@ -15,7 +15,7 @@
 import { useMemo, useState, useCallback, useEffect } from 'react';
 import { useScheduleStore } from '../stores/useScheduleStore';
 import { localDateStr, todayStr } from '../utils/date';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/data-access';
 import { localUpdate } from '../lib/local-db';
 import { useUserStore } from '../stores/useUserStore';
 import { showToast } from '../components/Toast';

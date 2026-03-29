@@ -55,11 +55,11 @@ export function JournalEditor({
   // Voice-to-text state
   const [isRecording, setIsRecording] = useState(false);
   const [interimTranscript, setInterimTranscript] = useState('');
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<unknown>(null);
   const [voiceSupported, setVoiceSupported] = useState(false);
 
   useEffect(() => {
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const SpeechRecognition = (window as unknown as Record<string, unknown>).SpeechRecognition || (window as unknown as Record<string, unknown>).webkitSpeechRecognition;
     if (SpeechRecognition) {
       setVoiceSupported(true);
       const recognition = new SpeechRecognition();
@@ -67,7 +67,7 @@ export function JournalEditor({
       recognition.interimResults = true;
       recognition.lang = 'en-AU';
 
-      recognition.onresult = (event: any) => {
+      recognition.onresult = (event: { results: ArrayLike<{ 0: { transcript: string } }> }) => {
         let interimText = '';
         let finalText = '';
         for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -86,7 +86,7 @@ export function JournalEditor({
         }
       };
 
-      recognition.onerror = (event: any) => {
+      recognition.onerror = (event: { results: ArrayLike<{ 0: { transcript: string } }> }) => {
         logger.error('Speech recognition error:', event.error);
         setIsRecording(false);
       };

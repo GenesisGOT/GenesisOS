@@ -11,7 +11,9 @@
     "preview": "vite preview",
     "release": "bash scripts/release.sh",
     "build:desktop": "vite build --mode desktop",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@fontsource/orbitron": "^5.2.8",
@@ -30,6 +32,10 @@
     "zustand": "^5.0.11"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "jsdom": "^26.1.0",
+    "vitest": "^3.1.1",
     "@eslint/js": "^9.39.1",
     "@tailwindcss/vite": "^4.2.0",
     "@tauri-apps/cli": "^2.10.0",

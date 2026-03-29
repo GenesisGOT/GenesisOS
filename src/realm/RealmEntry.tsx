@@ -739,7 +739,7 @@ export function RealmEntry({ onExit, fullscreen = false }: RealmEntryProps) {
             title: g.title || 'Goal',
             status: g.status || 'active',
             progress: 0,
-            target_date: (g as any).target_date,
+            target_date: (g as unknown as { target_date?: string }).target_date,
             icon: g.icon,
             color: g.color,
           }))}

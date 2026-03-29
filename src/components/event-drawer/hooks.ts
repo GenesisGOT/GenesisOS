@@ -1,7 +1,7 @@
 // ═══ EventDrawer hooks — data-fetching hooks ═══
 
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { logger } from '../../utils/logger';
 import { useScheduleStore } from '../../stores/useScheduleStore';
 import { useHabitsStore } from '../../stores/useHabitsStore';
@@ -80,7 +80,7 @@ export function useWeeklyStats(event: ScheduleEvent | null, enabled: boolean): W
     // Category distribution for all week events
     const categoryDistribution: Record<string, number> = {};
     for (const e of weekEvents) {
-      const cat = resolveEventCategory(e as any);
+      const cat = resolveEventCategory(e as Record<string, unknown>);
       if (!e.start_time || !e.end_time) continue;
       const dur = (new Date(e.end_time).getTime() - new Date(e.start_time).getTime()) / 60000;
       categoryDistribution[cat] = (categoryDistribution[cat] || 0) + Math.max(0, dur);

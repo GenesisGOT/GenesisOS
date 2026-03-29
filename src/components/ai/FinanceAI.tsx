@@ -17,7 +17,7 @@ import {
   DollarSign, Brain, ChevronDown, ChevronUp, RefreshCw, Loader2,
   Send, Sparkles, ArrowUpCircle, ArrowDownCircle, Receipt, BarChart3,
 } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/data-access';
 import { useUserStore } from '../../stores/useUserStore';
 import { useSubscription } from '../../hooks/useSubscription';
 import { callLLMSimple } from '../../lib/llm-proxy';
@@ -116,16 +116,16 @@ async function loadFinanceSnapshot(userId: string): Promise<FinanceSnapshot> {
   const categories = categoriesRes.data || [];
 
   // Calculate totals
-  const monthIncome = incomeData.reduce((s: number, i: any) => s + i.amount, 0) +
-    txData.filter((t: any) => t.type === 'income').reduce((s: number, t: any) => s + t.amount, 0);
-  const monthExpenses = expenseData.reduce((s: number, e: any) => s + e.amount, 0) +
-    txData.filter((t: any) => t.type === 'expense').reduce((s: number, t: any) => s + t.amount, 0);
+  const monthIncome = incomeData.reduce((s: number, i: { amount: number }) => s + i.amount, 0) +
+    txData.filter((t: { type: string }) => t.type === 'income').reduce((s: number, t: { amount: number }) => s + t.amount, 0);
+  const monthExpenses = expenseData.reduce((s: number, e: { amount: number }) => s + e.amount, 0) +
+    txData.filter((t: { type: string }) => t.type === 'expense').reduce((s: number, t: { amount: number }) => s + t.amount, 0);
   const net = monthIncome - monthExpenses;
 
   // Recent transactions
   const allTx = [
-    ...incomeData.map((i: any) => ({ type: 'income', amount: i.amount, desc: i.source || 'Income', date: i.date })),
-    ...expenseData.map((e: any) => ({ type: 'expense', amount: e.amount, desc: e.description || 'Expense', date: e.date })),
+    ...incomeData.map((i: { amount: number; source?: string; date: string }) => ({ type: 'income' as const, amount: i.amount, desc: i.source || 'Income', date: i.date })),
+    ...expenseData.map((e: { amount: number; description?: string; date: string; category_id?: string }) => ({ type: 'expense' as const, amount: e.amount, desc: e.description || 'Expense', date: e.date })),
   ].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 8);
 
   const recentTransactions = allTx.length > 0
@@ -133,16 +133,16 @@ async function loadFinanceSnapshot(userId: string): Promise<FinanceSnapshot> {
     : 'No transactions this month.';
 
   // Bills
-  const unpaidBills = bills.filter((b: any) => b.status !== 'paid');
-  const overdueBills = unpaidBills.filter((b: any) => b.due_date < new Date().toISOString().split('T')[0]);
+  const unpaidBills = bills.filter((b: { status: string }) => b.status !== 'paid');
+  const overdueBills = unpaidBills.filter((b: { due_date?: string }) => (b.due_date || '') < new Date().toISOString().split('T')[0]);
   const billsSummary = bills.length > 0
-    ? `${unpaidBills.length} unpaid bills totalling $${unpaidBills.reduce((s: number, b: any) => s + b.amount, 0).toFixed(2)}. ${overdueBills.length} overdue. Upcoming: ${unpaidBills.slice(0, 3).map((b: any) => `${b.title} $${b.amount} due ${b.due_date}`).join(', ') || 'none'}`
+    ? `${unpaidBills.length} unpaid bills totalling $${unpaidBills.reduce((s: number, b: { amount: number }) => s + b.amount, 0).toFixed(2)}. ${overdueBills.length} overdue. Upcoming: ${unpaidBills.slice(0, 3).map((b: { title: string; amount: number; due_date?: string }) => `${b.title} $${b.amount} due ${b.due_date}`).join(', ') || 'none'}`
     : 'No bills tracked.';
 
   // Top categories
   const catMap: Record<string, number> = {};
-  expenseData.forEach((e: any) => {
-    const catName = e.category_id ? (categories.find((c: any) => c.id === e.category_id)?.name || 'Other') : 'Uncategorized';
+  expenseData.forEach((e: { amount: number; category_id?: string }) => {
+    const catName = e.category_id ? (categories.find((c: { id: string; name: string }) => c.id === e.category_id)?.name || 'Other') : 'Uncategorized';
     catMap[catName] = (catMap[catName] || 0) + e.amount;
   });
   const topCategories = Object.entries(catMap).sort((a, b) => b[1] - a[1]).slice(0, 5)
@@ -150,7 +150,7 @@ async function loadFinanceSnapshot(userId: string): Promise<FinanceSnapshot> {
 
   // Business summary
   const businessSummary = businesses.length > 0
-    ? businesses.map((b: any) => `${b.icon || '💼'} ${b.name} (${b.type}, ${b.status})`).join(', ')
+    ? businesses.map((b: { icon?: string; name: string; type?: string; status?: string }) => `${b.icon || '💼'} ${b.name} (${b.type}, ${b.status})`).join(', ')
     : 'No businesses set up.';
 
   return { monthIncome, monthExpenses, net, recentTransactions, billsSummary, topCategories, businessSummary };
