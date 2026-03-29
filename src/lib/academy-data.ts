@@ -1,10 +1,10 @@
 /**
  * Academy Data Access Layer
- * 
- * Fetches curriculum, music, references, and nature data from the local Flask API.
- * Falls back to Tauri filesystem access when available.
- * 
- * API endpoints (Flask backend at localhost:8080):
+ *
+ * In Tauri mode: uses invoke() to read files/media directly from disk via Rust.
+ * In browser mode: fetches from Flask API endpoints.
+ *
+ * API endpoints (Flask backend):
  *   GET /api/academy/overview    — full overview with all data
  *   GET /api/academy/curriculum  — curriculum phases & subjects
  *   GET /api/academy/music       — study + realm music tracks
@@ -14,6 +14,41 @@
  *   GET /api/academy/lesson?path=... — read a lesson file
  *   GET /api/media/<type>/<file> — serve media files
  */
+
+import { ACADEMY_ROOT } from '../data/academy-manifest';
+
+// ─── Tauri Detection ────────────────────────────────────────
+
+const isTauri = typeof window !== 'undefined' && '__TAURI__' in window;
+
+let _invoke: ((cmd: string, args?: Record<string, unknown>) => Promise<unknown>) | null = null;
+let _convertFileSrc: ((path: string, protocol?: string) => string) | null = null;
+
+async function getTauriInvoke() {
+  if (_invoke) return _invoke;
+  if (!isTauri) return null;
+  try {
+    const { invoke } = await import('@tauri-apps/api/core');
+    _invoke = invoke;
+    return _invoke;
+  } catch {
+    return null;
+  }
+}
+
+async function getConvertFileSrc() {
+  if (_convertFileSrc) return _convertFileSrc;
+  if (!isTauri) return null;
+  try {
+    const { convertFileSrc } = await import('@tauri-apps/api/core');
+    _convertFileSrc = convertFileSrc;
+    return _convertFileSrc;
+  } catch {
+    return null;
+  }
+}
+
+// ─── HTTP fallback base URL ─────────────────────────────────
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
 
@@ -103,6 +138,30 @@ async function academyFetch<T>(endpoint: string): Promise<T | null> {
 
 /** Get full academy overview (one request for everything). */
 export async function getAcademyOverview(): Promise<AcademyOverview | null> {
+  if (isTauri) {
+    try {
+      const invoke = await getTauriInvoke();
+      if (invoke) {
+        const stats = await invoke('get_academy_overview') as Record<string, number>;
+        return {
+          curriculum: [],
+          music: [],
+          references: [],
+          backgrounds: [],
+          nature: [],
+          stats: {
+            phases: stats.phases ?? 0,
+            musicTracks: stats.studyMusicTracks ?? 0,
+            references: 0,
+            backgrounds: stats.backgrounds ?? 0,
+            natureDatasets: stats.natureDatasets ?? 0,
+          },
+        };
+      }
+    } catch (err) {
+      console.warn('[academy] Tauri overview failed:', err);
+    }
+  }
   return academyFetch<AcademyOverview>('overview');
 }
 
@@ -133,6 +192,23 @@ export async function getNatureData(): Promise<NatureDataset[]> {
 
 /** Read a lesson file's markdown content. */
 export async function readAcademyFile(filePath: string): Promise<string> {
+  // In Tauri mode: read file directly via Rust command
+  if (isTauri) {
+    try {
+      const invoke = await getTauriInvoke();
+      if (invoke) {
+        // filePath is relative to academy root (e.g. "01-foundations/python/00-why-python.md")
+        const fullPath = `${ACADEMY_ROOT}/${filePath}`;
+        const content = await invoke('read_file', { path: fullPath }) as string;
+        return content;
+      }
+    } catch (err) {
+      console.warn('[academy] Tauri read_file failed:', err);
+      return `# Unable to load content\n\nCould not read: \`${filePath}\``;
+    }
+  }
+
+  // HTTP fallback
   try {
     const res = await fetch(`${API_BASE}/api/academy/lesson?path=${encodeURIComponent(filePath)}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -146,13 +222,25 @@ export async function readAcademyFile(filePath: string): Promise<string> {
 
 /**
  * Get a playable URL for a music track.
- * Accepts either a MusicTrack object or a relative path string.
- * Routes through the Flask media endpoint.
+ * In Tauri mode: uses convertFileSrc() for asset protocol URLs.
+ * In browser mode: routes through the Flask media endpoint.
  */
 export function getMusicUrl(trackOrPath: MusicTrack | string): string {
+  const path = typeof trackOrPath === 'string' ? trackOrPath : trackOrPath.path;
+
+  if (isTauri) {
+    // Build absolute path from the relative track path
+    const fullPath = resolveMediaPath(path);
+    // Use convertFileSrc if available (loaded async), otherwise fall back to asset:// directly
+    if (_convertFileSrc) {
+      return _convertFileSrc(fullPath);
+    }
+    // Tauri 2 asset protocol: encode the absolute path
+    return `asset://localhost/${encodeURIComponent(fullPath)}`;
+  }
+
+  // HTTP fallback
   if (typeof trackOrPath === 'string') {
-    // Legacy path mode: "study-music/filename.mp3" or full path
-    const path = trackOrPath;
     if (path.includes('/study-music/') || path.startsWith('study-music/')) {
       const file = path.split('/').pop() ?? path;
       return `${API_BASE}/api/media/study-music/${encodeURIComponent(file)}`;
@@ -161,19 +249,45 @@ export function getMusicUrl(trackOrPath: MusicTrack | string): string {
       const file = path.split('/').pop() ?? path;
       return `${API_BASE}/api/media/realm-music/${encodeURIComponent(file)}`;
     }
-    // Default to study music
     const file = path.split('/').pop() ?? path;
     return `${API_BASE}/api/media/study-music/${encodeURIComponent(file)}`;
   }
-  // MusicTrack object mode
+
   const mediaType = trackOrPath.type === 'realm-music' ? 'realm-music' : 'study-music';
   return `${API_BASE}/api/media/${mediaType}/${encodeURIComponent(trackOrPath.file)}`;
+}
+
+/**
+ * Resolve a relative track path to an absolute filesystem path.
+ */
+function resolveMediaPath(trackPath: string): string {
+  // If already absolute, return as-is
+  if (trackPath.startsWith('/')) return trackPath;
+
+  // Paths in academy-manifest.ts are relative to academy root
+  // e.g. "study-music/filename.mp3"
+  if (trackPath.startsWith('study-music/')) {
+    return `${ACADEMY_ROOT}/${trackPath}`;
+  }
+  if (trackPath.startsWith('realm-music/') || trackPath.includes('/music/')) {
+    return `/mnt/data/prodigy/creative-engine/LifeOS/music/${trackPath.split('/').pop()}`;
+  }
+
+  // Default: treat as relative to academy root
+  return `${ACADEMY_ROOT}/${trackPath}`;
 }
 
 /**
  * Get a background image URL.
  */
 export function getBackgroundUrl(bg: Background): string {
+  if (isTauri) {
+    const fullPath = `/mnt/data/prodigy/creative-engine/LifeOS/Backgrounds/${bg.file}`;
+    if (_convertFileSrc) {
+      return _convertFileSrc(fullPath);
+    }
+    return `asset://localhost/${encodeURIComponent(fullPath)}`;
+  }
   return `${API_BASE}/api/media/backgrounds/${encodeURIComponent(bg.file)}`;
 }
 
@@ -185,4 +299,9 @@ export function estimateReadingTime(content: string): number {
   const words = content.split(/\s+/).length;
   const codeBlocks = (content.match(/```[\s\S]*?```/g) || []).length;
   return Math.max(1, Math.round((words / 200) + (codeBlocks * 2)));
+}
+
+// ─── Eager-load convertFileSrc in Tauri mode ────────────────
+if (isTauri) {
+  getConvertFileSrc().catch(() => {});
 }

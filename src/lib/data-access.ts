@@ -52,24 +52,25 @@ export function getEnvironment(): DataEnvironment {
 // Vite tree-shakes based on static analysis of import.meta.env
 const env = getEnvironment();
 
-// Both adapters are statically imported. supabase.ts will create a
-// no-op client if env vars are missing (local-api mode), and local-api.ts
-// is lightweight. Only the active adapter is actually used at runtime.
+// All three adapters are statically imported. Only the active one is used at runtime.
 import { supabase as supabaseCloud, dedup as dedupCloud } from './supabase';
 import { supabase as supabaseLocal, dedup as dedupLocal } from './local-api';
-
-const isLocal = env === 'local-api' || env === 'tauri';
+import { supabase as supabaseTauri, dedup as dedupTauri } from './tauri-api';
 
 /**
  * The unified database client. Drop-in replacement for `supabase`.
- * Routes to Supabase Cloud or Local API based on environment.
+ * Routes to Tauri IPC, Local API, or Supabase Cloud based on environment.
  */
-export const db = isLocal ? supabaseLocal : supabaseCloud;
+export const db = env === 'tauri' ? supabaseTauri
+               : env === 'local-api' ? supabaseLocal
+               : supabaseCloud;
 
 /**
  * Deduplicated query helper — prevents identical queries from firing simultaneously.
  */
-export const dedup = isLocal ? dedupLocal : dedupCloud;
+export const dedup = env === 'tauri' ? dedupTauri
+                   : env === 'local-api' ? dedupLocal
+                   : dedupCloud;
 
 // ─── Convenience API (higher-level operations) ──────────────────────
 

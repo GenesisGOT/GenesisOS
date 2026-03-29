@@ -1,7 +1,8 @@
 use rusqlite::{Connection, params};
+use serde::{Serialize, Deserialize};
 use serde_json::{json, Value};
 use std::collections::HashMap;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::sync::Mutex;
 use tauri::State;
 use thiserror::Error;
@@ -33,6 +34,12 @@ pub enum LifeOsError {
 
     #[error("Raw queries are disabled for security")]
     RawQueryDisabled,
+
+    #[error("IO error: {0}")]
+    Io(String),
+
+    #[error("Path not allowed: {0}")]
+    PathNotAllowed(String),
 }
 
 impl From<LifeOsError> for Value {
@@ -1239,6 +1246,129 @@ async fn ai_chat(
 }
 
 // ═══════════════════════════════════════════════════════════════
+// Academy / Filesystem Commands
+// ═══════════════════════════════════════════════════════════════
+
+/// Directories the Tauri app is allowed to read from.
+const ALLOWED_DIRS: &[&str] = &[
+    "/mnt/data/tmp/academy/",
+    "/mnt/data/prodigy/creative-engine/LifeOS/",
+    "/home/tewedros/clawd/lifeOS_data/",
+];
+
+/// Check if a canonical path is inside one of the allowed directories.
+fn is_path_allowed(path: &Path) -> bool {
+    let canonical = match std::fs::canonicalize(path) {
+        Ok(p) => p,
+        Err(_) => return false,
+    };
+    let path_str = canonical.to_string_lossy();
+    ALLOWED_DIRS.iter().any(|dir| path_str.starts_with(dir))
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct FileEntry {
+    pub name: String,
+    pub path: String,
+    pub is_dir: bool,
+    pub size: u64,
+}
+
+/// Read a text file from an allowed directory.
+#[tauri::command]
+fn read_file(path: String) -> Result<String, String> {
+    let p = Path::new(&path);
+    if !is_path_allowed(p) {
+        return Err(format!("Path not allowed: {}", path));
+    }
+    std::fs::read_to_string(p).map_err(|e| format!("IO error: {}", e))
+}
+
+/// List files in an allowed directory.
+#[tauri::command]
+fn list_directory(path: String) -> Result<Vec<FileEntry>, String> {
+    let p = Path::new(&path);
+    if !is_path_allowed(p) {
+        return Err(format!("Path not allowed: {}", path));
+    }
+    let entries = std::fs::read_dir(p).map_err(|e| format!("IO error: {}", e))?;
+    let mut result = Vec::new();
+    for entry in entries {
+        let entry = entry.map_err(|e| format!("IO error: {}", e))?;
+        let metadata = entry.metadata().map_err(|e| format!("IO error: {}", e))?;
+        result.push(FileEntry {
+            name: entry.file_name().to_string_lossy().to_string(),
+            path: entry.path().to_string_lossy().to_string(),
+            is_dir: metadata.is_dir(),
+            size: metadata.len(),
+        });
+    }
+    result.sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
+    Ok(result)
+}
+
+/// Return academy overview stats (phases, music count, etc).
+#[tauri::command]
+fn get_academy_overview() -> Value {
+    // Count study-music files
+    let music_count = std::fs::read_dir("/mnt/data/tmp/academy/study-music")
+        .map(|d| d.filter_map(|e| e.ok()).filter(|e| {
+            let name = e.file_name().to_string_lossy().to_lowercase();
+            name.ends_with(".mp3") || name.ends_with(".ogg") || name.ends_with(".wav")
+        }).count())
+        .unwrap_or(0);
+
+    // Count realm music files
+    let realm_music_count = std::fs::read_dir("/mnt/data/prodigy/creative-engine/LifeOS/music")
+        .map(|d| d.filter_map(|e| e.ok()).filter(|e| {
+            let name = e.file_name().to_string_lossy().to_lowercase();
+            name.ends_with(".mp3") || name.ends_with(".ogg") || name.ends_with(".wav")
+        }).count())
+        .unwrap_or(0);
+
+    // Count backgrounds
+    let bg_count = std::fs::read_dir("/mnt/data/prodigy/creative-engine/LifeOS/Backgrounds")
+        .map(|d| d.filter_map(|e| e.ok()).filter(|e| {
+            let name = e.file_name().to_string_lossy().to_lowercase();
+            name.ends_with(".png") || name.ends_with(".jpg") || name.ends_with(".jpeg") || name.ends_with(".webp")
+        }).count())
+        .unwrap_or(0);
+
+    // Count nature CSVs
+    let nature_count = std::fs::read_dir("/home/tewedros/clawd/lifeOS_data")
+        .map(|d| d.filter_map(|e| e.ok()).filter(|e| {
+            e.file_name().to_string_lossy().to_lowercase().ends_with(".csv")
+        }).count())
+        .unwrap_or(0);
+
+    // Count phase directories
+    let phase_count = std::fs::read_dir("/mnt/data/tmp/academy")
+        .map(|d| d.filter_map(|e| e.ok()).filter(|e| {
+            e.metadata().map(|m| m.is_dir()).unwrap_or(false)
+                && e.file_name().to_string_lossy().chars().next().map(|c| c.is_ascii_digit()).unwrap_or(false)
+        }).count())
+        .unwrap_or(0);
+
+    json!({
+        "phases": phase_count,
+        "studyMusicTracks": music_count,
+        "realmMusicTracks": realm_music_count,
+        "backgrounds": bg_count,
+        "natureDatasets": nature_count,
+    })
+}
+
+/// Serve binary file content (audio, images) from allowed directories.
+#[tauri::command]
+fn serve_media(path: String) -> Result<Vec<u8>, String> {
+    let p = Path::new(&path);
+    if !is_path_allowed(p) {
+        return Err(format!("Path not allowed: {}", path));
+    }
+    std::fs::read(p).map_err(|e| format!("IO error: {}", e))
+}
+
+// ═══════════════════════════════════════════════════════════════
 // App Entry
 // ═══════════════════════════════════════════════════════════════
 
@@ -1273,6 +1403,10 @@ pub fn run() {
             delete_item,
             query_raw,
             ai_chat,
+            read_file,
+            list_directory,
+            get_academy_overview,
+            serve_media,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
