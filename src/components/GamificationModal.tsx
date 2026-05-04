@@ -1,4 +1,4 @@
-// LifeOS — Gamification Stats Modal (popup only, not inline)
+// GenesisOS — Gamification Stats Modal (popup only, not inline)
 // Uses portal to escape transformed containers (sidebar on mobile)
 // v2: RPG-style game menu with icon tabs, quest filters, achievement showcase
 import { useState, useMemo } from 'react';

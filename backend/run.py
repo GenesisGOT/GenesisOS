@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""LifeOS Backend — Development Server"""
+"""GenesisOS Backend — Development Server"""
 from app import app
 
 if __name__ == '__main__':

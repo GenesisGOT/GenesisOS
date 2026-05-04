@@ -269,7 +269,7 @@ export function NLPDecomposer({ onClose, onCreated }: NLPDecomposerProps) {
       } catch { /* non-critical — debounced sync will catch up */ }
 
       // 7. Refresh
-      window.dispatchEvent(new Event('lifeos-refresh'));
+      window.dispatchEvent(new Event('genesisOS-refresh'));
       useGoalsStore.getState().invalidate();
 
       const counts = countHierarchyItems(hierarchy, excludedPaths);

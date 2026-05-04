@@ -1,4 +1,4 @@
-// LifeOS Gamification — Achievement Toast Notifications
+// GenesisOS Gamification — Achievement Toast Notifications
 // Slides in from right with gold/rarity borders, stacks
 
 import { useState, useEffect, useCallback } from 'react';

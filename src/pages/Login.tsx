@@ -73,7 +73,7 @@ export function Login() {
       <div className="login-card">
         <div className="login-logo">
           <span className="login-icon"><Zap size={28} color="#00D4FF" /></span>
-          <span className="login-brand">LifeOS</span>
+          <span className="login-brand">GenesisOS</span>
         </div>
         <h1 className="login-title">{isSignUp ? 'Create Account' : 'Welcome Back'}</h1>
         <p className="login-sub">

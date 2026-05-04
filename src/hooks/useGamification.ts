@@ -1,4 +1,4 @@
-// LifeOS Gamification Hook — provides all gamification state + actions
+// GenesisOS Gamification Hook — provides all gamification state + actions
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../lib/data-access';
 import { useUserStore } from '../stores/useUserStore';

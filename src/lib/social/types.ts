@@ -1,4 +1,4 @@
-// LifeOS Social Layer — Shared TypeScript Types
+// GenesisOS Social Layer — Shared TypeScript Types
 
 import type { LadderKey } from '../gamification/ladder';
 

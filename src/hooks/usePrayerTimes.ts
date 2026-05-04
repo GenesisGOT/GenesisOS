@@ -13,7 +13,7 @@ import { calculatePrayerTimes, type PrayerTime } from '../lib/prayer-times';
 // Default location: Melbourne, Australia
 const DEFAULT_LAT = -37.8136;
 const DEFAULT_LNG = 144.9631;
-const LOCATION_CACHE_KEY = 'lifeos-prayer-location';
+const LOCATION_CACHE_KEY = 'genesisOS-prayer-location';
 
 interface CachedLocation {
   lat: number;

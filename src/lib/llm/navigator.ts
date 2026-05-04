@@ -1,5 +1,5 @@
 /**
- * LifeOS LLM Navigator
+ * GenesisOS LLM Navigator
  *
  * Maps natural language intents to page navigation commands.
  * The AI can call parseNavigationIntent() on any user message to
@@ -185,7 +185,7 @@ export function executeNavigation(
         safeScrollIntoView(el, { behavior: 'smooth', block: 'center' });
       } else {
         document.dispatchEvent(
-          new CustomEvent('lifeos-scroll-to', { detail: { target: command.target } })
+          new CustomEvent('genesisOS-scroll-to', { detail: { target: command.target } })
         );
       }
       break;
@@ -193,7 +193,7 @@ export function executeNavigation(
 
     case 'highlight': {
       document.dispatchEvent(
-        new CustomEvent('lifeos-highlight', {
+        new CustomEvent('genesisOS-highlight', {
           detail: { target: command.target, params: command.params },
         })
       );
@@ -202,7 +202,7 @@ export function executeNavigation(
 
     case 'open_modal': {
       document.dispatchEvent(
-        new CustomEvent('lifeos-open-modal', {
+        new CustomEvent('genesisOS-open-modal', {
           detail: { target: command.target, params: command.params },
         })
       );

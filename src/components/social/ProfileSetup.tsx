@@ -1,4 +1,4 @@
-// LifeOS Social — Profile Setup (Public Profile Editor)
+// GenesisOS Social — Profile Setup (Public Profile Editor)
 
 import { useState, useEffect } from 'react';
 import { Loader2, Check } from 'lucide-react';

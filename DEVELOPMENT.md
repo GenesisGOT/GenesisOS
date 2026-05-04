@@ -1,6 +1,6 @@
-# DEVELOPMENT.md — LifeOS Development Rules
+# DEVELOPMENT.md — GenesisOS Development Rules
 > Version: 1.0 | Created: 2026-02-12
-> ⚠️ THIS FILE MUST PERSIST THROUGH COMPACTION — it governs all LifeOS development.
+> ⚠️ THIS FILE MUST PERSIST THROUGH COMPACTION — it governs all GenesisOS development.
 
 ## The Golden Rules
 
@@ -38,20 +38,20 @@
 
 ### 5. Deploy Process
 ```bash
-# From lifeos-app/
+# From genesisOS-app/
 # 1. Build
 npm run build
 
 # 2. Deploy to AWS (both paths!)
-scp -i ~/.ssh/your-key.pem -r dist/* YOUR_USER@YOUR_SERVER_IP:/tmp/lifeos-deploy/
+scp -i ~/.ssh/your-key.pem -r dist/* YOUR_USER@YOUR_SERVER_IP:/tmp/genesisOS-deploy/
 ssh -i ~/.ssh/your-key.pem YOUR_USER@YOUR_SERVER_IP '
-  sudo cp -r /tmp/lifeos-deploy/* /your/deploy/path/
-  sudo cp -r /tmp/lifeos-deploy/* /your/deploy/path/
-  rm -rf /tmp/lifeos-deploy
+  sudo cp -r /tmp/genesisOS-deploy/* /your/deploy/path/
+  sudo cp -r /tmp/genesisOS-deploy/* /your/deploy/path/
+  rm -rf /tmp/genesisOS-deploy
 '
 
 # 3. Verify
-curl -s -o /dev/null -w "%{http_code}" https://app.runlifeos.com
+curl -s -o /dev/null -w "%{http_code}" https://app.rungenesisOS.com
 ```
 
 ### 6. Git Workflow
@@ -79,14 +79,14 @@ master ──────────────────────── 
 ### Repos
 | Repo | Branch | Purpose |
 |------|--------|---------|
-| `lifeos-app` | master/develop | Web app (Vite + React + TS + Supabase) |
-| `lifeos` | master | Mobile app (Expo + React Native + Supabase) |
-| `lifeos-website` | master | Landing page (static HTML) |
+| `genesisOS-app` | master/develop | Web app (Vite + React + TS + Supabase) |
+| `genesisOS` | master | Mobile app (Expo + React Native + Supabase) |
+| `genesisOS-website` | master | Landing page (static HTML) |
 
 ### Infrastructure
 - **Supabase:** project `YOUR_PROJECT_REF` (prod)
 - **AWS Lightsail:** YOUR_SERVER_IP (web hosting)
-- **Domains:** runlifeos.com, lifeos.com.au, app.runlifeos.com
+- **Domains:** rungenesisOS.com, genesisOS.com.au, app.rungenesisOS.com
 - **Users in prod:** 4 accounts
 - **Tables:** 11 active
 
@@ -108,7 +108,7 @@ The web app is served from TWO paths on AWS:
 - [ ] `develop` branch is clean, no WIP commits
 - [ ] Build succeeds (`npm run build`)
 - [ ] Deploy to BOTH AWS paths
-- [ ] Verify app loads at app.runlifeos.com
+- [ ] Verify app loads at app.rungenesisOS.com
 - [ ] Check existing user data still intact
 - [ ] Tag release on master (`git tag v0.X.0`)
 - [ ] Update this migration log

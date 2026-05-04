@@ -1,4 +1,4 @@
-// LifeOS — Customisable Dashboard Layout
+// GenesisOS — Customisable Dashboard Layout
 // Users can reorder and toggle visibility of dashboard widgets
 // Layout persists in Supabase user_profiles.preferences.dashboardLayout
 

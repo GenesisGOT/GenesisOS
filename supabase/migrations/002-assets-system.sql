@@ -1,5 +1,5 @@
 -- ══════════════════════════════════════════════════
--- LifeOS Assets System — "Equip Your Life"
+-- GenesisOS Assets System — "Equip Your Life"
 -- 
 -- Master asset table + maintenance, bills, documents
 -- Everything you own is "equipped" to your character.

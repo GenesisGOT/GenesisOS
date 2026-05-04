@@ -127,11 +127,11 @@ export function Schedule() {
 
   // Layer filter
   const [layerFilter, setLayerFilter] = useState<LayerFilter>(() => {
-    try { return (localStorage.getItem('lifeos-schedule-layer') as LayerFilter) || 'all'; } catch { return 'all'; }
+    try { return (localStorage.getItem('genesisOS-schedule-layer') as LayerFilter) || 'all'; } catch { return 'all'; }
   });
   const setLayerFilterPersist = (lf: LayerFilter) => {
     setLayerFilter(lf);
-    try { localStorage.setItem('lifeos-schedule-layer', lf); } catch {}
+    try { localStorage.setItem('genesisOS-schedule-layer', lf); } catch {}
   };
 
   // Desktop multi-column detection (≥1200px)
@@ -182,12 +182,12 @@ export function Schedule() {
 
   // Time format: 12h vs 24h
   const [use24h, setUse24h] = useState(() => {
-    try { return localStorage.getItem('lifeos-schedule-24h') === 'true'; } catch { return false; }
+    try { return localStorage.getItem('genesisOS-schedule-24h') === 'true'; } catch { return false; }
   });
   const toggleTimeFormat = () => {
     setUse24h(prev => {
       const next = !prev;
-      try { localStorage.setItem('lifeos-schedule-24h', String(next)); } catch {}
+      try { localStorage.setItem('genesisOS-schedule-24h', String(next)); } catch {}
       return next;
     });
   };
@@ -307,11 +307,11 @@ export function Schedule() {
       else if (view === 'week') fetchWeekEvents();
       else fetchMonthEvents();
     };
-    window.addEventListener('lifeos-refresh', h);
+    window.addEventListener('genesisOS-refresh', h);
     const vis = () => { if (document.visibilityState === 'visible') h(); };
     document.addEventListener('visibilitychange', vis);
     return () => {
-      window.removeEventListener('lifeos-refresh', h);
+      window.removeEventListener('genesisOS-refresh', h);
       document.removeEventListener('visibilitychange', vis);
     };
   }, [view, fetchDayEvents, fetchWeekEvents, fetchMonthEvents]);

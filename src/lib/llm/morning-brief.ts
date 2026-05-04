@@ -1,8 +1,8 @@
 /**
- * LifeOS LLM Morning Brief Generator
+ * GenesisOS LLM Morning Brief Generator
  *
  * Generates a rich, data-driven morning brief by aggregating user data
- * from across the entire LifeOS database.
+ * from across the entire GenesisOS database.
  *
  * Note: The existing `src/lib/ai/coach.ts` has a simpler MorningBrief type.
  * This module extends it with partner updates, quest data, plugin income,

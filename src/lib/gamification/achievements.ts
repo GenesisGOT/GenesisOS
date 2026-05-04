@@ -1,4 +1,4 @@
-// LifeOS Gamification — Achievement / Badge System
+// GenesisOS Gamification — Achievement / Badge System
 // 60+ achievements across 7 categories
 
 import type { SupabaseClient } from '@supabase/supabase-js';
@@ -57,7 +57,7 @@ export const ACHIEVEMENTS: Achievement[] = [
   {
     id: 'first_step',
     title: 'First Step',
-    description: 'Complete your first action in LifeOS',
+    description: 'Complete your first action in GenesisOS',
     icon: '👣',
     rarity: 'common',
     category: 'consistency',
@@ -550,7 +550,7 @@ export const ACHIEVEMENTS: Achievement[] = [
   {
     id: 'explorer',
     title: 'Explorer',
-    description: 'Visit every page in LifeOS',
+    description: 'Visit every page in GenesisOS',
     icon: '🗺️',
     rarity: 'rare',
     category: 'meta',
@@ -560,7 +560,7 @@ export const ACHIEVEMENTS: Achievement[] = [
   {
     id: 'completionist',
     title: 'Completionist',
-    description: 'Set up all LifeOS modules (goals, habits, finance, health, journal)',
+    description: 'Set up all GenesisOS modules (goals, habits, finance, health, journal)',
     icon: '🏅',
     rarity: 'rare',
     category: 'meta',
@@ -656,7 +656,7 @@ export const ACHIEVEMENTS: Achievement[] = [
   {
     id: 'one_month',
     title: 'One Month In',
-    description: 'Use LifeOS for 30 days',
+    description: 'Use GenesisOS for 30 days',
     icon: '📆',
     rarity: 'common',
     category: 'meta',
@@ -667,7 +667,7 @@ export const ACHIEVEMENTS: Achievement[] = [
   {
     id: 'one_year',
     title: 'Year One',
-    description: 'Use LifeOS for 365 days',
+    description: 'Use GenesisOS for 365 days',
     icon: '🎂',
     rarity: 'legendary',
     category: 'meta',
@@ -678,7 +678,7 @@ export const ACHIEVEMENTS: Achievement[] = [
   {
     id: 'feedback_hero',
     title: 'Feedback Hero',
-    description: 'Submit feedback to help improve LifeOS',
+    description: 'Submit feedback to help improve GenesisOS',
     icon: '💬',
     rarity: 'common',
     category: 'meta',

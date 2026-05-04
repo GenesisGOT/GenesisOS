@@ -1,4 +1,4 @@
--- LifeOS Social v2 — Friends System + Ladder Classes
+-- GenesisOS Social v2 — Friends System + Ladder Classes
 -- Migration: 20260219_social_v2_friends_ladder
 -- Run after: 20260219_social_schema.sql
 

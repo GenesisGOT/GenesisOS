@@ -446,7 +446,7 @@ export async function scheduleObjectiveTasks(
   }
 
   if (scheduled > 0) {
-    try { window.dispatchEvent(new Event('lifeos-refresh')); } catch { /* SSR safe */ }
+    try { window.dispatchEvent(new Event('genesisOS-refresh')); } catch { /* SSR safe */ }
   }
 
   return scheduled;

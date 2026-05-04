@@ -22,7 +22,7 @@ const DEFAULT_SCHEDULE: SleepSchedulePrefs = {
   enabled: true,
 };
 
-const STORAGE_KEY = 'lifeos_sleep_schedule';
+const STORAGE_KEY = 'genesisOS_sleep_schedule';
 const DAYS_OF_WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 // ── Helpers ──
@@ -297,7 +297,7 @@ export function SleepTab({ metrics, allMetrics, onUpdateMetrics }: SleepTabProps
       }
 
       // Dispatch refresh event
-      window.dispatchEvent(new CustomEvent('lifeos-refresh'));
+      window.dispatchEvent(new CustomEvent('genesisOS-refresh'));
       setSyncMsg(`✅ ${created} sleep blocks added to calendar`);
     } catch (err: unknown) {
       setSyncMsg(`❌ ${err.message || 'Sync failed'}`);

@@ -66,8 +66,8 @@ export function GoalCoachCard({ compact = false, onTaskCreated, onAIGenerate }: 
   // Listen for goal/task changes
   useEffect(() => {
     const handler = () => fetchInsights();
-    window.addEventListener('lifeos-refresh', handler);
-    return () => window.removeEventListener('lifeos-refresh', handler);
+    window.addEventListener('genesisOS-refresh', handler);
+    return () => window.removeEventListener('genesisOS-refresh', handler);
   }, [fetchInsights]);
 
   const acceptSuggestion = async (insight: GoalCoachInsight) => {
@@ -177,7 +177,7 @@ export function GoalCoachCard({ compact = false, onTaskCreated, onAIGenerate }: 
               ) : (
                 <button className="gc-ai-generate-btn" onClick={() => {
                   // Navigate to onboarding/AI chat for goal creation
-                  window.dispatchEvent(new CustomEvent('lifeos-open-ai-chat', { detail: { prompt: 'Help me create goals' } }));
+                  window.dispatchEvent(new CustomEvent('genesisOS-open-ai-chat', { detail: { prompt: 'Help me create goals' } }));
                 }}>
                   <Sparkles size={14} />
                   <span>AI Goal Creation</span>

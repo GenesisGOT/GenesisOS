@@ -1,10 +1,10 @@
-# LifeOS Local Mode
+# GenesisOS Local Mode
 
-> Run LifeOS entirely offline with a local Flask API instead of Supabase.
+> Run GenesisOS entirely offline with a local Flask API instead of Supabase.
 
 ## Overview
 
-LifeOS was built on Supabase (PostgreSQL + Auth + Realtime). This adapter layer replaces Supabase with a local Flask API, enabling fully offline operation.
+GenesisOS was built on Supabase (PostgreSQL + Auth + Realtime). This adapter layer replaces Supabase with a local Flask API, enabling fully offline operation.
 
 **152 files** reference Supabase across the codebase. The migration uses a drop-in adapter that mimics Supabase's chainable query interface.
 
@@ -148,7 +148,7 @@ GET  /api/auth/user               → (with Authorization header)
 POST /api/auth/reset-password     → { email }
 ```
 
-### Tables used by LifeOS
+### Tables used by GenesisOS
 
 Based on codebase analysis, the Flask API needs these tables:
 

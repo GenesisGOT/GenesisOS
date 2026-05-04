@@ -60,7 +60,7 @@ export function SyncPromptBanner() {
         <div className="spb-row">
           <Cloud size={15} className="spb-icon" />
           <span className="spb-text">
-            You're using LifeOS offline.
+            You're using GenesisOS offline.
           </span>
           <button className="spb-action" onClick={() => setShowForm('signup')}>
             <UserPlus size={13} />

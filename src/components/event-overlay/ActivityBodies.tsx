@@ -327,7 +327,7 @@ export function MealOverlayBody({ event }: { event: ActiveEvent }) {
       notes: `${mealLabel}: ${event.title}. P:${protein}g C:${carbs}g F:${fat}g`,
     });
     setLogged(true);
-    window.dispatchEvent(new Event('lifeos-refresh'));
+    window.dispatchEvent(new Event('genesisOS-refresh'));
   };
 
   return (
@@ -403,7 +403,7 @@ export function SleepOverlayBody({ event }: { event: ActiveEvent }) {
       notes: `quality: ${quality}/5, bedtime: ${bedtime}, wake: ${wakeTime}`,
     }, { onConflict: 'user_id,date,metric_type' });
     setLogged(true);
-    window.dispatchEvent(new Event('lifeos-refresh'));
+    window.dispatchEvent(new Event('genesisOS-refresh'));
   };
 
   return (
@@ -483,7 +483,7 @@ export function MeditationOverlayBody({ event }: { event: ActiveEvent }) {
       notes: `${event.title} — ${Math.floor(elapsed / 60) || targetMin} minutes`,
     });
     setLogged(true);
-    window.dispatchEvent(new Event('lifeos-refresh'));
+    window.dispatchEvent(new Event('genesisOS-refresh'));
   };
 
   return (

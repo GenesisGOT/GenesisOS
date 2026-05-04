@@ -1,7 +1,7 @@
 /**
- * LifeOS Orchestrator — The Unified AI Brain
+ * GenesisOS Orchestrator — The Unified AI Brain
  *
- * Connects the AI chat widget to ALL AI engines in LifeOS.
+ * Connects the AI chat widget to ALL AI engines in GenesisOS.
  * Each "tool" wraps one of the 7 AI engines + the balance engine,
  * returning structured data that the chat can render as rich cards.
  *
@@ -127,7 +127,7 @@ export const ORCHESTRATOR_TOOLS: ToolDefinition[] = [
 
 // ── Cache Layer ────────────────────────────────────────────────────────────────
 
-const ORCH_CACHE_PREFIX = 'lifeos_orch_';
+const ORCH_CACHE_PREFIX = 'genesisOS_orch_';
 const CACHE_TTL_MS = 4 * 60 * 60 * 1000; // 4 hours
 
 function getCachedResult(tool: string, userId: string): OrchestratorToolResult | null {

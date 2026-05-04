@@ -1,4 +1,4 @@
-// LifeOS Social — Partner Matching Algorithm
+// GenesisOS Social — Partner Matching Algorithm
 
 import { supabase } from '../data-access';
 import { searchProfiles } from './profiles';

@@ -1,4 +1,4 @@
--- LifeOS Social Schema — Accountability Partners, Messaging, Groups
+-- GenesisOS Social Schema — Accountability Partners, Messaging, Groups
 -- Migration: 20260219_social_schema
 
 -- ══════════════════════════════════════════════════════

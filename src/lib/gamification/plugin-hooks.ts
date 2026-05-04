@@ -4,7 +4,7 @@
  * External systems write quest suggestions to `plugin_quest_suggestions`.
  * Quest Engine v2 reads and consumes them during daily generation.
  *
- * USAGE (from any external system or LifeOS module):
+ * USAGE (from any external system or GenesisOS module):
  *
  *   import { injectPluginQuest, PLUGIN_IDS } from './plugin-hooks';
  *
@@ -75,7 +75,7 @@ export interface PluginQuestRecord extends PluginQuestSuggestion {
 // ── KNOWN PLUGIN IDs ───────────────────────────────────────────────────────────
 
 /**
- * Canonical plugin_id values used by LifeOS integrations.
+ * Canonical plugin_id values used by GenesisOS integrations.
  * External code should import these rather than using raw strings.
  */
 export const PLUGIN_IDS = {

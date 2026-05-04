@@ -470,7 +470,7 @@ function buildOptimizerPrompt(input: OptimizerInput): string {
       return `  • ${r.emoji} ${r.title} (${timeRange}, ${daysStr}) ${todayActive}`;
     }).join('\n') || '  (no rituals defined)';
 
-  return `You are the LifeOS Schedule Optimizer. Analyze this schedule and return JSON.
+  return `You are the GenesisOS Schedule Optimizer. Analyze this schedule and return JSON.
 
 ## TODAY: ${input.date}
 

@@ -21,7 +21,7 @@ interface CommandItem {
   action: () => void;
 }
 
-const RECENT_KEY = 'lifeos_recent_commands';
+const RECENT_KEY = 'genesisOS_recent_commands';
 
 // ═══════════════════════════════════════════════════════════════
 // COMPONENT
@@ -341,7 +341,7 @@ export function CommandPalette() {
         }}>
           <span>↑↓ Navigate · ↵ Select · Esc Close</span>
           <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            <Sparkles size={10} /> LifeOS
+            <Sparkles size={10} /> GenesisOS
           </span>
         </div>
       </div>

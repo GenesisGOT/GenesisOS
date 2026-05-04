@@ -109,7 +109,7 @@ export function MealDetail({ event }: MealDetailProps) {
 
       setLogged(true);
       showToast('Meal logged! 🍽️', 'success');
-      window.dispatchEvent(new Event('lifeos-refresh'));
+      window.dispatchEvent(new Event('genesisOS-refresh'));
     } catch {
       showToast('Failed to log meal', 'error');
     } finally {

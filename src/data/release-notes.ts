@@ -1,5 +1,5 @@
 /**
- * Release Notes — What's New in LifeOS
+ * Release Notes — What's New in GenesisOS
  * 
  * Add a new entry here when releasing a new version.
  * Only the CURRENT version is shown to users (not full history).
@@ -701,7 +701,7 @@ export const releaseNotes: ReleaseNote[] = [
     date: 'March 13, 2026',
     title: 'See What They See',
     highlights: [
-      { icon: '✨', text: 'Removed owner bypass — owner experiences LifeOS as a regular member' },
+      { icon: '✨', text: 'Removed owner bypass — owner experiences GenesisOS as a regular member' },
     ],
   },
   {

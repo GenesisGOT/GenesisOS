@@ -16,7 +16,7 @@
 import { genId } from '../utils/date';
 import { logger } from '../utils/logger';
 
-const DB_NAME = 'lifeos-local';
+const DB_NAME = 'genesisOS-local';
 const DB_VERSION = 7;
 
 // All object stores (tables)
@@ -167,7 +167,7 @@ export async function openLocalDB(): Promise<IDBDatabase> {
 // Local User ID Management
 // ══════════════════════════════════════════════════════════════
 
-const LOCAL_USER_KEY = 'lifeos_local_user_id';
+const LOCAL_USER_KEY = 'genesisOS_local_user_id';
 
 /**
  * Get the current local user ID. Creates one if it doesn't exist.

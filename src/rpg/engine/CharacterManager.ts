@@ -7,7 +7,7 @@ import { EYE_COLORS } from '../data/sprites';
 import { getClassInfo } from '../data/classes';
 
 /**
- * Derive character stats from real LifeOS data.
+ * Derive character stats from real GenesisOS data.
  * This is the bridge between productivity data and RPG stats.
  */
 export async function deriveStats(userId: string, characterClass?: CharacterClass): Promise<CharacterStats> {
@@ -139,7 +139,7 @@ export async function createCharacter(
 ): Promise<RPGCharacter | null> {
   const stats = await deriveStats(userId, characterClass);
 
-  // Get user's current XP from LifeOS gamification
+  // Get user's current XP from GenesisOS gamification
   const { data: xpData } = await supabase
     .from('user_xp')
     .select('total_xp, level')

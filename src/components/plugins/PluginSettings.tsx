@@ -14,7 +14,7 @@ import { logger } from '../../utils/logger';
 
 // ── HELPERS ────────────────────────────────────────────────────────────────────
 
-/** The public webhook URL for this LifeOS instance */
+/** The public webhook URL for this GenesisOS instance */
 function getWebhookUrl(pluginId: string): string {
   const base = window.location.origin;
   return `${base}/api/webhooks/${pluginId}`;
@@ -275,7 +275,7 @@ function PluginCard({
           }}>
             <div style={{ fontSize: 11, color: '#5A7A9A', marginBottom: 6 }}>
               Send events to this URL using HMAC-SHA256 signature in{' '}
-              <code style={{ color: '#00D4FF', fontSize: 10 }}>X-LifeOS-Signature</code>
+              <code style={{ color: '#00D4FF', fontSize: 10 }}>X-GenesisOS-Signature</code>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <code style={{
@@ -306,7 +306,7 @@ function PluginCard({
                 {copiedWebhook ? <Check size={13} /> : <Copy size={13} />}
               </button>
               <a
-                href={`https://docs.lifeos.app/plugins/${plugin.id}`}
+                href={`https://docs.genesisOS.app/plugins/${plugin.id}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ color: '#5A7A9A', display: 'flex' }}

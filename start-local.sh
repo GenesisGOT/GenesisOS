@@ -1,5 +1,5 @@
 #!/bin/bash
-# LifeOS Local Mode — Start Both Servers
+# GenesisOS Local Mode — Start Both Servers
 # Usage: ./start-local.sh
 #   Flask API on :8080, Vite dev server on :5173
 
@@ -7,15 +7,15 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 BACKEND_DIR="$SCRIPT_DIR/backend"
-LOG_DIR="/tmp/lifeos-logs"
+LOG_DIR="/tmp/genesisOS-logs"
 mkdir -p "$LOG_DIR"
 
-echo "🚀 Starting LifeOS Local Mode..."
+echo "🚀 Starting GenesisOS Local Mode..."
 echo ""
 
 # Kill any existing instances
-pkill -f "python3.*app.py.*lifeos" 2>/dev/null || true
-pkill -f "vite.*lifeos" 2>/dev/null || true
+pkill -f "python3.*app.py.*genesisOS" 2>/dev/null || true
+pkill -f "vite.*genesisOS" 2>/dev/null || true
 sleep 1
 
 # Start Flask backend
@@ -44,7 +44,7 @@ sleep 3
 
 echo ""
 echo "═══════════════════════════════════════════"
-echo "  🎮 LifeOS is running!"
+echo "  🎮 GenesisOS is running!"
 echo ""
 echo "  Frontend:  http://localhost:5173"
 echo "  API:       http://localhost:8080"

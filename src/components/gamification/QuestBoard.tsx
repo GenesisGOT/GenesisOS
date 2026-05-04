@@ -1,4 +1,4 @@
-// LifeOS Gamification — Quest Board Component
+// GenesisOS Gamification — Quest Board Component
 // v2: Supports time indicators, work category, cleaner mobile layout
 //
 // Renders daily, weekly, and epic quests.

@@ -1,11 +1,11 @@
-# LifeOS — Free AI Life Operating System
-# https://app.runlifeos.com
+# GenesisOS — Free AI Life Operating System
+# https://app.rungenesisOS.com
 
 User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://app.runlifeos.com/app/sitemap.xml
+Sitemap: https://app.rungenesisOS.com/app/sitemap.xml
 
 # Allow all crawlers to index the app
 User-agent: Googlebot

@@ -1,4 +1,4 @@
-// LifeOS Social — Guilds Browser + Chat
+// GenesisOS Social — Guilds Browser + Chat
 
 import { useState, useEffect } from 'react';
 import { Plus, MessageCircle, Globe, Users, CheckCircle2, TrendingUp, Award, Calendar } from 'lucide-react';

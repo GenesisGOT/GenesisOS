@@ -209,7 +209,7 @@ function AppRoutes() {
     });
   }, [user?.id]);
 
-  // Listen for lifeos-refresh events and invalidate all stores (debounced)
+  // Listen for genesisOS-refresh events and invalidate all stores (debounced)
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout> | null = null;
     const handler = () => {
@@ -224,9 +224,9 @@ function AppRoutes() {
         useJournalStore.getState().invalidate();
       }, 300);
     };
-    window.addEventListener('lifeos-refresh', handler);
+    window.addEventListener('genesisOS-refresh', handler);
     return () => {
-      window.removeEventListener('lifeos-refresh', handler);
+      window.removeEventListener('genesisOS-refresh', handler);
       if (timer) clearTimeout(timer);
     };
   }, []);

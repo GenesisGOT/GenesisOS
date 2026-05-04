@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-LifeOS Flask Backend — Local-first SQLite API
+GenesisOS Flask Backend — Local-first SQLite API
 Replaces Supabase with a simple REST API.
 Single-user mode, no auth required.
 
@@ -36,7 +36,7 @@ CORS(app, origins=[
     "http://127.0.0.1:8080",
 ])
 
-DB_PATH = os.path.join(os.path.expanduser('~'), '.lifeos', 'data.db')
+DB_PATH = os.path.join(os.path.expanduser('~'), '.genesisOS', 'data.db')
 DEFAULT_USER_ID = 'local-user-001'
 AI_BRIDGE_URL = os.environ.get('AI_BRIDGE_URL', 'http://localhost:11435')
 
@@ -825,11 +825,11 @@ def init_db():
     # Ensure default user exists
     db.execute(
         "INSERT OR IGNORE INTO users (id, email, display_name) VALUES (?, ?, ?)",
-        (DEFAULT_USER_ID, 'local@lifeos.app', 'LifeOS User')
+        (DEFAULT_USER_ID, 'local@genesisOS.app', 'GenesisOS User')
     )
     db.execute(
         "INSERT OR IGNORE INTO user_profiles (user_id, email, full_name, onboarding_complete) VALUES (?, ?, ?, 1)",
-        (DEFAULT_USER_ID, 'local@lifeos.app', 'LifeOS User')
+        (DEFAULT_USER_ID, 'local@genesisOS.app', 'GenesisOS User')
     )
     db.execute(
         "INSERT OR IGNORE INTO user_xp (user_id, total_xp, level) VALUES (?, 0, 1)",
@@ -837,7 +837,7 @@ def init_db():
     )
     db.commit()
     db.close()
-    print(f"[LifeOS] Database initialized at {DB_PATH}")
+    print(f"[GenesisOS] Database initialized at {DB_PATH}")
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -1287,8 +1287,8 @@ def get_session():
     return supabase_response(data={
         "user": {
             "id": DEFAULT_USER_ID,
-            "email": "local@lifeos.app",
-            "user_metadata": {"full_name": "LifeOS User"}
+            "email": "local@genesisOS.app",
+            "user_metadata": {"full_name": "GenesisOS User"}
         },
         "access_token": "local-token",
         "expires_at": 9999999999
@@ -1298,8 +1298,8 @@ def get_session():
 def get_user():
     return supabase_response(data={
         "id": DEFAULT_USER_ID,
-        "email": "local@lifeos.app",
-        "user_metadata": {"full_name": "LifeOS User"}
+        "email": "local@genesisOS.app",
+        "user_metadata": {"full_name": "GenesisOS User"}
     })
 
 @app.route('/api/user/profile', methods=['GET'])
@@ -1599,7 +1599,7 @@ def health_check():
 # ═══════════════════════════════════════════════════════════════
 
 ACADEMY_ROOT = '/mnt/data/tmp/academy'
-LIFEOS_ASSETS = '/mnt/data/prodigy/creative-engine/LifeOS'
+LIFEOS_ASSETS = '/mnt/data/prodigy/creative-engine/GenesisOS'
 LIFEOS_DATA = '/home/tewedros/clawd/lifeOS_data'
 
 def scan_curriculum():
@@ -1654,12 +1654,12 @@ def scan_music():
                     "size": os.path.getsize(filepath),
                     "type": "study-music"
                 })
-    # Also scan LifeOS game music
-    lifeos_music = os.path.join(LIFEOS_ASSETS, 'music')
-    if os.path.isdir(lifeos_music):
-        for f in sorted(os.listdir(lifeos_music)):
+    # Also scan GenesisOS game music
+    genesisOS_music = os.path.join(LIFEOS_ASSETS, 'music')
+    if os.path.isdir(genesisOS_music):
+        for f in sorted(os.listdir(genesisOS_music)):
             if f.endswith(('.mp3', '.ogg', '.wav', '.flac')):
-                filepath = os.path.join(lifeos_music, f)
+                filepath = os.path.join(genesisOS_music, f)
                 tracks.append({
                     "name": os.path.splitext(f)[0],
                     "file": f,
@@ -1693,7 +1693,7 @@ def scan_references():
     return refs
 
 def scan_backgrounds():
-    """Scan LifeOS backgrounds."""
+    """Scan GenesisOS backgrounds."""
     bg_dir = os.path.join(LIFEOS_ASSETS, 'Backgrounds')
     bgs = []
     if os.path.isdir(bg_dir):
@@ -1761,7 +1761,7 @@ def academy_lesson():
     # If the path is relative (doesn't start with /), prepend academy root
     if path and not os.path.isabs(path):
         path = os.path.join(ACADEMY_ROOT, path)
-    # Security: only allow reading from academy, lifeos assets, or lifeos data dirs
+    # Security: only allow reading from academy, genesisOS assets, or genesisOS data dirs
     allowed_roots = [ACADEMY_ROOT, LIFEOS_ASSETS, LIFEOS_DATA]
     real_path = os.path.realpath(path)
     if not any(real_path.startswith(os.path.realpath(r)) for r in allowed_roots):

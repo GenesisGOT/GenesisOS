@@ -1,4 +1,4 @@
-// LifeOS Social — Friends List Component
+// GenesisOS Social — Friends List Component
 // Separate from accountability partners — social connections only
 
 import { useState, useEffect } from 'react';

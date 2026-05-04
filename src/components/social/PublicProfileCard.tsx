@@ -1,4 +1,4 @@
-// LifeOS Social — Public Profile Card (MapleStory-style character card)
+// GenesisOS Social — Public Profile Card (MapleStory-style character card)
 // v2: Shows ladder class, separate Friend / Partner request buttons, improved design
 
 import { useState } from 'react';

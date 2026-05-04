@@ -1,4 +1,4 @@
-// LifeOS Social — Public Profile Operations
+// GenesisOS Social — Public Profile Operations
 
 import { supabase } from '../data-access';
 import { inferLadderFromCategories, getLadderRank } from '../gamification/ladder';

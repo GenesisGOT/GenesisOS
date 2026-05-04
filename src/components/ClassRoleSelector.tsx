@@ -1,4 +1,4 @@
-// LifeOS — Class & Role Selector (RPG Character Creation)
+// GenesisOS — Class & Role Selector (RPG Character Creation)
 // Two-screen flow: Class (ESBI quadrant) → Role (archetype)
 import { useState } from 'react';
 import { ArrowRight, Sparkles } from 'lucide-react';

@@ -249,7 +249,7 @@ export function NodeDetail({ nodeId, allGoals, allTasks, onClose, onNavigate, on
     setNewChildTitle('');
     setShowAddChild(false);
     setAddingChild(false);
-    window.dispatchEvent(new Event('lifeos-refresh'));
+    window.dispatchEvent(new Event('genesisOS-refresh'));
   };
 
   const handleZeroClawClick = async () => {
@@ -265,7 +265,7 @@ export function NodeDetail({ nodeId, allGoals, allTasks, onClose, onNavigate, on
     
     // Close detail and trigger AgentChatFAB to open
     onClose();
-    window.dispatchEvent(new CustomEvent('lifeos-open-agent-chat'));
+    window.dispatchEvent(new CustomEvent('genesisOS-open-agent-chat'));
   };
 
   // Touch gesture handlers

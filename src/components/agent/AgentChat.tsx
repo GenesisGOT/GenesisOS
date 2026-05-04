@@ -82,7 +82,7 @@ export function AgentChat({ onClose }: AgentChatProps) {
       <div className="agent-chat-header">
         <div className="agent-chat-title">
           <span className="agent-icon"><Brain size={18} /></span>
-          <span>LifeOS Agent</span>
+          <span>GenesisOS Agent</span>
           <span className={`agent-status ${isOnline ? 'online' : 'offline'}`} />
         </div>
         {onClose && (

@@ -1,7 +1,7 @@
 /**
  * Realm Event Bus — Global event system for Realm integration
  *
- * This is the nervous system connecting LifeOS actions to Realm reactions.
+ * This is the nervous system connecting GenesisOS actions to Realm reactions.
  * When XP is awarded, habits logged, goals completed, etc., events fire here
  * and The Realm reacts — plants grow, shadows dispel, buildings upgrade.
  *

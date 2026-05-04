@@ -597,9 +597,9 @@ export function AIChat() {
                 }
                 return m;
               }));
-              window.dispatchEvent(new Event('lifeos-refresh'));
+              window.dispatchEvent(new Event('genesisOS-refresh'));
               // Second refresh after a short delay to catch async companion events
-              setTimeout(() => window.dispatchEvent(new Event('lifeos-refresh')), 1500);
+              setTimeout(() => window.dispatchEvent(new Event('genesisOS-refresh')), 1500);
             } else {
               setMessages(prev => prev.map(m =>
                 m.id === assistantMsgId
@@ -729,8 +729,8 @@ export function AIChat() {
       };
     }));
 
-    window.dispatchEvent(new Event('lifeos-refresh'));
-    setTimeout(() => window.dispatchEvent(new Event('lifeos-refresh')), 1500);
+    window.dispatchEvent(new Event('genesisOS-refresh'));
+    setTimeout(() => window.dispatchEvent(new Event('genesisOS-refresh')), 1500);
   }, [messages]);
 
   const dismissActions = useCallback((msgId: string) => {

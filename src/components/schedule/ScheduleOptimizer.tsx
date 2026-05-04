@@ -44,7 +44,7 @@ export const ScheduleOptimizer = memo(function ScheduleOptimizer({ selectedDate 
 
   const [expanded, setExpanded] = useState(() => {
     try {
-      return localStorage.getItem('lifeos-optimizer-expanded') !== 'false';
+      return localStorage.getItem('genesisOS-optimizer-expanded') !== 'false';
     } catch { return true; }
   });
 
@@ -53,7 +53,7 @@ export const ScheduleOptimizer = memo(function ScheduleOptimizer({ selectedDate 
   const toggleExpanded = useCallback(() => {
     setExpanded(prev => {
       const next = !prev;
-      try { localStorage.setItem('lifeos-optimizer-expanded', String(next)); } catch {}
+      try { localStorage.setItem('genesisOS-optimizer-expanded', String(next)); } catch {}
       return next;
     });
   }, []);

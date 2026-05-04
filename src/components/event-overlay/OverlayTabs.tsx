@@ -137,7 +137,7 @@ export function DetailsTab({ event }: { event: ActiveEvent }) {
     if (error) {
       logger.error('Save failed:', error.message);
     } else {
-      window.dispatchEvent(new Event('lifeos-refresh'));
+      window.dispatchEvent(new Event('genesisOS-refresh'));
       setEditing(false);
     }
     setSaving(false);

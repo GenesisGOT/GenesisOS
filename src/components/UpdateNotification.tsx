@@ -31,7 +31,7 @@ export function UpdateNotification() {
       <div className="update-notification-content">
         <RefreshCw size={14} className={updating ? 'un-spin' : ''} />
         <span>
-          {updating ? 'Updating...' : 'A new version of LifeOS is available'}
+          {updating ? 'Updating...' : 'A new version of GenesisOS is available'}
         </span>
       </div>
       <div className="update-notification-actions">

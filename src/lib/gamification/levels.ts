@@ -1,4 +1,4 @@
-// LifeOS Gamification — Level Progression System
+// GenesisOS Gamification — Level Progression System
 // 99 levels (Final Fantasy inspired), exponential XP curve
 
 export interface LevelInfo {

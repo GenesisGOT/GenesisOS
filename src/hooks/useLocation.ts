@@ -37,7 +37,7 @@ interface UseLocationReturn extends LocationState {
 /** Why we're requesting location — shown to user if needed */
 export type LocationReason = 'prayer_times' | 'travel_map' | 'weather';
 
-const LOCATION_CACHE_KEY = 'lifeos-location-cache';
+const LOCATION_CACHE_KEY = 'genesisOS-location-cache';
 const CACHE_MAX_AGE_MS = 30 * 60 * 1000; // 30 minutes
 
 function getCachedLocation(): { lat: number; lng: number; timestamp: number } | null {

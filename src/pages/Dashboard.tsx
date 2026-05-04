@@ -181,8 +181,8 @@ export function Dashboard() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const handler = () => fetchAll();
-    window.addEventListener('lifeos-refresh', handler);
-    return () => window.removeEventListener('lifeos-refresh', handler);
+    window.addEventListener('genesisOS-refresh', handler);
+    return () => window.removeEventListener('genesisOS-refresh', handler);
   }, []);
 
   // ── DERIVED DATA ──
@@ -284,7 +284,7 @@ export function Dashboard() {
 
   return (
     <FullscreenPage
-      title="LifeOS"
+      title="GenesisOS"
       titleIcon={<span className="mh-zap" style={{ fontSize: 16 }}>⚡</span>}
       tabs={DASH_TABS}
       activeTab={activeTab}

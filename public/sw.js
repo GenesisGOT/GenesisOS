@@ -1,12 +1,12 @@
 // ═══════════════════════════════════════════════════════════
-// LifeOS Service Worker
+// GenesisOS Service Worker
 // Strategies:
 //   - Stale-while-revalidate for static assets (JS, CSS, images, fonts)
 //   - Network-first for API calls
 //   - Offline fallback page for navigation requests
 // ═══════════════════��═══════════════════════════════════════
 
-const CACHE_VERSION = 'lifeos-v2';
+const CACHE_VERSION = 'genesisOS-v2';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const API_CACHE = `${CACHE_VERSION}-api`;
 const OFFLINE_PAGE = '/offline.html';
@@ -182,7 +182,7 @@ async function navigationWithFallback(request) {
 
     // Last resort: simple offline message
     return new Response(
-      '<html><body style="background:#0a1628;color:#8BA4BE;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:system-ui"><div style="text-align:center"><h1>📱 LifeOS</h1><p>You\'re offline. Check your connection and try again.</p></div></body></html>',
+      '<html><body style="background:#0a1628;color:#8BA4BE;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:system-ui"><div style="text-align:center"><h1>📱 GenesisOS</h1><p>You\'re offline. Check your connection and try again.</p></div></body></html>',
       {
         status: 503,
         headers: { 'Content-Type': 'text/html' },

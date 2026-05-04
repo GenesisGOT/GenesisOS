@@ -1,4 +1,4 @@
-// LifeOS Gamification — Class-Specific Starter Quests
+// GenesisOS Gamification — Class-Specific Starter Quests
 // Tailored first quests based on ESBI class selection
 import type { LucideIcon } from 'lucide-react';
 import { Palette, Wrench, Heart, BookOpen, Settings, Search, Crown, Shield } from 'lucide-react';

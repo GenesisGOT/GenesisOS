@@ -1,4 +1,4 @@
--- LifeOS Systems — Connected Systems & Sync Log
+-- GenesisOS Systems — Connected Systems & Sync Log
 -- Migration 006: System Bus persistence layer
 --
 -- connected_systems: stores which external systems a user has connected

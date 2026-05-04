@@ -1,7 +1,7 @@
 [package]
-name = "lifeos-app"
+name = "genesisOS-app"
 version = "0.1.0"
-description = "LifeOS — Command Center"
+description = "GenesisOS — Command Center"
 authors = ["Tewedros"]
 license = ""
 repository = ""

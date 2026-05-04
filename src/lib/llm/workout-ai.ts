@@ -1,5 +1,5 @@
 /**
- * AI Workout Generator — LifeOS
+ * AI Workout Generator — GenesisOS
  *
  * Generates personalized workout plans using the LLM proxy.
  * Considers fitness level, goals, equipment, recent history,

@@ -177,13 +177,13 @@ export function useCurrentEvent(): CurrentEventState {
   useEffect(() => {
     fetchEvents();
     const handler = () => fetchEvents();
-    window.addEventListener('lifeos-refresh', handler);
+    window.addEventListener('genesisOS-refresh', handler);
     const vis = () => { if (document.visibilityState === 'visible') fetchEvents(); };
     document.addEventListener('visibilitychange', vis);
 
     // Realtime: auto-refresh when schedule_events change (INSERT/UPDATE/DELETE)
     if (!userId) return () => {
-      window.removeEventListener('lifeos-refresh', handler);
+      window.removeEventListener('genesisOS-refresh', handler);
       document.removeEventListener('visibilitychange', vis);
     };
 
@@ -197,7 +197,7 @@ export function useCurrentEvent(): CurrentEventState {
       .subscribe();
 
     return () => {
-      window.removeEventListener('lifeos-refresh', handler);
+      window.removeEventListener('genesisOS-refresh', handler);
       document.removeEventListener('visibilitychange', vis);
       supabase.removeChannel(channel);
     };

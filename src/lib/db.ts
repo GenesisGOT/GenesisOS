@@ -1,5 +1,5 @@
 /**
- * db.ts — Unified database entry point for LifeOS
+ * db.ts — Unified database entry point for GenesisOS
  * 
  * Auto-detects the best available backend:
  *   1. Tauri (native invoke → Rust → SQLite) — when running as desktop app

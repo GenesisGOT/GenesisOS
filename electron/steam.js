@@ -1,5 +1,5 @@
 /**
- * LifeOS Steam Integration
+ * GenesisOS Steam Integration
  *
  * Provides Steam client initialization and license verification via steamworks.js.
  *

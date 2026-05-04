@@ -1,5 +1,5 @@
 /**
- * LifeOS Goal Coach — AI-powered goal analysis & nudging
+ * GenesisOS Goal Coach — AI-powered goal analysis & nudging
  *
  * Analyzes user goals to find:
  * - Neglected goals (no task activity in X days)

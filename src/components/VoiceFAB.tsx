@@ -130,7 +130,7 @@ export function VoiceFAB() {
       const dbActions = result.actions.filter(a => !['navigate', 'info'].includes(a.type));
       if (dbActions.length > 0) {
         const execResult = await executeActions(dbActions);
-        window.dispatchEvent(new Event('lifeos-refresh'));
+        window.dispatchEvent(new Event('genesisOS-refresh'));
 
         if (execResult.failures.length > 0) {
           showToast(`❌ ${execResult.failures[0]}`, true);

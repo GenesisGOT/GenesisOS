@@ -1,4 +1,4 @@
-// LifeOS Gamification — Daily/Weekly/Epic Quest System
+// GenesisOS Gamification — Daily/Weekly/Epic Quest System
 //
 // v1: Random pool quests (original — kept for backward compatibility)
 // v2: Contextual quests derived from real user data → see quest-engine-v2.ts
@@ -210,7 +210,7 @@ const WEEKLY_QUESTS: QuestTemplate[] = [
   {
     id: 'weekly_streak',
     title: 'Seven Day Fire',
-    description: 'Log into LifeOS every day this week',
+    description: 'Log into GenesisOS every day this week',
     icon: '🔥',
     type: 'weekly',
     target: 7,
@@ -254,7 +254,7 @@ const EPIC_QUESTS: QuestTemplate[] = [
   {
     id: 'epic_all_modules',
     title: 'Full Setup',
-    description: 'Use every module in LifeOS at least once',
+    description: 'Use every module in GenesisOS at least once',
     icon: '🧩',
     type: 'epic',
     target: 7,

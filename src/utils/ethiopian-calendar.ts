@@ -1,5 +1,5 @@
 /**
- * Ethiopian Calendar Conversion — LifeOS
+ * Ethiopian Calendar Conversion — GenesisOS
  *
  * Converts Gregorian dates to Ethiopian calendar dates using the JDN algorithm.
  * The Ethiopian calendar has 13 months: 12 × 30 days + Pagume (5 or 6 days).

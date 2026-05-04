@@ -6,7 +6,7 @@
  * 
  * Update flow (works with UpdateBanner):
  * 1. UpdateBanner detects new version → user clicks "Update Now"
- * 2. UpdateBanner sets `lifeos_update_pending` flag in localStorage → reloads
+ * 2. UpdateBanner sets `genesisOS_update_pending` flag in localStorage → reloads
  * 3. After reload with new code, WhatsNew detects the pending flag
  * 4. Fetches version.json to get the new version string
  * 5. Shows release notes modal if version has notes defined
@@ -24,12 +24,12 @@ import './WhatsNew.css';
 
 const VERSION_URL = (() => {
   const path = window.location.pathname;
-  if (path.startsWith('/lifeos-app')) return '/lifeos-app/version.json';
-  if (path.startsWith('/lifeos')) return '/lifeos/version.json';
+  if (path.startsWith('/genesisOS-app')) return '/genesisOS-app/version.json';
+  if (path.startsWith('/genesisOS')) return '/genesisOS/version.json';
   return '/app/version.json';
 })();
-const STORAGE_KEY = 'lifeos_last_seen_version';
-const PENDING_KEY = 'lifeos_update_pending';
+const STORAGE_KEY = 'genesisOS_last_seen_version';
+const PENDING_KEY = 'genesisOS_update_pending';
 
 export function WhatsNew() {
   const [show, setShow] = useState(false);

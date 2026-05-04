@@ -1,5 +1,5 @@
 /**
- * SHARED INFRASTRUCTURE — LifeOS Feature Module Contract
+ * SHARED INFRASTRUCTURE — GenesisOS Feature Module Contract
  *
  * Features should import shared utilities from here, NOT from each other.
  * Cross-feature data flows through:

@@ -2,7 +2,7 @@
  * DashboardMorningBrief — AI-powered personalized morning brief card.
  *
  * Replaces the simple greeting with a rich, LLM-generated daily overview.
- * - Calls generateMorningBrief() to gather data from across LifeOS
+ * - Calls generateMorningBrief() to gather data from across GenesisOS
  * - Sends that data to the LLM proxy for a conversational summary
  * - Caches the result in localStorage for the current day
  * - Falls back to static greeting if offline or on free tier
@@ -36,8 +36,8 @@ interface CachedBrief {
 
 // ── CACHE HELPERS ──────────────────────────────────────────────────────────────
 
-const CACHE_KEY_PREFIX = 'lifeos-morning-brief-';
-const XP_CACHE_KEY = 'lifeos-morning-brief-xp-';
+const CACHE_KEY_PREFIX = 'genesisOS-morning-brief-';
+const XP_CACHE_KEY = 'genesisOS-morning-brief-xp-';
 
 function getCachedBrief(userId: string, date: string): CachedBrief | null {
   try {
@@ -95,7 +95,7 @@ function buildBriefPrompt(brief: LLMMorningBrief, firstName: string): string {
     ? brief.partnerUpdates.join('; ')
     : 'No partner updates';
 
-  return `You are the LifeOS AI assistant. Generate a brief, personalized morning brief for ${firstName}.
+  return `You are the GenesisOS AI assistant. Generate a brief, personalized morning brief for ${firstName}.
 
 TODAY'S DATA:
 - Date: ${brief.date}
@@ -118,7 +118,7 @@ RULES:
 - Don't list everything — highlight what matters most.
 - Be specific to their data, not generic.
 - Don't use emojis excessively — max 2-3.
-- Don't mention "LifeOS" or sound like an AI assistant.
+- Don't mention "GenesisOS" or sound like an AI assistant.
 - Sound like a sharp, supportive friend who knows their goals.
 - If the user has no events, quests, or habits, don't mention them. Focus on suggesting what they could do to get started with their day.`;
 }
@@ -191,7 +191,7 @@ export function DashboardMorningBrief() {
       }
       setError(null);
 
-      // Step 1: Gather data from across LifeOS
+      // Step 1: Gather data from across GenesisOS
       const data = await generateMorningBrief(user.id, supabase);
       setBriefData(data);
 

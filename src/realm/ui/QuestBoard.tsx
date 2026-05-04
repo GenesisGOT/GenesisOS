@@ -33,7 +33,7 @@ export function QuestBoard({ goals, onClose }: QuestBoardProps) {
 
         {activeGoals.length === 0 && completedGoals.length === 0 && (
           <div className="realm-dialogue-text" style={{ color: '#5A7A9A' }}>
-            No quests posted. Create a goal in LifeOS to see it here.
+            No quests posted. Create a goal in GenesisOS to see it here.
           </div>
         )}
 

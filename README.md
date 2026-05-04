@@ -1,16 +1,16 @@
 <p align="center">
-  <img src="public/icon-512.png" alt="LifeOS" width="120" />
+  <img src="public/icon-512.png" alt="GenesisOS" width="120" />
 </p>
 
-<h1 align="center">LifeOS</h1>
+<h1 align="center">GenesisOS</h1>
 
 <p align="center">
   <strong>Your life is the game. Level up for real.</strong>
 </p>
 
 <p align="center">
-  <a href="https://app.runlifeos.com">Use LifeOS Free</a> · 
-  <a href="https://runlifeos.com">Website</a> · 
+  <a href="https://app.rungenesisOS.com">Use GenesisOS Free</a> · 
+  <a href="https://rungenesisOS.com">Website</a> · 
   <a href="#self-hosting">Self-Host</a> · 
   <a href="#contributing">Contribute</a>
 </p>
@@ -24,15 +24,15 @@
 
 ---
 
-LifeOS is an open-source personal operating system that turns your goals, habits, finances, health, and daily schedule into a living RPG. Built as a progressive web app — install it on any device, works offline, syncs when connected.
+GenesisOS is an open-source personal operating system that turns your goals, habits, finances, health, and daily schedule into a living RPG. Built as a progressive web app — install it on any device, works offline, syncs when connected.
 
 **514 components. 126,000+ lines of TypeScript. One app to run your life.**
 
 <br />
 
-## Why LifeOS?
+## Why GenesisOS?
 
-Most productivity apps solve one problem. LifeOS connects everything:
+Most productivity apps solve one problem. GenesisOS connects everything:
 
 - Your **goals** break down into tasks that appear on your **schedule**
 - Your **habits** feed XP into your **character** who levels up in a living **realm**
@@ -113,7 +113,7 @@ Progressive Web App — install on iOS, Android, Mac, Windows, Linux. Offline-fi
 
 ### Use the hosted version (recommended)
 
-**[app.runlifeos.com](https://app.runlifeos.com)** — free, always up to date, no setup required.
+**[app.rungenesisOS.com](https://app.rungenesisOS.com)** — free, always up to date, no setup required.
 
 Works on any device with a browser. Install as a PWA for the native app experience.
 
@@ -121,7 +121,7 @@ Works on any device with a browser. Install as a PWA for the native app experien
 
 ### Self-Hosting
 
-Want to run your own instance? LifeOS is fully open source.
+Want to run your own instance? GenesisOS is fully open source.
 
 #### Prerequisites
 
@@ -133,8 +133,8 @@ Want to run your own instance? LifeOS is fully open source.
 
 ```bash
 # Clone the repo
-git clone https://github.com/lifeos-app/lifeos.git
-cd lifeos
+git clone https://github.com/genesisOS-app/genesisOS.git
+cd genesisOS
 
 # Install dependencies
 npm install
@@ -159,7 +159,7 @@ VITE_API_BASE_URL=https://your-server.com    # LLM proxy endpoint
 
 The app uses Supabase with Row Level Security. Migration files are in `supabase/migrations/`. You'll need to set up the base schema in your Supabase project — see the [Supabase docs](https://supabase.com/docs) for getting started.
 
-> **Note:** The migration files handle incremental changes. If you need help setting up the complete schema, [open an issue](https://github.com/lifeos-app/lifeos/issues) or check the discussions — the community can help.
+> **Note:** The migration files handle incremental changes. If you need help setting up the complete schema, [open an issue](https://github.com/genesisOS-app/genesisOS/issues) or check the discussions — the community can help.
 
 #### Production Build
 
@@ -191,13 +191,13 @@ public/
 
 ## Contributing
 
-LifeOS is built by a small team and contributions are welcome.
+GenesisOS is built by a small team and contributions are welcome.
 
 ### Good first contributions
 - **Schema documentation** — Help document the full database schema for self-hosters
-- **Bug fixes** — Check [open issues](https://github.com/lifeos-app/lifeos/issues)
+- **Bug fixes** — Check [open issues](https://github.com/genesisOS-app/genesisOS/issues)
 - **New integrations** — Plugin system supports custom data sources
-- **Translations** — Help make LifeOS accessible in more languages
+- **Translations** — Help make GenesisOS accessible in more languages
 - **Mobile UX** — PWA refinements for iOS/Android edge cases
 
 ### How to contribute
@@ -231,5 +231,5 @@ MIT — use it, fork it, build on it.
 <p align="center">
   <strong>Built in Melbourne, Australia — with <a href="https://claude.ai/code">Claude Code</a></strong>
   <br />
-  <a href="https://teddyscleaning.com.au">Teddy's Cleaning Systems</a> · <a href="https://app.runlifeos.com">Try LifeOS</a>
+  <a href="https://teddyscleaning.com.au">Teddy's Cleaning Systems</a> · <a href="https://app.rungenesisOS.com">Try GenesisOS</a>
 </p>

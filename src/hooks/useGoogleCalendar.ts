@@ -1,5 +1,5 @@
 /**
- * useGoogleCalendar — Fetches Google Calendar events and merges with LifeOS schedule.
+ * useGoogleCalendar — Fetches Google Calendar events and merges with GenesisOS schedule.
  *
  * Polls every 5 minutes when connected. Transforms CalendarEvent[] into
  * ScheduleEvent-compatible shape with source: 'google'.

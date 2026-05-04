@@ -63,13 +63,13 @@ export async function fetchImportantEmails(limit = 10): Promise<GmailMessage[]> 
 }
 
 /**
- * Convert an email into a LifeOS task
+ * Convert an email into a GenesisOS task
  */
 export async function createTaskFromEmail(emailId: string): Promise<boolean> {
   try {
     const data = await proxyRequest('create_task_from_email', { emailId });
     if (data.success) {
-      window.dispatchEvent(new Event('lifeos-refresh'));
+      window.dispatchEvent(new Event('genesisOS-refresh'));
     }
     return !!data.success;
   } catch (err) {

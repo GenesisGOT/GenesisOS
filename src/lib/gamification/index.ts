@@ -1,4 +1,4 @@
-// LifeOS Gamification Engine — Public API
+// GenesisOS Gamification Engine — Public API
 
 export { calculateXP, awardXP, recalcUserStats, getStreakMultiplier, getStreakLabel } from './xp-engine';
 export type { ActionType, TaskPriority, GoalCategory, XPActionMetadata, XPCalculation, UserStats } from './xp-engine';

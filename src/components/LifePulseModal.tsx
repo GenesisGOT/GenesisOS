@@ -8,7 +8,7 @@
  *   → 06:00, 10:00, 14:00, 18:00, 22:00
  *
  * Persistence: localStorage key per window, e.g.
- *   lifeos_pulse_dismissed_2026-03-15_10
+ *   genesisOS_pulse_dismissed_2026-03-15_10
  * so each window is independently tracked.
  */
 
@@ -41,7 +41,7 @@ function getCurrentWindow(): number | null {
 
 /** localStorage key for a specific check-in window (user-scoped) */
 function windowKey(userId: string, windowHour: number): string {
-  return `lifeos_pulse_dismissed_${userId}_${today()}_${windowHour}`;
+  return `genesisOS_pulse_dismissed_${userId}_${today()}_${windowHour}`;
 }
 
 /** Check if a specific window has been dismissed today */

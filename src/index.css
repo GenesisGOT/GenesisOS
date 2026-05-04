@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* LifeOS — Global Styles (imports handled via theme.css in App.tsx) */
+/* GenesisOS — Global Styles (imports handled via theme.css in App.tsx) */
 
 :root {
   font-family: var(--font-body, 'Poppins', sans-serif);

@@ -1,4 +1,4 @@
-// LifeOS Social — Accountability Partner List Component
+// GenesisOS Social — Accountability Partner List Component
 // (Friends are in FriendsList.tsx — partners are deliberate accountability commitments)
 
 import { useState, useEffect } from 'react';

@@ -96,7 +96,7 @@ function OverlayPanel({ event, eventType, onMinimize, onClose }: {
     });
 
     // Dispatch refresh event
-    window.dispatchEvent(new Event('lifeos-refresh'));
+    window.dispatchEvent(new Event('genesisOS-refresh'));
 
     setTimeout(() => onClose(), 2000);
   };

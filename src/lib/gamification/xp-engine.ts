@@ -1,4 +1,4 @@
-// LifeOS Gamification — XP Calculation Engine
+// GenesisOS Gamification — XP Calculation Engine
 // Every action earns XP with streaks, combos, time bonuses
 
 import type { SupabaseClient } from '@supabase/supabase-js';

@@ -185,7 +185,7 @@ export function VisionTree({ goals, tasks, allTasks = [], onCreateNode, onSelect
       <div className="vp-apex">
         <ProgressRing value={totalPct} color="#00D4FF" size={64} strokeWidth={4} />
         <div className="vp-apex-info">
-          <h2 className="vp-apex-title">LifeOS</h2>
+          <h2 className="vp-apex-title">GenesisOS</h2>
           <span className="vp-apex-sub">{objectives.length} objectives · {goals.length} nodes</span>
         </div>
       </div>

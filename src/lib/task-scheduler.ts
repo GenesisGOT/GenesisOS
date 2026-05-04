@@ -184,7 +184,7 @@ export async function scheduleAllPendingTasks(
   }
 
   if (scheduled > 0) {
-    window.dispatchEvent(new Event('lifeos-refresh'));
+    window.dispatchEvent(new Event('genesisOS-refresh'));
   }
 
   return scheduled;
@@ -254,7 +254,7 @@ export async function scheduleHabitsForToday(
   }
 
   if (scheduled > 0) {
-    window.dispatchEvent(new Event('lifeos-refresh'));
+    window.dispatchEvent(new Event('genesisOS-refresh'));
   }
 
   return scheduled;

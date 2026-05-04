@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { Castle, Sparkles, X } from 'lucide-react';
 import { useCharacterAppearanceStore } from '../../stores/useCharacterAppearanceStore';
 
-const LS_KEY = 'lifeos_realm_onboarding_done';
+const LS_KEY = 'genesisOS_realm_onboarding_done';
 
 export function shouldShowRealmInvite(): boolean {
   if (localStorage.getItem(LS_KEY)) return false;

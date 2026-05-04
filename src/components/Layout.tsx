@@ -32,7 +32,7 @@ function LayoutInner() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [sidebarExpanded, setSidebarExpanded] = useState(() => {
     try {
-      const stored = localStorage.getItem('lifeos-sidebar-expanded');
+      const stored = localStorage.getItem('genesisOS-sidebar-expanded');
       if (stored !== null) return stored === 'true';
     } catch {}
     return window.innerWidth > 900;
@@ -43,7 +43,7 @@ function LayoutInner() {
   useEffect(() => {
     const ro = new ResizeObserver(([entry]) => {
       const w = entry.contentRect.width;
-      const userPref = localStorage.getItem('lifeos-sidebar-expanded');
+      const userPref = localStorage.getItem('genesisOS-sidebar-expanded');
       if (userPref === null) {
         setSidebarExpanded(w > 900);
       }
@@ -60,7 +60,7 @@ function LayoutInner() {
   const handleSidebarToggle = useCallback(() => {
     setSidebarExpanded(prev => {
       const next = !prev;
-      try { localStorage.setItem('lifeos-sidebar-expanded', String(next)); } catch {}
+      try { localStorage.setItem('genesisOS-sidebar-expanded', String(next)); } catch {}
       return next;
     });
   }, []);

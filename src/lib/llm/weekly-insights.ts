@@ -1,7 +1,7 @@
 /**
- * LifeOS Weekly Insights Generator
+ * GenesisOS Weekly Insights Generator
  *
- * Gathers a full week's worth of data across all LifeOS domains,
+ * Gathers a full week's worth of data across all GenesisOS domains,
  * computes stats locally, then calls the LLM for an AI narrative.
  *
  * Pattern follows morning-brief.ts and reschedule.ts
@@ -342,7 +342,7 @@ async function generateAINarrative(ctx: {
   expenses: number;
   topTimeCategory: string;
 }): Promise<string> {
-  const prompt = `You are LifeOS, a personal productivity AI. Generate a 3-4 sentence weekly insight summary.
+  const prompt = `You are GenesisOS, a personal productivity AI. Generate a 3-4 sentence weekly insight summary.
 Be conversational, warm, and actionable. Use data to be specific. Don't use emojis. Don't start with "This week".
 
 Week: ${ctx.weekLabel}
@@ -368,7 +368,7 @@ Write exactly 3-4 sentences. First sentence: overall vibe of the week. Second: h
 
 // ── CACHE HELPERS ──────────────────────────────────────────────────────────────
 
-const CACHE_PREFIX = 'lifeos_weekly_insights_';
+const CACHE_PREFIX = 'genesisOS_weekly_insights_';
 
 export function getCachedInsights(weekKey: string): WeeklyInsightsData | null {
   try {

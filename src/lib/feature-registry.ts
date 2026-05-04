@@ -1,5 +1,5 @@
 /**
- * LifeOS Feature Registry — Single source of truth for navigation.
+ * GenesisOS Feature Registry — Single source of truth for navigation.
  *
  * Both Sidebar and MobileNav consume this registry so adding/removing
  * a feature only requires a change here.

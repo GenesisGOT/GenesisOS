@@ -27,7 +27,7 @@ async function getDriver() {
 
 export type TourId = 'dashboard' | 'health' | 'finance' | 'goals' | 'habits' | 'schedule' | 'junction' | 'gamification' | 'realm-slides' | 'junction-slides';
 
-const TOUR_STORAGE_KEY = 'lifeos_completed_tours';
+const TOUR_STORAGE_KEY = 'genesisOS_completed_tours';
 
 // Sync-ready flag — blocks tour auto-start until Supabase sync completes
 let _toursReady = false;
@@ -142,7 +142,7 @@ const DASHBOARD_STEPS: DriveStep[] = [
   {
     element: '.dash-header',
     popover: {
-      title: 'Welcome to LifeOS',
+      title: 'Welcome to GenesisOS',
       description: 'This is your command centre. Everything you need at a glance — tasks, habits, goals, and insights.',
       side: 'bottom',
       align: 'center',
@@ -152,7 +152,7 @@ const DASHBOARD_STEPS: DriveStep[] = [
     element: '.ai-chat-fab',
     popover: {
       title: 'AI Assistant',
-      description: 'Tap this button or press ⌘J to talk to LifeOS. Add tasks, log expenses, check your schedule — all in natural language.',
+      description: 'Tap this button or press ⌘J to talk to GenesisOS. Add tasks, log expenses, check your schedule — all in natural language.',
       side: 'left',
       align: 'center',
     },
@@ -179,7 +179,7 @@ const DASHBOARD_STEPS: DriveStep[] = [
     element: '.phase-tracker',
     popover: {
       title: 'Setup Progress',
-      description: 'Complete all three phases — Life, Health, and Finance — to get the most out of LifeOS. Tap to continue setup anytime.',
+      description: 'Complete all three phases — Life, Health, and Finance — to get the most out of GenesisOS. Tap to continue setup anytime.',
       side: 'bottom',
       align: 'center',
     },
@@ -218,7 +218,7 @@ const DASHBOARD_STEPS: DriveStep[] = [
     element: '.phase-tracker',
     popover: {
       title: 'Set Up Your Life System',
-      description: 'Ready to make LifeOS yours? Tap here to set your goals, values, and habits. You can do it now or come back anytime.',
+      description: 'Ready to make GenesisOS yours? Tap here to set your goals, values, and habits. You can do it now or come back anytime.',
       side: 'bottom',
       align: 'center',
     },
@@ -458,7 +458,7 @@ const GAMIFICATION_STEPS: DriveStep[] = [
   {
     popover: {
       title: 'Level Up System',
-      description: 'Everything you do in LifeOS earns XP. Complete tasks, log habits, journal, and more to level up your character. 🏆',
+      description: 'Everything you do in GenesisOS earns XP. Complete tasks, log habits, journal, and more to level up your character. 🏆',
       side: 'bottom',
       align: 'center',
     },
@@ -467,7 +467,7 @@ const GAMIFICATION_STEPS: DriveStep[] = [
     element: '.ch-stats',
     popover: {
       title: 'Your Stats',
-      description: 'See your current level, equipped assets, and monthly bills at a glance. Your level reflects your overall engagement with LifeOS.',
+      description: 'See your current level, equipped assets, and monthly bills at a glance. Your level reflects your overall engagement with GenesisOS.',
       side: 'bottom',
       align: 'center',
     },
@@ -725,10 +725,10 @@ export function SpotlightTour({ tourId, autoStart = true, delay = 1000, onTourCo
       if (cancelled) return;
 
       // Check if this is a fresh signup — show tour ONLY for legacy onboarding users
-      const isNewSignup = sessionStorage.getItem('lifeos_new_signup') === 'true';
-      const isGenesisUser = localStorage.getItem('lifeos_lifetown_guide_complete') !== null || localStorage.getItem('lifeos_ui_state_lifetown_guide_complete') !== null;
+      const isNewSignup = sessionStorage.getItem('genesisOS_new_signup') === 'true';
+      const isGenesisUser = localStorage.getItem('genesisOS_lifetown_guide_complete') !== null || localStorage.getItem('genesisOS_ui_state_lifetown_guide_complete') !== null;
       if (isNewSignup && tourId === 'dashboard' && !isGenesisUser) {
-        try { sessionStorage.removeItem('lifeos_new_signup'); } catch { /* Safari private */ }
+        try { sessionStorage.removeItem('genesisOS_new_signup'); } catch { /* Safari private */ }
         // Only start if not already completed (don't clear completed tours!)
         if (!isTourComplete(tourId)) {
           setTimeout(startTour, delay);

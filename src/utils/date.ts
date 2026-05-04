@@ -1,5 +1,5 @@
 /**
- * Shared Date Utilities — LifeOS
+ * Shared Date Utilities — GenesisOS
  *
  * Single source of truth for all date formatting/manipulation.
  * Replaces 18+ inline implementations scattered across pages.

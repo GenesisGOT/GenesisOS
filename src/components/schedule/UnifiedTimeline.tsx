@@ -69,7 +69,7 @@ export const UnifiedTimeline = memo(function UnifiedTimeline({ date }: Props) {
   const [hourH, setHourH] = useState(DEFAULT_HOUR_H);
   const [showAllHours, setShowAllHours] = useState(false);
   const [use24h, setUse24h] = useState(() => {
-    try { return localStorage.getItem('lifeos-schedule-24h') === 'true'; } catch { return false; }
+    try { return localStorage.getItem('genesisOS-schedule-24h') === 'true'; } catch { return false; }
   });
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -91,7 +91,7 @@ export const UnifiedTimeline = memo(function UnifiedTimeline({ date }: Props) {
   const { logPractice } = useLogPractice();
   const [completedPrayers, setCompletedPrayers] = useState<Set<string>>(() => {
     try {
-      const raw = localStorage.getItem(`lifeos-prayer-completed-${localDateStr(date)}`);
+      const raw = localStorage.getItem(`genesisOS-prayer-completed-${localDateStr(date)}`);
       return raw ? new Set(JSON.parse(raw)) : new Set();
     } catch { return new Set(); }
   });
@@ -102,7 +102,7 @@ export const UnifiedTimeline = memo(function UnifiedTimeline({ date }: Props) {
     newCompleted.add(prayer.id);
     setCompletedPrayers(newCompleted);
     try {
-      localStorage.setItem(`lifeos-prayer-completed-${dateStr}`, JSON.stringify([...newCompleted]));
+      localStorage.setItem(`genesisOS-prayer-completed-${dateStr}`, JSON.stringify([...newCompleted]));
     } catch { /* ignore */ }
     // Log practice and award XP
     await logPractice(prayer.id, prayer.duration_minutes, `Completed ${prayer.name}`, 15);
@@ -178,7 +178,7 @@ export const UnifiedTimeline = memo(function UnifiedTimeline({ date }: Props) {
   const toggleTimeFormat = () => {
     setUse24h(prev => {
       const next = !prev;
-      try { localStorage.setItem('lifeos-schedule-24h', String(next)); } catch {}
+      try { localStorage.setItem('genesisOS-schedule-24h', String(next)); } catch {}
       return next;
     });
   };

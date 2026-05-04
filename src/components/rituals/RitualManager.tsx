@@ -159,7 +159,7 @@ export function RitualManager() {
       const result = await syncRitualsToSchedule(supabase, user.id);
       setSyncResult(result);
       // Dispatch refresh event so schedule updates
-      window.dispatchEvent(new CustomEvent('lifeos-refresh'));
+      window.dispatchEvent(new CustomEvent('genesisOS-refresh'));
       // Auto-dismiss result after 5s
       setTimeout(() => setSyncResult(null), 5000);
     } catch (err) {

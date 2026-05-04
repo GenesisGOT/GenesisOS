@@ -35,7 +35,7 @@ function getPageTitle(pathname: string): string {
   for (const [route, title] of Object.entries(ROUTE_TITLES)) {
     if (route !== '/' && pathname.startsWith(route)) return title;
   }
-  return 'LifeOS';
+  return 'GenesisOS';
 }
 
 export function DesktopHeader() {

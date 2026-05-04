@@ -1,4 +1,4 @@
-// LifeOS Gamification — React Context Provider
+// GenesisOS Gamification — React Context Provider
 // Wraps the app to provide gamification state everywhere
 
 import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';

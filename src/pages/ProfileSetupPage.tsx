@@ -1,4 +1,4 @@
-// LifeOS — Profile Setup Page (/social/profile)
+// GenesisOS — Profile Setup Page (/social/profile)
 
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, User } from 'lucide-react';

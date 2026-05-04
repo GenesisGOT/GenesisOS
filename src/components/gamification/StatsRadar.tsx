@@ -1,4 +1,4 @@
-// LifeOS Gamification — Radar/Hexagon Chart for 6 Stats
+// GenesisOS Gamification — Radar/Hexagon Chart for 6 Stats
 // v2: Cleaner, more readable, mobile-optimized, animated
 
 import { useMemo } from 'react';

@@ -1,5 +1,5 @@
 /**
- * LifeOS Electron Database Module
+ * GenesisOS Electron Database Module
  *
  * Native SQLite backend using better-sqlite3.
  * Ports all CRUD, filter parsing, and file operations from:
@@ -119,12 +119,12 @@ const ALLOWED_COLUMNS = new Set([
 // Directories the app is allowed to read from (academy, assets, data)
 const ALLOWED_DIRS = [
   '/mnt/data/tmp/academy/',
-  '/mnt/data/prodigy/creative-engine/LifeOS/',
+  '/mnt/data/prodigy/creative-engine/GenesisOS/',
   '/home/tewedros/clawd/lifeOS_data/',
 ];
 
 const ACADEMY_ROOT = '/mnt/data/tmp/academy';
-const LIFEOS_ASSETS = '/mnt/data/prodigy/creative-engine/LifeOS';
+const LIFEOS_ASSETS = '/mnt/data/prodigy/creative-engine/GenesisOS';
 const LIFEOS_DATA = '/home/tewedros/clawd/lifeOS_data';
 
 // ═══════════════════════════════════════════════════════════════
@@ -136,8 +136,8 @@ let db = null;
 
 /**
  * Get the platform-aware database path.
- * Linux/macOS: ~/.lifeos/data.db
- * Windows: %APPDATA%/lifeos/data.db
+ * Linux/macOS: ~/.genesisOS/data.db
+ * Windows: %APPDATA%/genesisOS/data.db
  * @param {string} [userDataPath] - Electron app.getPath('userData') override
  */
 export function getDbPath(userDataPath) {
@@ -147,9 +147,9 @@ export function getDbPath(userDataPath) {
   const home = homedir();
   if (platform() === 'win32') {
     const appData = process.env.APPDATA || join(home, 'AppData', 'Roaming');
-    return join(appData, 'lifeos', 'data.db');
+    return join(appData, 'genesisOS', 'data.db');
   }
-  return join(home, '.lifeos', 'data.db');
+  return join(home, '.genesisOS', 'data.db');
 }
 
 /**
@@ -180,9 +180,9 @@ export function initDatabase(dbPath) {
   // Seed default user
   db.exec(`
     INSERT OR IGNORE INTO users (id, email, display_name)
-      VALUES ('local-user-001', 'local@lifeos.app', 'LifeOS User');
+      VALUES ('local-user-001', 'local@genesisOS.app', 'GenesisOS User');
     INSERT OR IGNORE INTO user_profiles (user_id, email, full_name, onboarding_complete)
-      VALUES ('local-user-001', 'local@lifeos.app', 'LifeOS User', 1);
+      VALUES ('local-user-001', 'local@genesisOS.app', 'GenesisOS User', 1);
     INSERT OR IGNORE INTO user_xp (user_id, total_xp, level)
       VALUES ('local-user-001', 0, 1);
   `);

@@ -20,7 +20,7 @@ const PRIORITY_COLORS: Record<string, string> = {
   low: '#5A7A9A',
 };
 
-const SNOOZE_KEY = 'lifeos-nudge-snoozed-';
+const SNOOZE_KEY = 'genesisOS-nudge-snoozed-';
 
 function isSnoozed(nudgeType: string): boolean {
   try {

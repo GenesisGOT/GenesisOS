@@ -241,7 +241,7 @@ export const useAgentStore = create<AgentState>((set, get) => ({
     try {
       const result = await agentExecuteAction(userId, action);
       if (result.success) {
-        window.dispatchEvent(new Event('lifeos-refresh'));
+        window.dispatchEvent(new Event('genesisOS-refresh'));
       }
       return result.success;
     } catch (e) {

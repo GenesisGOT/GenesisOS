@@ -1,4 +1,4 @@
-// LifeOS Gamification — Ladder (Path) System
+// GenesisOS Gamification — Ladder (Path) System
 // Users are assigned ONE primary ladder based on their focus areas / goal categories
 // Each ladder has its own ranks, icon, and colour theme
 

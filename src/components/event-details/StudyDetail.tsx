@@ -142,7 +142,7 @@ export function StudyDetail({ event }: StudyDetailProps) {
 
       setLogged(true);
       showToast('Study session logged! 📚', 'success');
-      window.dispatchEvent(new Event('lifeos-refresh'));
+      window.dispatchEvent(new Event('genesisOS-refresh'));
     } catch {
       showToast('Failed to log session', 'error');
     } finally {

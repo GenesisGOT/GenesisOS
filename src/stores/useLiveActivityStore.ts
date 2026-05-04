@@ -271,7 +271,7 @@ export const useLiveActivityStore = create<LiveActivityState>((set, get) => ({
     });
 
     // Dispatch refresh for other stores
-    window.dispatchEvent(new Event('lifeos-refresh'));
+    window.dispatchEvent(new Event('genesisOS-refresh'));
 
     return liveEvent;
   },
@@ -395,7 +395,7 @@ export const useLiveActivityStore = create<LiveActivityState>((set, get) => ({
       }
     }, 10000);
 
-    window.dispatchEvent(new Event('lifeos-refresh'));
+    window.dispatchEvent(new Event('genesisOS-refresh'));
   },
 
   updateMetadata: async (key, value) => {

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════
-// EVENT OVERLAY SYSTEM — LifeOS
+// EVENT OVERLAY SYSTEM — GenesisOS
 // Re-exports from event-overlay/ sub-components.
 // This file maintains backwards compatibility for existing imports.
 // ═══════════════════════════════════════════════════════════

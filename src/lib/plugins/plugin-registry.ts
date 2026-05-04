@@ -1,5 +1,5 @@
 /**
- * LifeOS Plugin Registry
+ * GenesisOS Plugin Registry
  *
  * Central registry for all external-system plugins.
  * Plugins self-register; the registry routes incoming events to the right handler.

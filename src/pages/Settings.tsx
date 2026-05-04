@@ -158,7 +158,7 @@ export function Settings() {
       
       if (exportFormat === 'json') {
         blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
-        filename = `lifeos-export-${new Date().toISOString().slice(0, 10)}.json`;
+        filename = `genesisOS-export-${new Date().toISOString().slice(0, 10)}.json`;
       } else {
         // CSV export - create one CSV per table
         let csvContent = '';
@@ -177,7 +177,7 @@ export function Settings() {
           }
         }
         blob = new Blob([csvContent], { type: 'text/csv' });
-        filename = `lifeos-export-${new Date().toISOString().slice(0, 10)}.csv`;
+        filename = `genesisOS-export-${new Date().toISOString().slice(0, 10)}.csv`;
       }
       
       const url = URL.createObjectURL(blob);
@@ -462,7 +462,7 @@ export function Settings() {
                     {aiSaved && <span className="set-badge" style={{ background: 'rgba(34,197,94,0.15)', color: '#22C55E' }}>Saved</span>}
                   </div>
                   <p className="set-section-desc">
-                    Talk naturally and LifeOS will create tasks, log expenses, schedule events, and more. Powered by AI.
+                    Talk naturally and GenesisOS will create tasks, log expenses, schedule events, and more. Powered by AI.
                   </p>
                   
                   <div className="set-form-grid">
@@ -531,7 +531,7 @@ export function Settings() {
                     <h2>Integrations</h2>
                   </div>
                   <p className="set-section-desc">
-                    Connect external services to supercharge your LifeOS workflow.
+                    Connect external services to supercharge your GenesisOS workflow.
                   </p>
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 8 }}>
@@ -546,7 +546,7 @@ export function Settings() {
                     >
                       <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>
                         <p style={{ margin: '0 0 8px 0' }}>
-                          Gmail is connected with read-only access. LifeOS can:
+                          Gmail is connected with read-only access. GenesisOS can:
                         </p>
                         <ul style={{ margin: 0, paddingLeft: 16 }}>
                           <li>Show unread email count on your dashboard</li>
@@ -561,13 +561,13 @@ export function Settings() {
                       icon={<Calendar size={16} />}
                       connected={googleIntegration.isCalendarConnected}
                       loading={googleIntegration.loading}
-                      description="Sync events between LifeOS and Google Calendar"
+                      description="Sync events between GenesisOS and Google Calendar"
                       onConnect={() => googleIntegration.connectGoogle()}
                       onDisconnect={() => googleIntegration.disconnectGoogle()}
                     >
                       <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>
                         <p style={{ margin: '0 0 8px 0' }}>
-                          Google Calendar is connected with read-only access. LifeOS can:
+                          Google Calendar is connected with read-only access. GenesisOS can:
                         </p>
                         <ul style={{ margin: 0, paddingLeft: 16 }}>
                           <li>Show upcoming Google Calendar events on your schedule</li>
@@ -666,7 +666,7 @@ export function Settings() {
                             <Crown size={20} style={{ color: '#00D4FF' }} />
                             <div>
                               <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600 }}>
-                                LifeOS Pro — Early Adopter
+                                GenesisOS Pro — Early Adopter
                               </h3>
                               <p style={{ margin: '4px 0 0 0', fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>
                                 All Pro features unlocked
@@ -690,7 +690,7 @@ export function Settings() {
                               </h4>
                             </div>
                             <p style={{ margin: 0, fontSize: 13, color: 'rgba(255,255,255,0.7)', lineHeight: 1.6 }}>
-                              Thank you for being one of the first to use LifeOS! As an early adopter, you have 
+                              Thank you for being one of the first to use GenesisOS! As an early adopter, you have 
                               full access to all Pro features — 15 AI messages/day, advanced analytics, financial 
                               tracking, weekly reviews, and more. No subscription required.
                             </p>
@@ -801,7 +801,7 @@ export function Settings() {
                     <Navigation size={18} />
                     <h2>Tours & Help</h2>
                   </div>
-                  <p className="set-section-desc">Replay any guided walkthrough to learn about LifeOS features.</p>
+                  <p className="set-section-desc">Replay any guided walkthrough to learn about GenesisOS features.</p>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 10 }}>
                     <button className="set-btn" onClick={() => { startTourManually('dashboard'); }}>
                       <Sparkles size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} />Dashboard

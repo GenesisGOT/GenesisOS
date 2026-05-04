@@ -259,7 +259,7 @@ function getRecordKey(table: TableName, record: Record<string, unknown>): string
 // Retry Queue & Error Recovery
 // ══════════════════════════════════════════════════════════════
 
-const RETRY_QUEUE_KEY = 'lifeos_sync_retry_queue';
+const RETRY_QUEUE_KEY = 'genesisOS_sync_retry_queue';
 const MAX_RETRY_ATTEMPTS = 5;
 const BASE_RETRY_DELAY = 1000; // 1 second
 const MAX_RETRY_DELAY = 60000; // 60 seconds
@@ -802,7 +802,7 @@ async function _doSync(userId?: string): Promise<SyncStatus> {
     );
 
     // Trigger UI refresh
-    window.dispatchEvent(new Event('lifeos-refresh'));
+    window.dispatchEvent(new Event('genesisOS-refresh'));
   } catch (e: unknown) {
     error = e.message || 'Unknown sync error';
     logger.error('[sync] Sync failed:', e);

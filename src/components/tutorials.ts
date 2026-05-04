@@ -1,5 +1,5 @@
 /**
- * Slide Tutorial Definitions — LifeOS
+ * Slide Tutorial Definitions — GenesisOS
  *
  * Each tutorial is a set of image slides shown once on first visit to a feature.
  * Images are custom-generated per DESIGN-RULES.md (gradient fallbacks until ready).

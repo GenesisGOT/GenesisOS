@@ -58,7 +58,7 @@ export function MobileHeader({ onMenuToggle }: { onMenuToggle: () => void }) {
           if (window.location.pathname !== '/') navigate('/');
         }} style={{ cursor: 'pointer' }}>
           <Zap size={16} className="mh-zap" />
-          <span>LifeOS</span>
+          <span>GenesisOS</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           {/* Level badge — tapping opens Player Stats modal */}

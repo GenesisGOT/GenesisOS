@@ -24,7 +24,7 @@ import { getUIState, setUIState } from '../../utils/ui-state';
 
 // ── Cache helpers ──
 
-const CACHE_KEY_PREFIX = 'lifeos_health_ai_cache_';
+const CACHE_KEY_PREFIX = 'genesisOS_health_ai_cache_';
 
 interface CacheEntry {
   date: string;
@@ -197,7 +197,7 @@ export function HealthAI({ onTabChange }: HealthAIProps) {
       const snapshot = await loadHealthSnapshot(user.id);
       if (!mountedRef.current) return;
 
-      const prompt = `You are a holistic health AI for a personal life management app called LifeOS. Analyze this user's health data from the past week and provide a brief, friendly summary (3-5 sentences). Be specific about what's going well and what needs attention. Use a warm, encouraging tone.
+      const prompt = `You are a holistic health AI for a personal life management app called GenesisOS. Analyze this user's health data from the past week and provide a brief, friendly summary (3-5 sentences). Be specific about what's going well and what needs attention. Use a warm, encouraging tone.
 
 Health Metrics (last 7 days):
 ${snapshot.recentMetrics}
@@ -240,7 +240,7 @@ Give a holistic summary touching on sleep, nutrition, exercise, and mental welln
     try {
       const snapshot = await loadHealthSnapshot(user.id);
 
-      const prompt = `You are a holistic health AI assistant for LifeOS. Answer the user's health question based on their recent data. Be helpful, specific, and concise (2-4 sentences).
+      const prompt = `You are a holistic health AI assistant for GenesisOS. Answer the user's health question based on their recent data. Be helpful, specific, and concise (2-4 sentences).
 
 Health Metrics (last 7 days):
 ${snapshot.recentMetrics}

@@ -4,7 +4,7 @@ import { getDeferredPrompt, clearDeferredPrompt, isAppInstalled } from '../lib/s
 import './InstallPrompt.css';
 import { logger } from '../utils/logger';
 
-const DISMISSED_KEY = 'lifeos_install_dismissed';
+const DISMISSED_KEY = 'genesisOS_install_dismissed';
 const DISMISS_DAYS = 14; // Don't show again for 2 weeks after dismissal
 
 /** Detect iOS Safari (not Chrome/Firefox on iOS — they can't install PWAs) */
@@ -107,7 +107,7 @@ export function InstallPrompt() {
         <button className="install-prompt-dismiss install-guide-close" onClick={handleDismiss} aria-label="Dismiss install prompt">
           <X size={16} />
         </button>
-        <div className="install-guide-title">Install LifeOS</div>
+        <div className="install-guide-title">Install GenesisOS</div>
         <div className="install-guide-steps">
           <div className="install-guide-step">
             <div className="install-guide-step-num">1</div>
@@ -124,7 +124,7 @@ export function InstallPrompt() {
           <div className="install-guide-step">
             <div className="install-guide-step-num">3</div>
             <div className="install-guide-step-text">
-              Tap <strong>Add</strong> — LifeOS will appear on your home screen like a real app
+              Tap <strong>Add</strong> — GenesisOS will appear on your home screen like a real app
             </div>
           </div>
         </div>
@@ -141,8 +141,8 @@ export function InstallPrompt() {
         <Download size={16} className="install-prompt-icon" />
         <span className="install-prompt-text">
           {isIOS
-            ? 'Add LifeOS to your Home Screen for the full experience'
-            : 'Install LifeOS for quick access & offline use'
+            ? 'Add GenesisOS to your Home Screen for the full experience'
+            : 'Install GenesisOS for quick access & offline use'
           }
         </span>
       </div>

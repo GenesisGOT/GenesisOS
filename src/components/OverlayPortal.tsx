@@ -12,7 +12,7 @@ const TIER_Z: Record<string, number> = {
   celebration: 10000,
 };
 
-const ROOT_ID = 'lifeos-overlay-root';
+const ROOT_ID = 'genesisOS-overlay-root';
 
 function getOrCreateRoot(): HTMLElement {
   let root = document.getElementById(ROOT_ID);

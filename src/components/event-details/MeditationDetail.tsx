@@ -119,7 +119,7 @@ export function MeditationDetail({ event }: MeditationDetailProps) {
       setLogged(true);
       setSessionsThisWeek(prev => prev + 1);
       showToast('Session logged! 🧘', 'success');
-      window.dispatchEvent(new Event('lifeos-refresh'));
+      window.dispatchEvent(new Event('genesisOS-refresh'));
     } catch {
       showToast('Failed to log session', 'error');
     } finally {

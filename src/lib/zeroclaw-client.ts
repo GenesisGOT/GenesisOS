@@ -64,7 +64,7 @@ export interface AgentInsight {
 
 // ─── System prompt ───────────────────────────────────────────────
 
-const ZEROCLAW_SYSTEM_PROMPT = `You are ZeroClaw, a proactive AI life coach inside LifeOS — a personal productivity OS.
+const ZEROCLAW_SYSTEM_PROMPT = `You are ZeroClaw, a proactive AI life coach inside GenesisOS — a personal productivity OS.
 
 Personality: Direct, encouraging, strategic. No fluff. Speak like a coach who genuinely cares about the user's progress.
 
@@ -466,7 +466,7 @@ export async function agentExecuteAction(userId: string, action: AgentAction): P
         const priority = String(action.payload.priority || 'medium');
         const result = await useScheduleStore.getState().createTask(userId, title, priority);
         if (result) {
-          window.dispatchEvent(new Event('lifeos-refresh'));
+          window.dispatchEvent(new Event('genesisOS-refresh'));
           return { success: true, message: `Task "${title}" created.` };
         }
         return { success: false, message: 'Failed to create task.' };
@@ -477,7 +477,7 @@ export async function agentExecuteAction(userId: string, action: AgentAction): P
         const taskId = String(action.payload.taskId || '');
         if (!taskId) return { success: false, message: 'No task ID provided.' };
         await useScheduleStore.getState().changeTaskStatus(taskId, 'done');
-        window.dispatchEvent(new Event('lifeos-refresh'));
+        window.dispatchEvent(new Event('genesisOS-refresh'));
         return { success: true, message: 'Task marked as done.' };
       }
 
@@ -488,7 +488,7 @@ export async function agentExecuteAction(userId: string, action: AgentAction): P
         const startTime = String(action.payload.startTime || new Date().toISOString());
         const endTime = String(action.payload.endTime || new Date(Date.now() + 3600000).toISOString());
         await createScheduleEvent(supabase, { userId, title, startTime, endTime });
-        window.dispatchEvent(new Event('lifeos-refresh'));
+        window.dispatchEvent(new Event('genesisOS-refresh'));
         return { success: true, message: `Event "${title}" created.` };
       }
 
@@ -500,7 +500,7 @@ export async function agentExecuteAction(userId: string, action: AgentAction): P
         if (action.payload.progress !== undefined) updates.progress = Number(action.payload.progress);
         if (action.payload.status) updates.status = action.payload.status;
         await useGoalsStore.getState().updateGoal(goalId, updates as any);
-        window.dispatchEvent(new Event('lifeos-refresh'));
+        window.dispatchEvent(new Event('genesisOS-refresh'));
         return { success: true, message: 'Goal updated.' };
       }
 
@@ -510,13 +510,13 @@ export async function agentExecuteAction(userId: string, action: AgentAction): P
         const date = String(action.payload.date || new Date().toISOString().slice(0, 10));
         if (!habitId) return { success: false, message: 'No habit ID provided.' };
         await useHabitsStore.getState().toggleHabit(habitId, date);
-        window.dispatchEvent(new Event('lifeos-refresh'));
+        window.dispatchEvent(new Event('genesisOS-refresh'));
         return { success: true, message: 'Habit logged.' };
       }
 
       case 'navigate': {
         const path = String(action.payload.path || '/');
-        window.dispatchEvent(new CustomEvent('lifeos-navigate', { detail: { path } }));
+        window.dispatchEvent(new CustomEvent('genesisOS-navigate', { detail: { path } }));
         return { success: true, message: `Navigating to ${path}.` };
       }
 
@@ -538,7 +538,7 @@ export async function agentExecuteAction(userId: string, action: AgentAction): P
         const existingTitles = useGoalsStore.getState().goals.map(g => g.title);
         const result = await decomposeObjective(goal.title, existingTitles, localDateStr());
         await useGoalsStore.getState().createGoalBatch(result);
-        window.dispatchEvent(new Event('lifeos-refresh'));
+        window.dispatchEvent(new Event('genesisOS-refresh'));
         return { success: true, message: `Decomposed "${goal.title}" into sub-goals.` };
       }
 
@@ -548,7 +548,7 @@ export async function agentExecuteAction(userId: string, action: AgentAction): P
         const frequency = String(action.payload.frequency || 'daily');
         const icon = String(action.payload.icon || '✅');
         await useHabitsStore.getState().createHabit(userId, { title: name, frequency, icon });
-        window.dispatchEvent(new Event('lifeos-refresh'));
+        window.dispatchEvent(new Event('genesisOS-refresh'));
         return { success: true, message: `Habit "${name}" created.` };
       }
 
@@ -558,7 +558,7 @@ export async function agentExecuteAction(userId: string, action: AgentAction): P
         const category = String(action.payload.category || 'goal');
         const target_date = action.payload.target_date ? String(action.payload.target_date) : undefined;
         await useGoalsStore.getState().createGoal({ user_id: userId, title, category, target_date, status: 'active' });
-        window.dispatchEvent(new Event('lifeos-refresh'));
+        window.dispatchEvent(new Event('genesisOS-refresh'));
         return { success: true, message: `Goal "${title}" created.` };
       }
 
@@ -603,7 +603,7 @@ export async function agentExecuteAction(userId: string, action: AgentAction): P
         const { data, error } = await supabase.from('income').insert(entry).select().single();
         if (error) return { success: false, message: `Failed to log income: ${error.message}` };
         if (data) await localInsert('income', { ...data, synced: true });
-        window.dispatchEvent(new Event('lifeos-refresh'));
+        window.dispatchEvent(new Event('genesisOS-refresh'));
         return { success: true, message: `Logged income: $${amount}${source ? ' from ' + source : ''}` };
       }
 
@@ -625,7 +625,7 @@ export async function agentExecuteAction(userId: string, action: AgentAction): P
         const { data, error } = await supabase.from('expenses').insert(entry).select().single();
         if (error) return { success: false, message: `Failed to log expense: ${error.message}` };
         if (data) await localInsert('expenses', { ...data, synced: true });
-        window.dispatchEvent(new Event('lifeos-refresh'));
+        window.dispatchEvent(new Event('genesisOS-refresh'));
         return { success: true, message: `Logged expense: $${amount} — ${description}` };
       }
 
@@ -643,7 +643,7 @@ export async function agentExecuteAction(userId: string, action: AgentAction): P
           endTime: `${date}T13:00:00`,
           notes: `[${category}] ${notes}`
         });
-        window.dispatchEvent(new Event('lifeos-refresh'));
+        window.dispatchEvent(new Event('genesisOS-refresh'));
         return { success: true, message: `Logged activity: ${activity}` };
       }
 
@@ -673,7 +673,7 @@ export async function agentExecuteAction(userId: string, action: AgentAction): P
           { onConflict: 'user_id,date' }
         );
         if (error) return { success: false, message: `Failed to log mood: ${error.message}` };
-        window.dispatchEvent(new Event('lifeos-refresh'));
+        window.dispatchEvent(new Event('genesisOS-refresh'));
         return { success: true, message: `Logged mood: ${mood}` };
       }
 
@@ -703,7 +703,7 @@ export async function agentExecuteAction(userId: string, action: AgentAction): P
           { onConflict: 'user_id,date' }
         );
         if (error) return { success: false, message: `Failed to log health: ${error.message}` };
-        window.dispatchEvent(new Event('lifeos-refresh'));
+        window.dispatchEvent(new Event('genesisOS-refresh'));
         return { success: true, message: `Logged ${metric}: ${value}` };
       }
 
@@ -738,7 +738,7 @@ export async function agentExecuteAction(userId: string, action: AgentAction): P
         const { data, error } = await supabase.from('journal_entries').insert(journalEntry).select().single();
         if (error) return { success: false, message: `Failed to save journal: ${error.message}` };
         if (data) await localInsert('journal_entries', { ...data, synced: true });
-        window.dispatchEvent(new Event('lifeos-refresh'));
+        window.dispatchEvent(new Event('genesisOS-refresh'));
         return { success: true, message: 'Journal entry saved.' };
       }
 

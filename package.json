@@ -1,8 +1,8 @@
 {
-  "name": "lifeos-app",
+  "name": "genesisOS-app",
   "private": true,
   "version": "1.19.20",
-  "description": "LifeOS — Personal life operating system by Teddy's Cleaning Systems",
+  "description": "Your Personal AI Life Operating System",
   "author": "Tewedros Gebrewubet <tewedros@teddyscleaning.com.au>",
   "type": "module",
   "main": "electron/main.js",
@@ -46,8 +46,8 @@
     "zustand": "^5.0.11"
   },
   "build": {
-    "appId": "app.lifeos.desktop",
-    "productName": "LifeOS",
+    "appId": "app.genesisOS.desktop",
+    "productName": "GenesisOS",
     "directories": {
       "output": "release"
     },

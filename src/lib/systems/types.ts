@@ -1,7 +1,7 @@
-// LifeOS System Bus — Core Type Definitions
-// The universal language every System speaks to LifeOS.
+// GenesisOS System Bus — Core Type Definitions
+// The universal language every System speaks to GenesisOS.
 // Every business has schedules, money, goals, tasks, and people.
-// LifeOS is the universal translator.
+// GenesisOS is the universal translator.
 
 // ── Date & Time ────────────────────────────────────────────────────────────
 export interface DateRange {
@@ -10,7 +10,7 @@ export interface DateRange {
 }
 
 // ── Core System Interface ──────────────────────────────────────────────────
-export interface LifeOSSystem {
+export interface GenesisOSSystem {
   /** Unique identifier, e.g. 'tcs', 'fitness-pro' */
   id: string
   /** Human-readable name */
@@ -31,7 +31,7 @@ export interface LifeOSSystem {
 
 // ── System Manifest ────────────────────────────────────────────────────────
 export interface SystemManifest {
-  /** What LifeOS domains this system provides data for */
+  /** What GenesisOS domains this system provides data for */
   provides: SystemProviders
   /** Custom pages injected into the sidebar */
   pages?: SystemPage[]
@@ -60,7 +60,7 @@ export interface SystemConfig {
   apiUrl?: string
   /** API key */
   apiKey?: string
-  /** Map LifeOS user → external system user */
+  /** Map GenesisOS user → external system user */
   externalUserId?: string
   /** Which providers to enable */
   enabledProviders?: {
@@ -77,7 +77,7 @@ export interface SystemConfig {
 
 // ── System Registration & Status ───────────────────────────────────────────
 export interface SystemRegistration {
-  system: LifeOSSystem
+  system: GenesisOSSystem
   config: SystemConfig
   connectedAt: Date
 }

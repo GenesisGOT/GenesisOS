@@ -1,4 +1,4 @@
-// LifeOS Gamification — Level Up Celebration Modal
+// GenesisOS Gamification — Level Up Celebration Modal
 // Full-screen with particles, glow animations, title reveal, character jump
 
 import { useEffect, useMemo } from 'react';

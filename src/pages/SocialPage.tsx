@@ -1,4 +1,4 @@
-// LifeOS Social Hub — /social
+// GenesisOS Social Hub — /social
 // v4: Fullscreen immersive mode via FullscreenPage
 
 import { useState, useEffect, useCallback, useRef } from 'react';

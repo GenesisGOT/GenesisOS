@@ -1,4 +1,4 @@
--- LifeOS Finance Schema Migration
+-- GenesisOS Finance Schema Migration
 -- Run date: 2026-02-11
 -- Creates: expense_categories, businesses, transactions, budgets
 -- Alters: tasks, schedule_events, clients, goals

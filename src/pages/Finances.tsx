@@ -177,8 +177,8 @@ export function Finances() {
       useGoalsStore.getState().invalidate();
       fetchAll();
     };
-    window.addEventListener('lifeos-refresh', h);
-    return () => window.removeEventListener('lifeos-refresh', h);
+    window.addEventListener('genesisOS-refresh', h);
+    return () => window.removeEventListener('genesisOS-refresh', h);
   }, []);
 
   const switchTab = (t: Tab) => {

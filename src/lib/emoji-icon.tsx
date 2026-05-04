@@ -1,6 +1,6 @@
 /**
  * emoji-icon.tsx
- * Central emoji → Lucide icon resolver for LifeOS.
+ * Central emoji → Lucide icon resolver for GenesisOS.
  * Use <EmojiIcon emoji="🎯" size={16} /> anywhere emoji was previously rendered.
  * Use resolveIcon(emoji) to get the Lucide component programmatically.
  */

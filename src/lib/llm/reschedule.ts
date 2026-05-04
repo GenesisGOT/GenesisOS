@@ -111,7 +111,7 @@ export async function getAIRescheduleSuggestions(
     ? rescheduledTasks.map((t: { title: string; due_date?: string; updated_at: string }) => `• "${t.title}" — due ${t.due_date}, last updated ${new Date(t.updated_at).toLocaleDateString('en-AU', { month: 'short', day: 'numeric' })}`).join('\n')
     : '';
 
-  const prompt = `You are LifeOS, helping a user reschedule their overdue tasks and missed events.
+  const prompt = `You are GenesisOS, helping a user reschedule their overdue tasks and missed events.
 
 Today: ${today} (${new Date().toLocaleDateString('en-AU', { weekday: 'long' })})
 

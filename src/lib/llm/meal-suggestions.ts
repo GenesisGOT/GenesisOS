@@ -37,7 +37,7 @@ export interface MealSuggestionsResult {
 
 // ── Cache ──────────────────────────────────────────────────────────────────────
 
-const CACHE_KEY = 'lifeos_ai_meal_suggestions';
+const CACHE_KEY = 'genesisOS_ai_meal_suggestions';
 
 interface CachedSuggestions {
   date: string;

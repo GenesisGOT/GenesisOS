@@ -53,8 +53,8 @@ export function InboxPage() {
   useEffect(() => { fetchItems(); }, []);
   useEffect(() => {
     const handler = () => fetchItems();
-    window.addEventListener('lifeos-refresh', handler);
-    return () => window.removeEventListener('lifeos-refresh', handler);
+    window.addEventListener('genesisOS-refresh', handler);
+    return () => window.removeEventListener('genesisOS-refresh', handler);
   }, []);
 
   const addItem = async () => {

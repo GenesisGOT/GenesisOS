@@ -13,7 +13,7 @@
  *   supabase.rpc('function_name', params)
  *   supabase.auth.getUser() / getSession() / signIn / signOut etc.
  * 
- * Created: 2026-03-27 for LifeOS local-mode migration
+ * Created: 2026-03-27 for GenesisOS local-mode migration
  */
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL

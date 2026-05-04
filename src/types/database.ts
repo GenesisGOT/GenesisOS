@@ -1,7 +1,7 @@
 /**
  * Database Type Definitions
  * 
- * TypeScript interfaces for all major database tables in LifeOS.
+ * TypeScript interfaces for all major database tables in GenesisOS.
  * Use these to replace 'any' types throughout the codebase.
  */
 

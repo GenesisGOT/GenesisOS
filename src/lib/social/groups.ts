@@ -1,4 +1,4 @@
-// LifeOS Social — Goal-based Group Chats
+// GenesisOS Social — Goal-based Group Chats
 
 import { supabase } from '../data-access';
 import type { GoalGroup, GoalGroupMember, Message } from './types';

@@ -1,5 +1,5 @@
 /**
- * LifeOS LLM Context Builder
+ * GenesisOS LLM Context Builder
  *
  * Gathers relevant data based on the current page and user question,
  * then formats it as a compact string to inject into LLM prompts.
@@ -43,7 +43,7 @@ const PAGE_LOADERS: Record<string, PageContextLoader> = {
 /**
  * Build a compact LLM context string for the given page + user question.
  *
- * @param userId       - LifeOS user ID
+ * @param userId       - GenesisOS user ID
  * @param currentPage  - Current route path (e.g. '/finances')
  * @param userMessage  - The user's question (used for intent detection)
  * @param supabase     - Authenticated Supabase client

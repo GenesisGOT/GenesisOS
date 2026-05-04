@@ -1,4 +1,4 @@
-// LifeOS System Bus — React Context & Hooks
+// GenesisOS System Bus — React Context & Hooks
 //
 // Wraps the SystemBus singleton in React context so components can:
 // - Connect/disconnect systems
@@ -20,7 +20,7 @@ import { TCSAdapter } from './adapters/tcs'
 import type { TCSConfig } from './adapters/tcs'
 import { logger } from '../../utils/logger';
 import type {
-  LifeOSSystem,
+  GenesisOSSystem,
   DateRange,
   ScheduleEvent,
   FinanceSummary,
@@ -33,7 +33,7 @@ import type {
 } from './types'
 
 // ── System Registry (maps saved IDs → factory functions) ──────────────────
-const SYSTEM_FACTORIES: Record<string, () => LifeOSSystem> = {
+const SYSTEM_FACTORIES: Record<string, () => GenesisOSSystem> = {
   tcs: () => new TCSAdapter(),
 }
 
@@ -45,7 +45,7 @@ interface SystemBusContextValue {
   /** The singleton SystemBus instance */
   bus: typeof systemBus
   /** All currently connected systems */
-  systems: LifeOSSystem[]
+  systems: GenesisOSSystem[]
   /** True during a global refresh */
   refreshing: boolean
   /** Monotonically incrementing tick — hooks can watch this to re-fetch */
@@ -68,7 +68,7 @@ const SystemBusContext = createContext<SystemBusContextValue | null>(null)
 
 // ── Provider ───────────────────────────────────────────────────────────────
 export function SystemBusProvider({ children }: { children: ReactNode }) {
-  const [systems, setSystems] = useState<LifeOSSystem[]>([])
+  const [systems, setSystems] = useState<GenesisOSSystem[]>([])
   const [refreshing, setRefreshing] = useState(false)
   const [refreshTick, setRefreshTick] = useState(0)
   const [systemPages, setSystemPages] = useState<SystemPage[]>([])

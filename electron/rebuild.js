@@ -1,5 +1,5 @@
 /**
- * LifeOS Electron Builder — afterPack Hook
+ * GenesisOS Electron Builder — afterPack Hook
  *
  * Rebuilds native Node.js modules (better-sqlite3) for the target platform
  * after electron-builder packages the app. This ensures the .node binaries

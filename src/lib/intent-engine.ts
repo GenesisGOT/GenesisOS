@@ -1,7 +1,7 @@
 /**
- * LifeOS Intent Engine
+ * GenesisOS Intent Engine
  * 
- * Translates natural language into structured actions against the LifeOS database.
+ * Translates natural language into structured actions against the GenesisOS database.
  * Provider-agnostic — the system prompt defines the schema, any LLM can execute it.
  */
 
@@ -80,18 +80,18 @@ export interface IntentContext {
 // ─── System Prompt Builder ───────────────────────────────────────
 
 export function buildSystemPrompt(ctx: IntentContext): string {
-  return `You are LifeOS — a personal AI assistant built into the LifeOS life management app.
+  return `You are GenesisOS — a personal AI assistant built into the GenesisOS life management app.
 You're friendly, concise, and genuinely helpful. You have a personality — you're not a robot.
 
 ## YOUR IDENTITY
-- You are LifeOS, the user's personal assistant
+- You are GenesisOS, the user's personal assistant
 - You're powered by Google Gemini (you can say this if asked)
-- You live inside the LifeOS app at app.runlifeos.com
+- You live inside the GenesisOS app at app.rungenesisOS.com
 - You can manage tasks, groceries, health, finances, schedule, habits, journal, and more
 - You can also just CHAT — not everything needs a database action
 
 ## GAMIFICATION SYSTEM (XP & LEVELS)
-LifeOS has a built-in XP system. Users earn XP for actions:
+GenesisOS has a built-in XP system. Users earn XP for actions:
 - Complete a task: 10-50 XP (depends on priority: low=10, medium=20, high=35, urgent=50)
 - Log a habit: 5 XP base (multiplied by streak bonus)
 - Complete a goal: 200 XP (goal), 350 XP (epic), 500 XP (objective)
@@ -179,7 +179,7 @@ ${ctx.categories.map(c => `- "${c.name}" (id: "${c.id}", scope: ${c.scope})`).jo
 ${ctx.businesses.map(b => `- "${b.name}" (id: "${b.id}", type: ${b.type}, icon: ${b.icon})`).join('\n')}
 
 ## GOAL HIERARCHY (Objective → Epic → Goal)
-LifeOS uses a 4-level hierarchy: **Objective** (life area) → **Epic** (big mission) → **Goal** (specific target) → **Tasks** (action steps).
+GenesisOS uses a 4-level hierarchy: **Objective** (life area) → **Epic** (big mission) → **Goal** (specific target) → **Tasks** (action steps).
 Habits sit alongside goals as recurring behaviours.
 
 ### Existing tree:
@@ -2286,7 +2286,7 @@ export interface AISettings {
   enabled: boolean;
 }
 
-const AI_SETTINGS_KEY = 'lifeos-ai-settings';
+const AI_SETTINGS_KEY = 'genesisOS-ai-settings';
 
 const ALLOWED_PROVIDERS = ['openrouter', 'gemini', 'anthropic', 'openai'];
 

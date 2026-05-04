@@ -59,7 +59,7 @@ pub struct AppState {
 
 fn db_path() -> PathBuf {
     let mut path = dirs::home_dir().expect("No home directory");
-    path.push(".lifeos");
+    path.push(".genesisOS");
     std::fs::create_dir_all(&path).ok();
     path.push("data.db");
     path
@@ -726,8 +726,8 @@ CREATE INDEX IF NOT EXISTS idx_expenses_user ON expenses(user_id);
 CREATE INDEX IF NOT EXISTS idx_bills_user ON bills(user_id);
 
 -- Seed default user
-INSERT OR IGNORE INTO users (id, email, display_name) VALUES ('local-user-001', 'local@lifeos.app', 'LifeOS User');
-INSERT OR IGNORE INTO user_profiles (user_id, email, full_name, onboarding_complete) VALUES ('local-user-001', 'local@lifeos.app', 'LifeOS User', 1);
+INSERT OR IGNORE INTO users (id, email, display_name) VALUES ('local-user-001', 'local@genesisOS.app', 'GenesisOS User');
+INSERT OR IGNORE INTO user_profiles (user_id, email, full_name, onboarding_complete) VALUES ('local-user-001', 'local@genesisOS.app', 'GenesisOS User', 1);
 INSERT OR IGNORE INTO user_xp (user_id, total_xp, level) VALUES ('local-user-001', 0, 1);
 "#;
 
@@ -1846,7 +1846,7 @@ async fn ai_chat(
 /// Directories the Tauri app is allowed to read from.
 const ALLOWED_DIRS: &[&str] = &[
     "/mnt/data/tmp/academy/",
-    "/mnt/data/prodigy/creative-engine/LifeOS/",
+    "/mnt/data/prodigy/creative-engine/GenesisOS/",
     "/home/tewedros/clawd/lifeOS_data/",
 ];
 
@@ -1913,7 +1913,7 @@ fn get_academy_overview() -> Value {
         .unwrap_or(0);
 
     // Count realm music files
-    let realm_music_count = std::fs::read_dir("/mnt/data/prodigy/creative-engine/LifeOS/music")
+    let realm_music_count = std::fs::read_dir("/mnt/data/prodigy/creative-engine/GenesisOS/music")
         .map(|d| d.filter_map(|e| e.ok()).filter(|e| {
             let name = e.file_name().to_string_lossy().to_lowercase();
             name.ends_with(".mp3") || name.ends_with(".ogg") || name.ends_with(".wav")
@@ -1921,7 +1921,7 @@ fn get_academy_overview() -> Value {
         .unwrap_or(0);
 
     // Count backgrounds
-    let bg_count = std::fs::read_dir("/mnt/data/prodigy/creative-engine/LifeOS/Backgrounds")
+    let bg_count = std::fs::read_dir("/mnt/data/prodigy/creative-engine/GenesisOS/Backgrounds")
         .map(|d| d.filter_map(|e| e.ok()).filter(|e| {
             let name = e.file_name().to_string_lossy().to_lowercase();
             name.ends_with(".png") || name.ends_with(".jpg") || name.ends_with(".jpeg") || name.ends_with(".webp")

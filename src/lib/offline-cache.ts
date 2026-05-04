@@ -10,7 +10,7 @@
 
 import { logger } from '../utils/logger';
 
-const DB_NAME = 'lifeos-offline';
+const DB_NAME = 'genesisOS-offline';
 const DB_VERSION = 1;
 const STORE_NAME = 'cache';
 

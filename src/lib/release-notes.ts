@@ -1,5 +1,5 @@
 /**
- * LifeOS Release Notes
+ * GenesisOS Release Notes
  * Version history and changelog
  */
 

@@ -120,7 +120,7 @@ export function FuturePlanningPanel() {
             }
             if (count > 0) {
               showToast(`Scheduled ${count} tasks`, '📅', '#39FF14');
-              window.dispatchEvent(new Event('lifeos-refresh'));
+              window.dispatchEvent(new Event('genesisOS-refresh'));
             }
             setScheduleSlots(null);
           }}

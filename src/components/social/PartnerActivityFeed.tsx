@@ -1,4 +1,4 @@
-// LifeOS Social — Partner Activity Feed
+// GenesisOS Social — Partner Activity Feed
 
 import { useState, useEffect } from 'react';
 import { Globe, PartyPopper, CheckCircle2 } from 'lucide-react';

@@ -15,7 +15,7 @@ interface BodyPhoto {
   dataUrl: string;
 }
 
-const STORAGE_KEY = 'lifeos_body_photos';
+const STORAGE_KEY = 'genesisOS_body_photos';
 const MAX_PHOTOS = 8;
 
 function loadPhotos(): BodyPhoto[] {

@@ -1,4 +1,4 @@
-// LifeOS — Floating Chat Widget (Intercom-style)
+// GenesisOS — Floating Chat Widget (Intercom-style)
 // Accessible from any page, shows unread count, slide-up chat panel
 
 import { useState, useEffect, useCallback } from 'react';
@@ -57,7 +57,7 @@ export function ChatWidget() {
           new Notification('New Message', {
             body: msg.content?.slice(0, 60) || 'You have a new message',
             icon: '/icons/icon-192.png',
-            tag: 'lifeos-chat',
+            tag: 'genesisOS-chat',
           });
         } catch { /* iOS PWA doesn't support Notification constructor */ }
       }

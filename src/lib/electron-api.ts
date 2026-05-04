@@ -279,7 +279,7 @@ const _authListeners = new Set<AuthChangeCallback>();
 
 const LOCAL_USER: AuthUser = {
   id: 'local-user-001',
-  email: 'local@lifeos.app',
+  email: 'local@genesisOS.app',
   user_metadata: { full_name: 'Local User' },
   app_metadata: { provider: 'local' },
   created_at: new Date().toISOString(),

@@ -29,7 +29,7 @@ export function EventExpiryNudge({ event, onDismiss, onRefresh }: Props) {
   const userId = useUserStore(s => s.user?.id);
   const [dismissed, setDismissed] = useState<Set<string>>(() => {
     try {
-      const raw = sessionStorage.getItem('lifeos-expiry-dismissed');
+      const raw = sessionStorage.getItem('genesisOS-expiry-dismissed');
       return raw ? new Set(JSON.parse(raw)) : new Set();
     } catch { return new Set(); }
   });
@@ -50,7 +50,7 @@ export function EventExpiryNudge({ event, onDismiss, onRefresh }: Props) {
     next.add(id);
     setDismissed(next);
     try {
-      sessionStorage.setItem('lifeos-expiry-dismissed', JSON.stringify([...next]));
+      sessionStorage.setItem('genesisOS-expiry-dismissed', JSON.stringify([...next]));
     } catch { /* ignore */ }
   };
 
@@ -104,7 +104,7 @@ export function EventExpiryNudge({ event, onDismiss, onRefresh }: Props) {
         }
       }
 
-      window.dispatchEvent(new Event('lifeos-refresh'));
+      window.dispatchEvent(new Event('genesisOS-refresh'));
     } catch (err) {
       logger.warn('Expiry complete error:', err);
       if (!silent) showToast('Failed to complete event', 'error');
@@ -128,7 +128,7 @@ export function EventExpiryNudge({ event, onDismiss, onRefresh }: Props) {
       }).eq('id', event.id);
 
       showToast('Extended 30 minutes', 'success');
-      window.dispatchEvent(new Event('lifeos-refresh'));
+      window.dispatchEvent(new Event('genesisOS-refresh'));
     } catch (err) {
       logger.warn('Expiry extend error:', err);
       showToast('Failed to extend event', 'error');

@@ -1,5 +1,5 @@
 #!/bin/bash
-# LifeOS — Jetson Electron Desktop Launcher
+# GenesisOS — Jetson Electron Desktop Launcher
 # Builds frontend with ELECTRON_ENV, then launches Electron.
 # Falls back to Flask + Chromium if Electron fails.
 #
@@ -25,7 +25,7 @@ done
 
 # ── Fallback to Flask + Chromium ──
 if [ "$FORCE_FALLBACK" = true ]; then
-  echo "Launching LifeOS (Flask + Chromium fallback)..."
+  echo "Launching GenesisOS (Flask + Chromium fallback)..."
   exec bash start-jetson.sh "$@"
 fi
 
@@ -41,9 +41,9 @@ if [ "$NO_BUILD" = false ]; then
 fi
 
 # ── Launch Electron ──
-echo "Starting LifeOS (Electron)..."
+echo "Starting GenesisOS (Electron)..."
 echo "═══════════════════════════════════════"
-echo "  Database: ~/.lifeos/data.db"
+echo "  Database: ~/.genesisOS/data.db"
 echo "  Press Ctrl+C to stop"
 echo "═══════════════════════════════════════"
 

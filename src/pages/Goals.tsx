@@ -180,8 +180,8 @@ export function Goals() {
 
   useEffect(() => {
     const handler = () => fetchGoals(true);
-    window.addEventListener('lifeos-refresh', handler);
-    return () => window.removeEventListener('lifeos-refresh', handler);
+    window.addEventListener('genesisOS-refresh', handler);
+    return () => window.removeEventListener('genesisOS-refresh', handler);
   }, []);
 
   // Deep-link: ?node=<id>
@@ -577,7 +577,7 @@ export function Goals() {
       setLinkedTasks(prev => ({ ...prev, [goalId]: refreshedTasks as unknown as GoalTask[] }));
       fetchTaskChartData(goalId);
       fetchGoals();
-      window.dispatchEvent(new Event('lifeos-refresh'));
+      window.dispatchEvent(new Event('genesisOS-refresh'));
     }
     setCreatingLinkedTask(false);
   };

@@ -56,7 +56,7 @@ export function EventDrawer() {
 
   const [drawerMode, setDrawerMode] = useState<'daily' | 'sacred'>(() => {
     try {
-      const stored = localStorage.getItem('lifeos-drawer-mode');
+      const stored = localStorage.getItem('genesisOS-drawer-mode');
       return (stored === 'sacred' ? 'sacred' : 'daily');
     } catch {
       return 'daily';
@@ -76,7 +76,7 @@ export function EventDrawer() {
   const [completedPrayers, setCompletedPrayers] = useState<Set<string>>(() => {
     try {
       const today = new Date().toISOString().slice(0, 10);
-      const saved = localStorage.getItem(`lifeos-prayers-${today}`);
+      const saved = localStorage.getItem(`genesisOS-prayers-${today}`);
       return saved ? new Set(JSON.parse(saved)) : new Set();
     } catch { return new Set(); }
   });
@@ -182,8 +182,8 @@ export function EventDrawer() {
         }
       }
     };
-    window.addEventListener('lifeos-focus-event', handler);
-    return () => window.removeEventListener('lifeos-focus-event', handler);
+    window.addEventListener('genesisOS-focus-event', handler);
+    return () => window.removeEventListener('genesisOS-focus-event', handler);
   }, []);
 
   // ── Body scroll lock ──
@@ -291,7 +291,7 @@ export function EventDrawer() {
             logger.warn('XP award error (non-fatal):', xpErr);
           }
         }
-        window.dispatchEvent(new Event('lifeos-refresh'));
+        window.dispatchEvent(new Event('genesisOS-refresh'));
         setCompleted(currentEvent.id);
         showToast(xpMessage, xpAwarded > 0 ? 'success' : 'info');
         setTimeout(() => { setCompleted(null); setIsOpen(false); }, 2000);
@@ -323,7 +323,7 @@ export function EventDrawer() {
       showToast('Event created!', 'success');
       setShowQuickAdd(false);
       state.refresh();
-      window.dispatchEvent(new Event('lifeos-refresh'));
+      window.dispatchEvent(new Event('genesisOS-refresh'));
     } catch (e) {
       logger.warn('Quick add error:', e);
       showToast('Failed to create event', 'error');
@@ -349,7 +349,7 @@ export function EventDrawer() {
       await handleComplete();
     } else {
       showToast('Session completed!', 'success');
-      window.dispatchEvent(new Event('lifeos-refresh'));
+      window.dispatchEvent(new Event('genesisOS-refresh'));
     }
   }, [currentEvent]);
 
@@ -369,7 +369,7 @@ export function EventDrawer() {
     const next = drawerMode === 'daily' ? 'sacred' : 'daily';
     setDrawerMode(next);
     try {
-      localStorage.setItem('lifeos-drawer-mode', next);
+      localStorage.setItem('genesisOS-drawer-mode', next);
     } catch { /* ignore */ }
   }, [drawerMode]);
 
@@ -489,7 +489,7 @@ export function EventDrawer() {
                     // Persist to localStorage
                     try {
                       const today = new Date().toISOString().slice(0, 10);
-                      localStorage.setItem(`lifeos-prayers-${today}`, JSON.stringify([...next]));
+                      localStorage.setItem(`genesisOS-prayers-${today}`, JSON.stringify([...next]));
                     } catch {}
                     // Log completion to Supabase (fire-and-forget)
                     if (!wasCompleted && user?.id) {

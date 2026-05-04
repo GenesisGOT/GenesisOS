@@ -108,7 +108,7 @@ function TrendBadge({ trend, prevRate }: { trend: string; prevRate: number }) {
 // ── XP Award (once per week) ──
 
 async function awardWeeklyInsightsXP(userId: string, weekKey: string): Promise<boolean> {
-  const storageKey = `lifeos_insights_xp_${weekKey}`;
+  const storageKey = `genesisOS_insights_xp_${weekKey}`;
   if (localStorage.getItem(storageKey)) return false;
 
   try {

@@ -1,4 +1,4 @@
-// LifeOS Social — Direct Messaging & Nudge System
+// GenesisOS Social — Direct Messaging & Nudge System
 
 import { supabase } from '../data-access';
 import type { Message, ConversationPreview, Nudge } from './types';

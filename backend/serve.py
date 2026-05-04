@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-LifeOS Local Server — Single-process, one-click launcher.
+GenesisOS Local Server — Single-process, one-click launcher.
 
 Serves both the Flask API and the built frontend from one process.
 No external servers, no internet required.
@@ -88,7 +88,7 @@ def open_browser(port):
                     f'--app={url}',
                     '--no-first-run',
                     '--disable-default-apps',
-                    f'--user-data-dir=/tmp/lifeos-browser',
+                    f'--user-data-dir=/tmp/genesisOS-browser',
                     '--window-size=1280,800',
                 ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 return
@@ -102,13 +102,13 @@ def open_browser(port):
         print(f"  Open manually: {url}")
 
 def main():
-    parser = argparse.ArgumentParser(description='LifeOS Local Server')
+    parser = argparse.ArgumentParser(description='GenesisOS Local Server')
     parser.add_argument('--port', type=int, default=8080, help='Port (default: 8080)')
     parser.add_argument('--no-open', action='store_true', help="Don't open browser")
     parser.add_argument('--no-build', action='store_true', help="Skip build check")
     args = parser.parse_args()
     
-    print("🎮 LifeOS — Command Center")
+    print("🎮 GenesisOS — Command Center")
     print("═" * 40)
     
     # Build check
@@ -123,7 +123,7 @@ def main():
         threading.Thread(target=open_browser, args=(args.port,), daemon=True).start()
     
     print(f"  URL: http://localhost:{args.port}")
-    print(f"  Database: ~/.lifeos/data.db")
+    print(f"  Database: ~/.genesisOS/data.db")
     print("=" * 40)
     print("  Press Ctrl+C to stop")
     print()

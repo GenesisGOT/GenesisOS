@@ -1,5 +1,5 @@
 [Unit]
-Description=LifeOS Command Center
+Description=GenesisOS Command Center
 After=network.target graphical.target
 Wants=network.target
 
@@ -7,8 +7,8 @@ Wants=network.target
 Type=simple
 User=tewedros
 Group=tewedros
-WorkingDirectory=/mnt/data/tmp/lifeos
-ExecStart=/usr/bin/python3 /mnt/data/tmp/lifeos/backend/serve.py --no-open --port 8080
+WorkingDirectory=/mnt/data/tmp/genesisOS
+ExecStart=/usr/bin/python3 /mnt/data/tmp/genesisOS/backend/serve.py --no-open --port 8080
 Restart=on-failure
 RestartSec=5
 Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
@@ -16,7 +16,7 @@ Environment=HOME=/home/tewedros
 Environment=PYTHONUNBUFFERED=1
 StandardOutput=journal
 StandardError=journal
-SyslogIdentifier=lifeos
+SyslogIdentifier=genesisOS
 
 [Install]
 WantedBy=multi-user.target

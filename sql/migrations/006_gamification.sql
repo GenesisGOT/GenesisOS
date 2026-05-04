@@ -1,4 +1,4 @@
--- LifeOS Gamification Engine — Database Schema
+-- GenesisOS Gamification Engine — Database Schema
 -- Migration 006: XP, Achievements, Quests tables
 
 -- ══════════════════════════════════════════════════════

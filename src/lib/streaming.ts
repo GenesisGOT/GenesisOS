@@ -1,5 +1,5 @@
 /**
- * LifeOS Streaming Text Reveal
+ * GenesisOS Streaming Text Reveal
  * 
  * Simulates streaming by revealing text word-by-word with natural timing.
  * Since the backend returns full responses, we animate the reveal to feel alive.

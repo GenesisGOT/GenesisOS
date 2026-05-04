@@ -46,7 +46,7 @@ interface UseScheduleOptimizerReturn {
   };
 }
 
-const CACHE_KEY = 'lifeos-optimizer-cache';
+const CACHE_KEY = 'genesisOS-optimizer-cache';
 const CACHE_TTL_MS = 12 * 60 * 60 * 1000; // 12 hours
 
 function getCachedResult(dateStr: string): OptimizerResult | null {
@@ -283,7 +283,7 @@ export function useScheduleOptimizer(selectedDate: Date): UseScheduleOptimizerRe
       }
 
       // Trigger refresh
-      window.dispatchEvent(new Event('lifeos-refresh'));
+      window.dispatchEvent(new Event('genesisOS-refresh'));
       useScheduleStore.getState().invalidate();
 
       return true;

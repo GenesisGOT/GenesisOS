@@ -8,7 +8,7 @@
  * Update flow:
  * 1. Poll version.json → detect mismatch with loaded JS buildId
  * 2. Show "New version available!" banner
- * 3. User clicks "Update Now" → set `lifeos_update_pending` flag → reload
+ * 3. User clicks "Update Now" → set `genesisOS_update_pending` flag → reload
  * 4. After reload, WhatsNew component picks up the pending flag and shows release notes
  */
 
@@ -19,8 +19,8 @@ import { onUpdateAvailable, applyUpdate } from '../lib/sw-register';
 const VERSION_CHECK_URL = (() => {
   // Detect the base path from the current page URL
   const path = window.location.pathname;
-  if (path.startsWith('/lifeos-app')) return '/lifeos-app/version.json';
-  if (path.startsWith('/lifeos')) return '/lifeos/version.json';
+  if (path.startsWith('/genesisOS-app')) return '/genesisOS-app/version.json';
+  if (path.startsWith('/genesisOS')) return '/genesisOS/version.json';
   return '/app/version.json';
 })();
 const CHECK_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
@@ -38,7 +38,7 @@ function getCurrentBuildId(): string | null {
 export function UpdateBanner() {
   const [swRegistration, setSwRegistration] = useState<ServiceWorkerRegistration | null>(null);
   const [serverUpdateAvailable, setServerUpdateAvailable] = useState(false);
-  const [dismissed, setDismissed] = useState(() => sessionStorage.getItem('lifeos_update_dismissed') === 'true');
+  const [dismissed, setDismissed] = useState(() => sessionStorage.getItem('genesisOS_update_dismissed') === 'true');
 
   // Listen for SW update events
   useEffect(() => {
@@ -51,15 +51,15 @@ export function UpdateBanner() {
   useEffect(() => {
     const currentBuildId = getCurrentBuildId();
     if (currentBuildId) {
-      localStorage.setItem('lifeos_current_build_id', currentBuildId);
+      localStorage.setItem('genesisOS_current_build_id', currentBuildId);
     }
     // If we just loaded fresh code, the update already happened — clear pending flag
     // (WhatsNew will handle showing the modal if needed)
-    const pending = localStorage.getItem('lifeos_update_pending');
+    const pending = localStorage.getItem('genesisOS_update_pending');
     if (pending === 'true') {
       // Give WhatsNew 100ms to pick it up, then clear if it's still there
       setTimeout(() => {
-        localStorage.removeItem('lifeos_update_pending');
+        localStorage.removeItem('genesisOS_update_pending');
       }, 3000);
     }
   }, []);
@@ -99,8 +99,8 @@ export function UpdateBanner() {
 
   const handleUpdate = useCallback(() => {
     // Set pending flag so WhatsNew knows to show after reload
-    localStorage.setItem('lifeos_update_pending', 'true');
-    sessionStorage.removeItem('lifeos_update_dismissed');
+    localStorage.setItem('genesisOS_update_pending', 'true');
+    sessionStorage.removeItem('genesisOS_update_dismissed');
 
     if (swRegistration) {
       applyUpdate(swRegistration);
@@ -165,7 +165,7 @@ export function UpdateBanner() {
           Update Now
         </button>
         <button
-          onClick={() => { setDismissed(true); sessionStorage.setItem('lifeos_update_dismissed', 'true'); }}
+          onClick={() => { setDismissed(true); sessionStorage.setItem('genesisOS_update_dismissed', 'true'); }}
           style={{
             background: 'transparent',
             color: '#050E1A',

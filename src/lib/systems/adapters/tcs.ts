@@ -1,15 +1,15 @@
-// TCS Adapter — Example Cleaning Business → LifeOS System Bus
+// TCS Adapter — Example Cleaning Business → GenesisOS System Bus
 //
 // Design principle: Transparent bridge. RLS does the security.
 //   - An admin sees all jobs. An employee sees their assigned jobs.
 //   - The adapter passes through whatever Supabase returns — no filtering here.
-//   - persistSession: false keeps TCS auth out of LifeOS's localStorage slot.
+//   - persistSession: false keeps TCS auth out of GenesisOS's localStorage slot.
 
 import { createClient } from '@supabase/supabase-js'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { logger } from '../../../utils/logger';
 import type {
-  LifeOSSystem,
+  GenesisOSSystem,
   SystemConfig,
   SystemManifest,
   SystemStatus,
@@ -781,7 +781,7 @@ class TCSTaskProvider implements TaskProvider {
 }
 
 // ── TCS Adapter (Main System Implementation) ───────────────────────────────
-export class TCSAdapter implements LifeOSSystem {
+export class TCSAdapter implements GenesisOSSystem {
   readonly id = 'tcs'
   readonly name = "Example Cleaning Business"
   readonly icon = '🧹'

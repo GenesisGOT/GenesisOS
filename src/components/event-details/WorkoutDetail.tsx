@@ -148,7 +148,7 @@ export function WorkoutDetail({ event }: WorkoutDetailProps) {
       });
 
       showToast('Workout logged! 💪', 'success');
-      window.dispatchEvent(new Event('lifeos-refresh'));
+      window.dispatchEvent(new Event('genesisOS-refresh'));
     } catch {
       showToast('Failed to log workout', 'error');
     } finally {

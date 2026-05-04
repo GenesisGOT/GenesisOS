@@ -50,7 +50,7 @@ export async function fetchUpcomingEvents(days = 7): Promise<CalendarEvent[]> {
 }
 
 /**
- * Create a new Google Calendar event from LifeOS schedule
+ * Create a new Google Calendar event from GenesisOS schedule
  */
 export async function createCalendarEvent(event: NewCalendarEvent): Promise<boolean> {
   try {
@@ -63,7 +63,7 @@ export async function createCalendarEvent(event: NewCalendarEvent): Promise<bool
 }
 
 /**
- * Push LifeOS scheduled events to Google Calendar
+ * Push GenesisOS scheduled events to Google Calendar
  */
 export async function syncScheduleToCalendar(): Promise<{ synced: number; errors: number }> {
   try {

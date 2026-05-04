@@ -1,4 +1,4 @@
--- LifeOS Database Schema
+-- GenesisOS Database Schema
 -- Shared by Tauri (lib.rs), Flask (app.py), and Electron (database.js)
 
 CREATE TABLE IF NOT EXISTS users (

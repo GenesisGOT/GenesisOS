@@ -1,5 +1,5 @@
 /**
- * offline.ts — Basic Offline Support for LifeOS
+ * offline.ts — Basic Offline Support for GenesisOS
  * 
  * Detects online/offline state, queues mutations when offline,
  * and replays them when back online.
@@ -9,8 +9,8 @@ import { genId } from '../utils/date';
 import { getErrorMessage } from '../utils/error';
 import { logger } from '../utils/logger';
 
-const QUEUE_KEY = 'lifeos_offline_queue';
-const OFFLINE_BANNER_EVENT = 'lifeos-offline-change';
+const QUEUE_KEY = 'genesisOS_offline_queue';
+const OFFLINE_BANNER_EVENT = 'genesisOS-offline-change';
 
 // ── State Management ──
 
@@ -39,7 +39,7 @@ if (typeof window !== 'undefined') {
     logger.log('[offline] Back online — replaying queue...');
     replayQueue().then(() => {
       // Trigger global refresh so stores re-fetch fresh data
-      window.dispatchEvent(new Event('lifeos-refresh'));
+      window.dispatchEvent(new Event('genesisOS-refresh'));
     });
   });
 
@@ -165,7 +165,7 @@ export async function replayQueue(): Promise<{ replayed: number; failed: number 
   if (replayed > 0) {
     logger.log(`[offline] Replayed ${replayed} mutations, ${failed} failed, ${remaining.length} remaining`);
     // Trigger refresh so UI updates
-    window.dispatchEvent(new Event('lifeos-refresh'));
+    window.dispatchEvent(new Event('genesisOS-refresh'));
   }
 
   return { replayed, failed };

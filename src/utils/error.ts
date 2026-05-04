@@ -1,5 +1,5 @@
 /**
- * Error Utilities — LifeOS
+ * Error Utilities — GenesisOS
  *
  * Safe error message extraction for catch (err: unknown) blocks.
  */

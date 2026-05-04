@@ -1,5 +1,5 @@
 /**
- * LifeOS LLM Action System
+ * GenesisOS LLM Action System
  *
  * Parses AI responses for structured action intents and executes them
  * against the Supabase database.

@@ -187,7 +187,7 @@ export function AIMealSuggestions({ compact = false, maxSuggestions }: AIMealSug
       setSchedulePrompt(null);
 
       // Dispatch refresh event
-      window.dispatchEvent(new CustomEvent('lifeos-refresh'));
+      window.dispatchEvent(new CustomEvent('genesisOS-refresh'));
     } catch (err) {
       logger.error('[scheduleMeal]', err);
     } finally {
@@ -229,7 +229,7 @@ export function AIMealSuggestions({ compact = false, maxSuggestions }: AIMealSug
       }
 
       setWeekScheduleCount(count);
-      window.dispatchEvent(new CustomEvent('lifeos-refresh'));
+      window.dispatchEvent(new CustomEvent('genesisOS-refresh'));
     } catch (err) {
       logger.error('[scheduleWeek]', err);
     } finally {

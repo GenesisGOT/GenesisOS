@@ -1,4 +1,4 @@
-// LifeOS Social — Accountability Partner Goal Features
+// GenesisOS Social — Accountability Partner Goal Features
 
 import { db as supabase } from '../data-access';
 import type { PartnerGoal, GoalComment, WeeklyProgress } from './types';

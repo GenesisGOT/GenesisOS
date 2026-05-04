@@ -1,5 +1,5 @@
 /**
- * TelegramConnect — Settings component for linking Telegram to LifeOS.
+ * TelegramConnect — Settings component for linking Telegram to GenesisOS.
  * Shows connect/disconnect UI, generates 6-digit codes, and manages preferences.
  */
 
@@ -42,7 +42,7 @@ const DEFAULT_PREFS: TelegramPreferences = {
   quiet_hours_end: '06:00',
 };
 
-const BOT_USERNAME = 'RunLifeOSBot';
+const BOT_USERNAME = 'RunGenesisOSBot';
 
 export function TelegramConnect() {
   const user = useUserStore(s => s.user);

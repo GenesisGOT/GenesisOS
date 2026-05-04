@@ -1,4 +1,4 @@
-// LifeOS Gamification — Player Card (Character Sheet)
+// GenesisOS Gamification — Player Card (Character Sheet)
 // v2: Shield level badge, days active, longest streak, cleaner layout
 // Mobile-first, fits iPhone SE (320px)
 

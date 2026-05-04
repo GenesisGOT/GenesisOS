@@ -16,7 +16,7 @@
  *   supabase.rpc('function_name', params)
  *   supabase.auth.getUser() / getSession() / signIn / signOut etc.
  * 
- * Created: 2026-03-27 for LifeOS Tauri migration
+ * Created: 2026-03-27 for GenesisOS Tauri migration
  */
 
 // ─── Tauri Detection ─────────────────────────────────────────────────
@@ -529,7 +529,7 @@ function _setStoredSession(session: AuthSession | null) {
 // In Tauri mode, we auto-create a local session (single-user, no login needed)
 const LOCAL_USER: AuthUser = {
   id: 'local-user-001',
-  email: 'local@lifeos.app',
+  email: 'local@genesisOS.app',
   user_metadata: { full_name: 'Local User' },
   app_metadata: { provider: 'local' },
   created_at: new Date().toISOString(),

@@ -1,5 +1,5 @@
 /**
- * LifeOS Plugin System — Shared Types
+ * GenesisOS Plugin System — Shared Types
  *
  * Generic plugin pipeline: TCS, Shopify, gym apps, etc.
  * External systems fire events; each plugin handler decides what to do with them.
@@ -15,7 +15,7 @@ export interface PluginEvent {
   plugin_id: string;
   /** What happened: 'job_complete', 'invoice_paid', 'order_complete', etc. */
   event_type: string;
-  /** LifeOS user this event belongs to */
+  /** GenesisOS user this event belongs to */
   user_id: string;
   /** ISO timestamp of when the event occurred */
   timestamp: string;

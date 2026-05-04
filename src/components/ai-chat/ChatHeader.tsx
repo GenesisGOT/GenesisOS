@@ -26,7 +26,7 @@ export function ChatHeader({
     <div className="ai-chat-header">
       <div className="ai-chat-header-left">
         <Sparkles size={18} className="ai-chat-header-icon" />
-        <span className="ai-chat-title">LifeOS AI</span>
+        <span className="ai-chat-title">GenesisOS AI</span>
         {mode && (
           <span className="ai-chat-mode" style={{ color: mode.color }}>
             {mode.emoji} {mode.label}

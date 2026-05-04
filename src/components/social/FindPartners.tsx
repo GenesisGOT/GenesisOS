@@ -1,4 +1,4 @@
-// LifeOS Social — Find Accountability Partners (Discovery/Matching)
+// GenesisOS Social — Find Accountability Partners (Discovery/Matching)
 
 import { useState, useEffect } from 'react';
 import { Search, X, Users, Handshake, Lightbulb } from 'lucide-react';

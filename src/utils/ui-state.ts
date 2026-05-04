@@ -13,15 +13,15 @@
 
 import { db as supabase } from '../lib/data-access';
 
-const LS_PREFIX = 'lifeos_ui_state_';
+const LS_PREFIX = 'genesisOS_ui_state_';
 
 // Legacy localStorage keys → new ui_state keys (for migration)
 const LEGACY_KEYS: Record<string, string> = {
-  'lifeos_junction_tutorial_done': 'junction_tutorial_done',
-  'lifeos_health_ai_seen': 'health_ai_seen',
-  'lifeos_finance_ai_holo_seen': 'finance_ai_seen',
+  'genesisOS_junction_tutorial_done': 'junction_tutorial_done',
+  'genesisOS_health_ai_seen': 'health_ai_seen',
+  'genesisOS_finance_ai_holo_seen': 'finance_ai_seen',
   'ed-toggle-discovered': 'event_drawer_discovered',
-  'lifeos_lifetown_guide_complete': 'lifetown_guide_complete',
+  'genesisOS_lifetown_guide_complete': 'lifetown_guide_complete',
 };
 
 // ── Read ──

@@ -203,8 +203,8 @@ export function useSmartSuggestions(enabled: boolean): { suggestions: Suggestion
   // Refresh when app refreshes
   useEffect(() => {
     const handler = () => fetchSuggestions();
-    window.addEventListener('lifeos-refresh', handler);
-    return () => window.removeEventListener('lifeos-refresh', handler);
+    window.addEventListener('genesisOS-refresh', handler);
+    return () => window.removeEventListener('genesisOS-refresh', handler);
   }, [fetchSuggestions]);
 
   return { suggestions, loading };

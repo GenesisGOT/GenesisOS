@@ -27,7 +27,7 @@ export function GlobalLoadingSpinner() {
           <Zap size={40} className="global-loading-icon" />
           <div className="global-loading-pulse" />
         </div>
-        <div className="global-loading-brand">LifeOS</div>
+        <div className="global-loading-brand">GenesisOS</div>
         {!stuck ? (
           <div className="global-loading-bar-wrap">
             <div className="global-loading-bar" />

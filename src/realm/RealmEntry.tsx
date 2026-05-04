@@ -116,7 +116,7 @@ export function RealmEntry({ onExit, fullscreen = false }: RealmEntryProps) {
 
   // Biome state
   const [biomeId, setBiomeId] = useState<BiomeId>(() => {
-    return (localStorage.getItem('lifeos-realm-biome') as BiomeId) || 'woodland';
+    return (localStorage.getItem('genesisOS-realm-biome') as BiomeId) || 'woodland';
   });
   const [showBiomePicker, setShowBiomePicker] = useState(false);
 
@@ -307,7 +307,7 @@ export function RealmEntry({ onExit, fullscreen = false }: RealmEntryProps) {
     }, userId);
 
     // Apply biome
-    const savedBiome = (localStorage.getItem('lifeos-realm-biome') as BiomeId) || 'woodland';
+    const savedBiome = (localStorage.getItem('genesisOS-realm-biome') as BiomeId) || 'woodland';
     engine.setTileBiome(BIOMES[savedBiome] ?? BIOMES.woodland);
 
     // Subscribe to chat messages
@@ -466,7 +466,7 @@ export function RealmEntry({ onExit, fullscreen = false }: RealmEntryProps) {
 
   const handleSelectBiome = useCallback((id: BiomeId) => {
     setBiomeId(id);
-    localStorage.setItem('lifeos-realm-biome', id);
+    localStorage.setItem('genesisOS-realm-biome', id);
     engineRef.current?.setTileBiome(BIOMES[id]);
   }, []);
 
@@ -478,7 +478,7 @@ export function RealmEntry({ onExit, fullscreen = false }: RealmEntryProps) {
   const handleSkipLater = useCallback(() => {
     setShowOnboarding(false);
     // Clear invite card dismissal so DashboardRealmInvite re-appears
-    try { localStorage.removeItem('lifeos_realm_onboarding_done'); } catch { /* ignore */ }
+    try { localStorage.removeItem('genesisOS_realm_onboarding_done'); } catch { /* ignore */ }
     navigate('/dashboard');
   }, [navigate]);
 

@@ -34,7 +34,7 @@ export interface TriageItem {
 
 export type TriageAction = 'done' | 'missed' | 'moved';
 
-const TRIAGE_STORAGE_KEY = 'lifeos_triage_state';
+const TRIAGE_STORAGE_KEY = 'genesisOS_triage_state';
 
 interface TriageState {
   [date: string]: {

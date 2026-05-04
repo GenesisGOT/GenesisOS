@@ -60,7 +60,7 @@ export function RealmSessionGuard({ onNudge }: RealmSessionGuardProps) {
       const elapsed = Math.floor((Date.now() - startTimeRef.current) / 60000);
       if (elapsed > 0) {
         const today = new Date().toISOString().split('T')[0];
-        const key = `lifeos-realm-time-${today}`;
+        const key = `genesisOS-realm-time-${today}`;
         const prev = parseInt(localStorage.getItem(key) || '0', 10);
         localStorage.setItem(key, String(prev + elapsed));
       }
@@ -75,6 +75,6 @@ export function RealmSessionGuard({ onNudge }: RealmSessionGuardProps) {
  */
 export function getRealmTimeToday(): number {
   const today = new Date().toISOString().split('T')[0];
-  const key = `lifeos-realm-time-${today}`;
+  const key = `genesisOS-realm-time-${today}`;
   return parseInt(localStorage.getItem(key) || '0', 10);
 }

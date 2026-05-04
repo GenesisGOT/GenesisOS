@@ -81,7 +81,7 @@ export async function schedulePreloadedTasks(
   }
 
   if (scheduled > 0) {
-    try { window.dispatchEvent(new Event('lifeos-refresh')); } catch { /* SSR safe */ }
+    try { window.dispatchEvent(new Event('genesisOS-refresh')); } catch { /* SSR safe */ }
   }
 
   logger.log(`[life-planner] Scheduled ${scheduled}/${tasks.length} tasks (${warnings.length} warnings)`);

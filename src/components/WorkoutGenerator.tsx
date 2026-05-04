@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════
-// AI WORKOUT GENERATOR — LifeOS
+// AI WORKOUT GENERATOR — GenesisOS
 // Full AI-powered workout generation with quick presets,
 // start workout, and save-as-template functionality
 // ═══════════════════════════════════════════════════════════

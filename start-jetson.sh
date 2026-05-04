@@ -1,5 +1,5 @@
 #!/bin/bash
-# LifeOS — Jetson Desktop Launcher
+# GenesisOS — Jetson Desktop Launcher
 # Builds frontend, starts Flask API + Chromium (bypasses WebKitGTK)
 #
 # Usage:
@@ -24,5 +24,5 @@ if [[ "$*" != *"--no-build"* ]]; then
 fi
 
 # ── Launch Flask backend + Chromium ──
-echo "Starting LifeOS..."
+echo "Starting GenesisOS..."
 exec python3 backend/serve.py "$@"

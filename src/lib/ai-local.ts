@@ -1,5 +1,5 @@
 /**
- * ai-local.ts — Local AI adapter for LifeOS
+ * ai-local.ts — Local AI adapter for GenesisOS
  * 
  * Replaces OpenRouter / remote LLM calls with local SentientTeddy Bridge
  * running at localhost:11435 (OpenAI-compatible API).

@@ -114,7 +114,7 @@ function buildOnboardingPrompt(currentData: ExtractedData, coverage: OnboardingC
     .map(([key]) => key);
   const percent = Math.round((covered.length / Object.keys(coverage).length) * 100);
 
-  return `You are LifeOS — a warm, insightful life coach helping someone set up their personal life system through natural conversation.
+  return `You are GenesisOS — a warm, insightful life coach helping someone set up their personal life system through natural conversation.
 
 ## CRITICAL RULES
 1. NEVER repeat a question you already asked. Read the conversation history.

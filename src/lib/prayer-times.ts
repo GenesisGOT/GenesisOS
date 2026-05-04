@@ -1,5 +1,5 @@
 /**
- * Prayer Time Calculator — Sacred Time Markers for LifeOS
+ * Prayer Time Calculator — Sacred Time Markers for GenesisOS
  * 
  * Computes daily prayer/devotion times for multiple traditions:
  * - Islamic (astronomically calculated using standard algorithms)

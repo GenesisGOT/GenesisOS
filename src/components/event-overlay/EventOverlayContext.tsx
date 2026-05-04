@@ -23,7 +23,7 @@ export function EventOverlayProvider({ children }: { children: React.ReactNode }
 
   const startOverlay = useCallback((event: ActiveEvent) => {
     // Dispatch to EventDrawer focus mode instead of rendering overlay
-    window.dispatchEvent(new CustomEvent('lifeos-focus-event', { detail: event }));
+    window.dispatchEvent(new CustomEvent('genesisOS-focus-event', { detail: event }));
   }, []);
 
   const closeOverlay = useCallback(() => {
@@ -36,7 +36,7 @@ export function EventOverlayProvider({ children }: { children: React.ReactNode }
     setOverlayState(prev => ({ ...prev, isMinimized: !prev.isMinimized }));
   }, []);
 
-  // Listen for 'lifeos-refresh' and re-query active event from Supabase
+  // Listen for 'genesisOS-refresh' and re-query active event from Supabase
   useEffect(() => {
     const handleRefresh = async () => {
       if (!overlayState.activeEvent) return;
@@ -63,8 +63,8 @@ export function EventOverlayProvider({ children }: { children: React.ReactNode }
       }));
     };
 
-    window.addEventListener('lifeos-refresh', handleRefresh);
-    return () => window.removeEventListener('lifeos-refresh', handleRefresh);
+    window.addEventListener('genesisOS-refresh', handleRefresh);
+    return () => window.removeEventListener('genesisOS-refresh', handleRefresh);
   }, [overlayState.activeEvent, closeOverlay]);
 
   // Auto-trigger removed — EventDrawer now handles auto-opening

@@ -295,7 +295,7 @@ export function getMusicUrl(trackOrPath: MusicTrack | string): string {
   // Electron: use custom protocol
   if (isElectronCheck()) {
     const fullPath = resolveMediaPath(path);
-    return `lifeos-media://${fullPath}`;
+    return `genesisOS-media://${fullPath}`;
   }
 
   if (isTauriCheck()) {
@@ -387,7 +387,7 @@ function resolveMediaPath(trackPath: string): string {
     return `${ACADEMY_ROOT}/${trackPath}`;
   }
   if (trackPath.startsWith('realm-music/') || trackPath.includes('/music/')) {
-    return `/mnt/data/prodigy/creative-engine/LifeOS/music/${trackPath.split('/').pop()}`;
+    return `/mnt/data/prodigy/creative-engine/GenesisOS/music/${trackPath.split('/').pop()}`;
   }
 
   // Default: treat as relative to academy root
@@ -399,12 +399,12 @@ function resolveMediaPath(trackPath: string): string {
  */
 export function getBackgroundUrl(bg: Background): string {
   if (isElectronCheck()) {
-    const fullPath = `/mnt/data/prodigy/creative-engine/LifeOS/Backgrounds/${bg.file}`;
-    return `lifeos-media://${fullPath}`;
+    const fullPath = `/mnt/data/prodigy/creative-engine/GenesisOS/Backgrounds/${bg.file}`;
+    return `genesisOS-media://${fullPath}`;
   }
 
   if (isTauriCheck()) {
-    const fullPath = `/mnt/data/prodigy/creative-engine/LifeOS/Backgrounds/${bg.file}`;
+    const fullPath = `/mnt/data/prodigy/creative-engine/GenesisOS/Backgrounds/${bg.file}`;
     if (_convertFileSrc) {
       return _convertFileSrc(fullPath);
     }

@@ -1,4 +1,4 @@
-// LifeOS Gamification — XP Progress Bar
+// GenesisOS Gamification — XP Progress Bar
 // Animated, glowing, with compact/expanded modes
 
 import { useEffect, useState, useRef } from 'react';

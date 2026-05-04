@@ -1,7 +1,7 @@
 /**
- * LifeOS Balance Engine
+ * GenesisOS Balance Engine
  *
- * The philosophical core of LifeOS — measures how balanced your life is
+ * The philosophical core of GenesisOS — measures how balanced your life is
  * across 6 key domains. Fetches XP data from Supabase, calculates a
  * balance score, and generates suggestions for improvement.
  *
@@ -136,7 +136,7 @@ const ALL_DOMAINS: BalanceDomain[] = ['physical', 'mental', 'spiritual', 'financ
 
 // ── Cache ──────────────────────────────────────────────────────────────────────
 
-const CACHE_KEY = 'lifeos_balance_status';
+const CACHE_KEY = 'genesisOS_balance_status';
 
 interface CachedBalance {
   date: string;
@@ -278,7 +278,7 @@ function generateSuggestions(domains: DomainXP[], strongest: DomainXP | null, we
  * Calculate the user's life balance status.
  * Fetches XP events, classifies them by domain, and scores the balance.
  *
- * @param userId   - LifeOS user ID
+ * @param userId   - GenesisOS user ID
  * @param supabase - Authenticated Supabase client
  * @param options  - { forceRefresh: skip cache }
  */

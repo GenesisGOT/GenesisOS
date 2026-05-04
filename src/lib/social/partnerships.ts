@@ -1,4 +1,4 @@
-// LifeOS Social — Partnership / Accountability Partner Operations
+// GenesisOS Social — Partnership / Accountability Partner Operations
 
 import { supabase } from '../data-access';
 import { sendMessage } from './messaging';

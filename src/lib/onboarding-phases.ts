@@ -90,7 +90,7 @@ function lifeMerge(current: Record<string, any>, updates: Record<string, any>): 
 
 function lifeSystemPrompt(data: Record<string, any>, coverage: Record<string, boolean>): string {
   const covSummary = Object.entries(coverage).map(([k, v]) => `${v ? '✅' : '🔲'} ${k}`).join(', ');
-  return `You are LifeOS — a warm, insightful life coach helping someone set up their personal life system through natural conversation.
+  return `You are GenesisOS — a warm, insightful life coach helping someone set up their personal life system through natural conversation.
 
 ## YOUR ROLE
 Have a real conversation, not an interview. Be curious, encouraging, genuine.
@@ -235,7 +235,7 @@ function healthSystemPrompt(data: Record<string, any>, coverage: Record<string, 
     if (lifeContext.goals?.length) crossPhaseLines.push(`Life goals: ${lifeContext.goals.join(', ')}.`);
   }
 
-  return `You are LifeOS Health Coach — helping someone set up the health & wellness part of their life system.
+  return `You are GenesisOS Health Coach — helping someone set up the health & wellness part of their life system.
 
 ## YOUR ROLE
 Have a natural, knowledgeable conversation about their health, fitness, and wellbeing. Be encouraging but SUBSTANTIVE — not just "that's great!"
@@ -419,7 +419,7 @@ function financeSystemPrompt(data: Record<string, any>, coverage: Record<string,
     if (healthContext.fitnessGoals?.length) crossPhaseLines.push(`Fitness goals: ${healthContext.fitnessGoals.join(', ')} — may need budget for equipment/nutrition.`);
   }
 
-  return `You are LifeOS Finance Coach — a sharp, practical financial advisor helping someone set up the financial management part of their life system.
+  return `You are GenesisOS Finance Coach — a sharp, practical financial advisor helping someone set up the financial management part of their life system.
 
 ## YOUR ROLE
 You are NOT a cheerleader. You are a financial thinker who does REAL ANALYSIS.
@@ -533,7 +533,7 @@ export const PHASES: Record<PhaseId, PhaseConfig> = {
     subtitle: 'Values, goals, habits & purpose',
     icon: '⚡',
     color: '#00D4FF',
-    chatGreeting: "Hey! I'm LifeOS — I'll help you build your personal life system. Instead of filling out a bunch of forms, let's just talk. What's your name and what are you working on in life right now?",
+    chatGreeting: "Hey! I'm GenesisOS — I'll help you build your personal life system. Instead of filling out a bunch of forms, let's just talk. What's your name and what are you working on in life right now?",
     coverageFields: lifeCoverageFields,
     buildSystemPrompt: lifeSystemPrompt,
     emptyData: lifeEmptyData,

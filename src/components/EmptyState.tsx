@@ -26,7 +26,7 @@ const VARIANTS: Record<EmptyVariant, { icon: ReactNode; title: string; descripti
   tasks: {
     icon: <CheckCircle2 size={36} />,
     title: "No tasks yet",
-    description: "Let's plan your week! Add tasks or let LifeOS AI help you get started.",
+    description: "Let's plan your week! Add tasks or let GenesisOS AI help you get started.",
     color: '#39FF14',
   },
   goals: {
@@ -74,7 +74,7 @@ const VARIANTS: Record<EmptyVariant, { icon: ReactNode; title: string; descripti
   review: {
     icon: <BarChart3 size={36} />,
     title: "Not enough data yet",
-    description: "Use LifeOS for a few days to unlock your weekly review and insights.",
+    description: "Use GenesisOS for a few days to unlock your weekly review and insights.",
     color: '#A855F7',
   },
   generic: {
@@ -103,7 +103,7 @@ const VARIANTS: Record<EmptyVariant, { icon: ReactNode; title: string; descripti
   },
   dashboard: {
     icon: <BarChart3 size={36} />,
-    title: "Welcome to LifeOS",
+    title: "Welcome to GenesisOS",
     description: "Add your first task, habit, or goal to get your command center running.",
     color: '#39FF14',
   },

@@ -1,5 +1,5 @@
 /**
- * Cross-Page Links — Connects data across LifeOS modules.
+ * Cross-Page Links — Connects data across GenesisOS modules.
  *
  * habit↔event matching, goal↔finance utils, health trend detection.
  * Used by nudges, schedule badges, and habit page annotations.

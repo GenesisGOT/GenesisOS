@@ -28,7 +28,7 @@ import { getUIState, setUIState } from '../../utils/ui-state';
 
 // ── Cache helpers ──
 
-const CACHE_KEY_PREFIX = 'lifeos_finance_ai_holo_cache_';
+const CACHE_KEY_PREFIX = 'genesisOS_finance_ai_holo_cache_';
 
 interface CacheEntry {
   date: string;
@@ -202,7 +202,7 @@ export function FinanceAIHolo({ onSwitchTab, onFormMode }: FinanceAIHoloProps) {
     try {
       const snapshot = await loadFinanceSnapshot(user.id);
 
-      const prompt = `You are a financial advisor AI for a personal life management app called LifeOS. Analyze this user's financial data and provide:
+      const prompt = `You are a financial advisor AI for a personal life management app called GenesisOS. Analyze this user's financial data and provide:
 1. A brief financial health summary (2-3 sentences).
 2. Up to 3 smart suggestions (one sentence each).
 
@@ -261,8 +261,8 @@ Be specific with numbers. Be encouraging but honest. Use Australian dollars.`;
       localStorage.removeItem(CACHE_KEY);
       fetchSummary(true);
     };
-    window.addEventListener('lifeos-refresh', handler);
-    return () => window.removeEventListener('lifeos-refresh', handler);
+    window.addEventListener('genesisOS-refresh', handler);
+    return () => window.removeEventListener('genesisOS-refresh', handler);
   }, [fetchSummary]);
 
   const handleAsk = async () => {
@@ -275,7 +275,7 @@ Be specific with numbers. Be encouraging but honest. Use Australian dollars.`;
     try {
       const snapshot = await loadFinanceSnapshot(user.id);
 
-      const prompt = `You are a financial AI assistant for LifeOS. Answer the user's finance question based on their data. Be helpful, specific, and concise (2-4 sentences). Use Australian dollars.
+      const prompt = `You are a financial AI assistant for GenesisOS. Answer the user's finance question based on their data. Be helpful, specific, and concise (2-4 sentences). Use Australian dollars.
 
 Financial Data:
 - Month Income: $${snapshot.monthIncome.toFixed(2)}

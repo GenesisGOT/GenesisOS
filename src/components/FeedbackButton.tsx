@@ -117,7 +117,7 @@ export function FeedbackButton() {
                   placeholder={
                     type === 'bug' ? 'What went wrong? What did you expect?'
                     : type === 'feature' ? 'What feature would you love to see?'
-                    : type === 'praise' ? 'What do you love about LifeOS?'
+                    : type === 'praise' ? 'What do you love about GenesisOS?'
                     : 'Tell us anything...'
                   }
                   rows={4}

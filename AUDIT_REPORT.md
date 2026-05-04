@@ -1,4 +1,4 @@
-# LifeOS Comprehensive Audit Report
+# GenesisOS Comprehensive Audit Report
 
 **Date:** 2026-03-28  
 **Version:** 1.19.20  
@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-LifeOS is an ambitious personal operating system with **127,803 lines of TypeScript** across **~355 source files**, a **1,039-line Rust backend**, and an impressive feature set spanning productivity, gamification, health, finance, and social systems. The codebase is **surprisingly well-organized** for its scale, with proper lazy loading, Zustand state management, and a thoughtful local-first architecture. However, there are **critical security issues in the Rust backend**, **zero test coverage**, and **significant `any` type abuse** that undermine reliability.
+GenesisOS is an ambitious personal operating system with **127,803 lines of TypeScript** across **~355 source files**, a **1,039-line Rust backend**, and an impressive feature set spanning productivity, gamification, health, finance, and social systems. The codebase is **surprisingly well-organized** for its scale, with proper lazy loading, Zustand state management, and a thoughtful local-first architecture. However, there are **critical security issues in the Rust backend**, **zero test coverage**, and **significant `any` type abuse** that undermine reliability.
 
 ### Severity Summary
 
@@ -96,7 +96,7 @@ LifeOS is an ambitious personal operating system with **127,803 lines of TypeScr
 - **Store hydration fires ALL stores at once** — `Promise.allSettled` with 8 parallel fetches on login. Good pattern, but no priority ordering (schedule/habits before assets/journal).
 - **`profile.onboarding_complete = true`** — Direct mutation of store state outside of Zustand (line ~250 of App.tsx). Should use store action.
 - **`supabase` imported directly** in 20+ files — not abstracted behind the adapter layer in all places. The local-api.ts/tauri-api.ts adapters exist but coexist with direct supabase imports.
-- **`window.addEventListener('lifeos-refresh')`** — Custom events for cross-component communication. Works but fragile; could use Zustand middleware or event bus.
+- **`window.addEventListener('genesisOS-refresh')`** — Custom events for cross-component communication. Works but fragile; could use Zustand middleware or event bus.
 - **`useMemo`/`useCallback`/`React.memo` usage: 683 instances** — good but hard to verify correctness without profiling
 
 ### Routing
@@ -220,7 +220,7 @@ Files with highest `as any` / `: any` counts:
 - **Skeleton components** — 14 skeleton screens for perceived performance
 - **`dedup()` query deduplication** — prevents duplicate Supabase queries
 - **Store hydration** — all stores pre-fetched on login with `skipSync: true`
-- **Debounced refresh events** — 300ms debounce on `lifeos-refresh`
+- **Debounced refresh events** — 300ms debounce on `genesisOS-refresh`
 - **Module preload disabled** — avoids Safari preload warnings
 
 ### ⚠️ Issues
@@ -280,7 +280,7 @@ Files with highest `as any` / `: any` counts:
 The RPG/Realm system is **genuinely impressive and fully wired up**:
 
 #### Character System (`src/rpg/`)
-- **`CharacterManager.ts`** — derives stats from REAL LifeOS data:
+- **`CharacterManager.ts`** — derives stats from REAL GenesisOS data:
   - HP from energy + sleep + mood
   - MP from exercise + habit streaks
   - Strength from exercise + energy
@@ -392,7 +392,7 @@ This is NOT stub code. The RPG system is a **deeply integrated, functioning game
 
 ## Final Assessment
 
-**LifeOS is an extraordinarily ambitious project that's further along than most apps this complex.** The architecture decisions are sound (Zustand, lazy loading, code splitting, local-first adapters), the RPG system is genuinely functional (not vaporware), and the code organization is good for 128K LOC.
+**GenesisOS is an extraordinarily ambitious project that's further along than most apps this complex.** The architecture decisions are sound (Zustand, lazy loading, code splitting, local-first adapters), the RPG system is genuinely functional (not vaporware), and the code organization is good for 128K LOC.
 
 The biggest risks are:
 1. **Zero tests** — one refactor away from cascading breakage

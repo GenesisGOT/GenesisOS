@@ -1,12 +1,12 @@
-// LifeOS System Bus — Singleton Aggregator & Event Emitter
+// GenesisOS System Bus — Singleton Aggregator & Event Emitter
 //
-// The System Bus is the glue between LifeOS and external Systems.
+// The System Bus is the glue between GenesisOS and external Systems.
 // It aggregates data from all connected systems, emits events,
 // and persists connection state across sessions.
 
 import { logger } from '../../utils/logger';
 import type {
-  LifeOSSystem,
+  GenesisOSSystem,
   SystemConfig,
   SystemRegistration,
   DateRange,
@@ -21,7 +21,7 @@ import type {
 } from './types'
 
 // ── Storage ────────────────────────────────────────────────────────────────
-const STORAGE_KEY = 'lifeos_system_bus_v1'
+const STORAGE_KEY = 'genesisOS_system_bus_v1'
 
 /** Encode a string to base64 (UTF-8 safe). Real encryption in a future pass. */
 function encode(str: string): string {
@@ -59,7 +59,7 @@ type AnyListener = (data: unknown) => void
 // ── SystemBus Class ────────────────────────────────────────────────────────
 class SystemBus {
   private static _instance: SystemBus | undefined
-  private systems = new Map<string, LifeOSSystem>()
+  private systems = new Map<string, GenesisOSSystem>()
   private registrations = new Map<string, SystemRegistration>()
   private listeners = new Map<BusEventKey, Set<AnyListener>>()
 
@@ -96,7 +96,7 @@ class SystemBus {
 
   // ── System Registry ────────────────────────────────────────────────────
 
-  async register(system: LifeOSSystem, config?: SystemConfig): Promise<void> {
+  async register(system: GenesisOSSystem, config?: SystemConfig): Promise<void> {
     this.systems.set(system.id, system)
     if (config) {
       this.registrations.set(system.id, {
@@ -118,11 +118,11 @@ class SystemBus {
     this.emit('system-disconnected', systemId)
   }
 
-  getSystem(id: string): LifeOSSystem | undefined {
+  getSystem(id: string): GenesisOSSystem | undefined {
     return this.systems.get(id)
   }
 
-  getSystems(): LifeOSSystem[] {
+  getSystems(): GenesisOSSystem[] {
     return Array.from(this.systems.values())
   }
 

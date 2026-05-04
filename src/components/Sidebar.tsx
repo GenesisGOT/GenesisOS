@@ -96,7 +96,7 @@ export const Sidebar = React.memo(function Sidebar({ expanded = true, onToggle, 
       <div className="sb-top">
         <button className="sb-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer', background: 'none', border: 'none', padding: 0, display: 'flex', alignItems: 'center', gap: 8 }} aria-label="Go to dashboard">
           <Zap size={22} className="sb-logo-icon" />
-          <span className="sb-brand">LifeOS</span>
+          <span className="sb-brand">GenesisOS</span>
         </button>
         <button className="sb-collapse" onClick={onToggle} aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}>
           {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
@@ -256,7 +256,7 @@ export const Sidebar = React.memo(function Sidebar({ expanded = true, onToggle, 
           title="Early Adopter — Pro Unlocked"
           aria-label="Early Adopter Pro"
           onClick={() => {
-            alert('🎉 Early Adopter — Pro Unlocked!\n\nThank you for being one of the first to use LifeOS. All Pro features are yours for free.\n\nWe\'re building something special, and you\'re part of it from the beginning.');
+            alert('🎉 Early Adopter — Pro Unlocked!\n\nThank you for being one of the first to use GenesisOS. All Pro features are yours for free.\n\nWe\'re building something special, and you\'re part of it from the beginning.');
           }}
           style={{
             display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', margin: '0 8px 8px',

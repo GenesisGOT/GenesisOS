@@ -146,7 +146,7 @@ interface UserState {
 // Derive the auth storage key from the Supabase URL ref
 const _supaRef = (import.meta.env.VITE_SUPABASE_URL || '').match(/\/\/([^.]+)\./)?.[1] || 'app';
 const SUPABASE_AUTH_KEY = `sb-${_supaRef}-auth-token`;
-const PROFILE_CACHE_PREFIX = 'lifeos_profile_cache_';
+const PROFILE_CACHE_PREFIX = 'genesisOS_profile_cache_';
 
 function getStoredSession(): Session | null {
   try {
@@ -170,16 +170,16 @@ function getStoredProfile(userId?: string): UserProfile | null {
       if (raw) return JSON.parse(raw) as UserProfile;
     }
     // Legacy fallback (will be cleaned up on next cache write)
-    const legacy = localStorage.getItem('lifeos_profile_cache');
+    const legacy = localStorage.getItem('genesisOS_profile_cache');
     if (legacy) {
       const profile = JSON.parse(legacy) as UserProfile;
       // If the legacy profile matches this user, migrate it
       if (userId && profile.user_id === userId) {
         localStorage.setItem(`${PROFILE_CACHE_PREFIX}${userId}`, legacy);
-        localStorage.removeItem('lifeos_profile_cache');
+        localStorage.removeItem('genesisOS_profile_cache');
       } else if (userId) {
         // Wrong user's data — discard
-        localStorage.removeItem('lifeos_profile_cache');
+        localStorage.removeItem('genesisOS_profile_cache');
         return null;
       }
       return profile;
@@ -195,7 +195,7 @@ function cacheProfile(profile: UserProfile | null): void {
     if (profile?.user_id) {
       localStorage.setItem(`${PROFILE_CACHE_PREFIX}${profile.user_id}`, JSON.stringify(profile));
       // Clean up legacy key if present
-      localStorage.removeItem('lifeos_profile_cache');
+      localStorage.removeItem('genesisOS_profile_cache');
     } else if (!profile) {
       // On sign-out we don't know which user, but it's fine — cache stays scoped
     }
@@ -233,7 +233,7 @@ export const useUserStore = create<UserState>((set, get) => ({
     const detectedEnv = getEnvironment();
     if (detectedEnv === 'tauri' || detectedEnv === 'electron') {
       set({
-        user: { id: 'local-user-001', email: 'local@lifeos.app', email_confirmed_at: new Date().toISOString(), user_metadata: { full_name: 'LifeOS User' } } as any,
+        user: { id: 'local-user-001', email: 'local@genesisOS.app', email_confirmed_at: new Date().toISOString(), user_metadata: { full_name: 'GenesisOS User' } } as any,
         mode: 'local',
         authLoading: false,
         connectionError: false,
@@ -254,7 +254,7 @@ export const useUserStore = create<UserState>((set, get) => ({
             // Profile row should exist (seeded by database.js), but create if missing
             supabase.from('user_profiles').upsert({
               user_id: 'local-user-001',
-              full_name: 'LifeOS User',
+              full_name: 'GenesisOS User',
               onboarding_complete: false,
               preferences: {},
             }, { onConflict: 'user_id' }).select().single().then(({ data: created }: any) => {
@@ -292,12 +292,12 @@ export const useUserStore = create<UserState>((set, get) => ({
         ...(cachedProfile ? { profile: cachedProfile, firstName, profileLoading: true } : {}),
       });
 
-      localStorage.setItem('lifeos_user_mode', 'synced');
+      localStorage.setItem('genesisOS_user_mode', 'synced');
       // Fetch fresh profile — this will set profileLoading=false when done
       get().fetchProfile();
     } else {
       // No stored session — check local mode preference
-      const savedMode = localStorage.getItem('lifeos_user_mode');
+      const savedMode = localStorage.getItem('genesisOS_user_mode');
       if (savedMode === 'local') {
         get().initLocalMode();
       }
@@ -336,7 +336,7 @@ export const useUserStore = create<UserState>((set, get) => ({
           mode: 'synced',
           connectionError: false,
         });
-        localStorage.setItem('lifeos_user_mode', 'synced');
+        localStorage.setItem('genesisOS_user_mode', 'synced');
         // Only fetch profile if we didn't already do it from the sync read
         if (!storedSession?.user) {
           get().fetchProfile();
@@ -368,7 +368,7 @@ export const useUserStore = create<UserState>((set, get) => ({
 
       if (user) {
         // Detect user switch (different authenticated user, not initial local→supabase migration)
-        const previousAuthId = localStorage.getItem('lifeos_current_user_id');
+        const previousAuthId = localStorage.getItem('genesisOS_current_user_id');
         const isUserSwitch = previousAuthId && previousAuthId !== user.id;
         if (isUserSwitch) {
           // Different authenticated user — clear ALL local data to prevent data leakage
@@ -380,13 +380,13 @@ export const useUserStore = create<UserState>((set, get) => ({
           await resetAllDataStores();
           // Also clear localStorage caches that hold user-specific data
           const keysToRemove = Object.keys(localStorage).filter(k =>
-            k.startsWith('lifeos_orch_') ||
-            k.startsWith('lifeos_sync_retry_queue') ||
-            k.startsWith('lifeos_zeroclaw_')
+            k.startsWith('genesisOS_orch_') ||
+            k.startsWith('genesisOS_sync_retry_queue') ||
+            k.startsWith('genesisOS_zeroclaw_')
           );
           keysToRemove.forEach(k => localStorage.removeItem(k));
         }
-        localStorage.setItem('lifeos_current_user_id', user.id);
+        localStorage.setItem('genesisOS_current_user_id', user.id);
 
         set({
           session: s,
@@ -395,7 +395,7 @@ export const useUserStore = create<UserState>((set, get) => ({
           mode: 'synced',
           connectionError: false,
         });
-        localStorage.setItem('lifeos_user_mode', 'synced');
+        localStorage.setItem('genesisOS_user_mode', 'synced');
 
         // Migrate local data to Supabase user ID if needed.
         // SKIP migration on user switch — clearLocalDB already wiped everything.
@@ -409,7 +409,7 @@ export const useUserStore = create<UserState>((set, get) => ({
         // Always update localUserId to match the current auth user
         set({ localUserId: user.id });
         // Update LOCAL_USER_KEY in localStorage so getEffectiveUserId() returns the right user
-        localStorage.setItem('lifeos_local_user_id', user.id);
+        localStorage.setItem('genesisOS_local_user_id', user.id);
 
         // Trigger sync via single exported function (no duplicate listener in sync-engine)
         // Wrap in setInitialSyncPromise so stores can await it before first load
@@ -421,8 +421,8 @@ export const useUserStore = create<UserState>((set, get) => ({
         if (_signOutInProgress) return;
 
         // Only clear state on explicit sign-out event
-        localStorage.removeItem('lifeos_user_mode');
-        localStorage.removeItem('lifeos_current_user_id');
+        localStorage.removeItem('genesisOS_user_mode');
+        localStorage.removeItem('genesisOS_current_user_id');
         cacheProfile(null);
 
         // Clear local DB + reset stores (signOut() and SIGNED_OUT can race)
@@ -523,8 +523,8 @@ export const useUserStore = create<UserState>((set, get) => ({
           }, { onConflict: 'user_id' });
 
           // Mark as new signup for tour system
-          try { sessionStorage.setItem('lifeos_new_signup', 'true'); } catch { /* Safari private */ }
-          try { localStorage.removeItem('lifeos_completed_tours'); } catch { /* Safari private */ }
+          try { sessionStorage.setItem('genesisOS_new_signup', 'true'); } catch { /* Safari private */ }
+          try { localStorage.removeItem('genesisOS_completed_tours'); } catch { /* Safari private */ }
 
           // Re-fetch the newly created profile
           const { data: newData } = await supabase
@@ -591,14 +591,14 @@ export const useUserStore = create<UserState>((set, get) => ({
     const isElectron = !!(window as any).electronAPI?.isElectron;
 
     if (isElectron) {
-      // Electron: open system browser, redirect back via lifeos:// deep link.
+      // Electron: open system browser, redirect back via genesisOS:// deep link.
       // Use the CLOUD Supabase client (not the db proxy, which routes to SQLite).
       const { supabase: cloudSupabase } = await import('../lib/supabase');
 
       const { data, error } = await cloudSupabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: 'lifeos://auth/callback',
+          redirectTo: 'genesisOS://auth/callback',
           skipBrowserRedirect: true,
         },
       });
@@ -634,8 +634,8 @@ export const useUserStore = create<UserState>((set, get) => ({
                 authLoading: false,
                 connectionError: false,
               });
-              localStorage.setItem('lifeos_user_mode', 'synced');
-              localStorage.setItem('lifeos_current_user_id', user.id);
+              localStorage.setItem('genesisOS_user_mode', 'synced');
+              localStorage.setItem('genesisOS_current_user_id', user.id);
 
               // Fetch profile from cloud Supabase (not local SQLite)
               try {
@@ -711,17 +711,17 @@ export const useUserStore = create<UserState>((set, get) => ({
     cacheProfile(null);
 
     // Clear all local state so user returns to login screen
-    localStorage.removeItem('lifeos_user_mode');
-    localStorage.removeItem('lifeos_local_user_id');
-    localStorage.removeItem('lifeos_current_user_id');
-    localStorage.removeItem('lifeos_sync_retry_queue');
+    localStorage.removeItem('genesisOS_user_mode');
+    localStorage.removeItem('genesisOS_local_user_id');
+    localStorage.removeItem('genesisOS_current_user_id');
+    localStorage.removeItem('genesisOS_sync_retry_queue');
 
     // Clear offline caches (IndexedDB + localStorage queue)
     try {
       const { clearAllCache } = await import('../lib/offline-cache');
       await clearAllCache();
     } catch { /* non-critical */ }
-    localStorage.removeItem('lifeos_offline_queue');
+    localStorage.removeItem('genesisOS_offline_queue');
 
     // Clear local-first IndexedDB to prevent data leakage to next user
     try {
@@ -752,7 +752,7 @@ export const useUserStore = create<UserState>((set, get) => ({
       authLoading: false,
     });
     // Persist choice — next launch skips login wall
-    localStorage.setItem('lifeos_user_mode', 'local');
+    localStorage.setItem('genesisOS_user_mode', 'local');
     await get().fetchProfile();
     logger.log('[Auth] Local mode initialized —', localUserId);
   },

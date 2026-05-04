@@ -1,4 +1,4 @@
-// LifeOS — Dashboard Layout Editor
+// GenesisOS — Dashboard Layout Editor
 // Slide-out panel for reordering (drag-and-drop) and toggling dashboard widgets
 
 import { useState, useRef, useCallback } from 'react';

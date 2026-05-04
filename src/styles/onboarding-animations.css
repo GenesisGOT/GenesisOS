@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════
-   LifeOS Onboarding Polish Animations
+   GenesisOS Onboarding Polish Animations
    Imported globally via App.tsx so all onboarding components can use these.
    ═══════════════════════════════════════════════════════════════════ */
 
@@ -206,7 +206,7 @@
   letter-spacing: 0.8px;
 }
 
-/* Enter LifeOS button pulse */
+/* Enter GenesisOS button pulse */
 @keyframes enterBtnPulse {
   0%, 100% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.22); }
   50%       { box-shadow: 0 0 30px 6px rgba(0, 212, 255, 0.16); }

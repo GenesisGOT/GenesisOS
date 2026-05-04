@@ -23,7 +23,7 @@ import { logger } from '../../utils/logger';
 
 // ── Cache helpers ──
 
-const CACHE_KEY = 'lifeos_junction_ai_cache';
+const CACHE_KEY = 'genesisOS_junction_ai_cache';
 
 interface CacheEntry {
   date: string;
@@ -219,7 +219,7 @@ export function JunctionAI() {
         return;
       }
 
-      const prompt = `You are a spiritual AI guide for the Junction System in LifeOS — a gamified spiritual growth system where users equip wisdom traditions (like Tewahedo, Buddhism, Islam, etc.) and earn Junction XP through practices.
+      const prompt = `You are a spiritual AI guide for the Junction System in GenesisOS — a gamified spiritual growth system where users equip wisdom traditions (like Tewahedo, Buddhism, Islam, etc.) and earn Junction XP through practices.
 
 Analyze this user's junction status and give a warm, spiritually-aware summary (2-4 sentences). Be encouraging and suggest what they could do next.
 
@@ -261,7 +261,7 @@ Be specific. Reference their tradition by name. Don't use markdown. Keep it warm
     try {
       const snap = snapshot || await loadJunctionSnapshot(user.id);
 
-      const prompt = `You are a spiritual AI guide for the Junction System in LifeOS. Answer the user's question about their spiritual journey.
+      const prompt = `You are a spiritual AI guide for the Junction System in GenesisOS. Answer the user's question about their spiritual journey.
 
 Context:
 - Equipped Tradition: ${snap.traditionName || 'None'} ${snap.traditionIcon || ''}

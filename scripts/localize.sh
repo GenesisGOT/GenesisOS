@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ══════════════════════════════════════════════════════════════════════
-# localize.sh — Switch LifeOS from Supabase to Local API adapter
+# localize.sh — Switch GenesisOS from Supabase to Local API adapter
 #
 # What it does:
 #   1. Backs up every file that will be modified (.bak)
@@ -10,7 +10,7 @@
 #   5. Logs every change to scripts/localize.log
 #
 # Usage:
-#   cd /mnt/data/tmp/lifeos
+#   cd /mnt/data/tmp/genesisOS
 #   bash scripts/localize.sh          # dry-run (default)
 #   bash scripts/localize.sh --apply  # actually modify files
 #
@@ -34,7 +34,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m'
 
 echo "═══════════════════════════════════════════════════════"
-echo " LifeOS → Local API Migration Script"
+echo " GenesisOS → Local API Migration Script"
 echo "═══════════════════════════════════════════════════════"
 echo ""
 echo "Project root: $PROJECT_ROOT"

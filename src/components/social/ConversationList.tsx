@@ -1,4 +1,4 @@
-// LifeOS Social — Conversation Inbox List
+// GenesisOS Social — Conversation Inbox List
 // v3: Messenger-style with search, avatars, relative timestamps, unread indicators
 
 import { useState, useEffect, useCallback } from 'react';

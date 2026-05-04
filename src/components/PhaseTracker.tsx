@@ -35,7 +35,7 @@ export function PhaseTracker({ preferences }: PhaseTrackerProps) {
   };
 
   // Title logic: friendly copy when at 0%
-  const title = overall === 0 ? 'Personalize LifeOS' : 'Continue Setup';
+  const title = overall === 0 ? 'Personalize GenesisOS' : 'Continue Setup';
 
   return (
     <Link to={routeMap[nextPhase]} className="phase-tracker" style={{ textDecoration: 'none', color: 'inherit' }}>

@@ -1,5 +1,5 @@
 /**
- * LifeOS Plugin System — Barrel Export
+ * GenesisOS Plugin System — Barrel Export
  *
  * Import everything from here:
  *   import { registerPlugin, processEvent } from '../lib/plugins';

@@ -1,4 +1,4 @@
-// LifeOS Gamification — Global Overlay
+// GenesisOS Gamification — Global Overlay
 // Renders level-up modals, achievement toasts, XP floaters
 // Place this ONCE at the app root level
 

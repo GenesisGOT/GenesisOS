@@ -1,4 +1,4 @@
--- LifeOS Plugin System Migration
+-- GenesisOS Plugin System Migration
 -- Created: 2026-02-19
 -- Purpose: Generic plugin pipeline (TCS, Shopify, gym apps, etc.) + activity feed
 

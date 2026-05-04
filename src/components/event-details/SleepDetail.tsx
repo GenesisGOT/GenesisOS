@@ -82,7 +82,7 @@ export function SleepDetail({ event }: SleepDetailProps) {
       if (error) throw error;
       setLogged(true);
       showToast('Sleep logged! 😴', 'success');
-      window.dispatchEvent(new Event('lifeos-refresh'));
+      window.dispatchEvent(new Event('genesisOS-refresh'));
     } catch {
       showToast('Failed to log sleep', 'error');
     } finally {

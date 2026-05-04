@@ -1,5 +1,5 @@
 /**
- * LifeOS Electron Preload Script
+ * GenesisOS Electron Preload Script
  *
  * Exposes a secure bridge between the renderer (React app) and the main process
  * via contextBridge. The renderer accesses these through `window.electronAPI`.

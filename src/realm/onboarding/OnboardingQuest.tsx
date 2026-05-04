@@ -46,7 +46,7 @@ import { logger } from '../../utils/logger';
 // ── Constants ────────────────────────────────────
 
 const SCENES: OnboardingScene[] = ['awakening', 'path_selection', 'identity', 'first_seed', 'the_dream', 'first_words', 'reveal'];
-const STORAGE_KEY = 'lifeos_onboarding_progress';
+const STORAGE_KEY = 'genesisOS_onboarding_progress';
 
 // Class-based identity colors
 const CLASS_PARTICLE_COLORS: Record<string, string[]> = {
@@ -932,7 +932,7 @@ export function OnboardingQuest({ userId, onComplete, onSkipLater }: OnboardingQ
 
     // Also update localStorage cache (user-scoped)
     try {
-      const cacheKey = `lifeos_profile_cache_${userId}`;
+      const cacheKey = `genesisOS_profile_cache_${userId}`;
       localStorage.setItem(cacheKey, JSON.stringify({
         ...currentStoreProfile,
         onboarding_complete: true,

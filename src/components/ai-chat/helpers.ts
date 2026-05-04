@@ -207,7 +207,7 @@ export function getSuggestions(pathname: string): SuggestionChip[] {
 export const SUGGESTIONS = DEFAULT_SUGGESTIONS;
 
 // ─── Chat Memory (localStorage, per-user) ──────────────────────────────────
-const CHAT_STORAGE_PREFIX = 'lifeos_chat_';
+const CHAT_STORAGE_PREFIX = 'genesisOS_chat_';
 const MAX_STORED_MESSAGES = 50;
 
 export function getChatStorageKey(userId?: string): string {
@@ -239,14 +239,14 @@ export function saveChatHistory(messages: ChatMessage[], userId?: string) {
 // Clean up legacy shared key (one-time migration)
 export function migrateLegacyChat(userId?: string) {
   try {
-    const legacy = localStorage.getItem('lifeos_chat_history');
+    const legacy = localStorage.getItem('genesisOS_chat_history');
     if (legacy && userId) {
       // Only migrate if the user-specific key doesn't exist yet
       const userKey = getChatStorageKey(userId);
       if (!localStorage.getItem(userKey)) {
         localStorage.setItem(userKey, legacy);
       }
-      localStorage.removeItem('lifeos_chat_history');
+      localStorage.removeItem('genesisOS_chat_history');
     }
   } catch { /* ignore */ }
 }

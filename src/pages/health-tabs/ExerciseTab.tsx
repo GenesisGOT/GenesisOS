@@ -190,7 +190,7 @@ export function ExerciseTab({ templates, logs, onSaveTemplate, onDeleteTemplate,
       }
 
       // Dispatch refresh event so Schedule page updates
-      window.dispatchEvent(new CustomEvent('lifeos-refresh'));
+      window.dispatchEvent(new CustomEvent('genesisOS-refresh'));
 
       // Show toast-like feedback
       const dayLabels = daysToSchedule.map(d => dayNames[d]).join(', ');

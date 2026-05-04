@@ -1,4 +1,4 @@
-// LifeOS Social — Chat Panel (DM + Group)
+// GenesisOS Social — Chat Panel (DM + Group)
 // v3: Messenger-style bubbles, grouped messages, reactions, scroll-to-bottom, day separators
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';

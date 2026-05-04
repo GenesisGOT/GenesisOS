@@ -1,4 +1,4 @@
--- RPG System Tables for LifeOS
+-- RPG System Tables for GenesisOS
 -- Run via Supabase SQL Editor
 
 -- Character table

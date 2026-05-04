@@ -13,7 +13,7 @@ import { createScheduleEvent, EVENT_TYPE_COLORS, type EventType } from './schedu
 import { logger } from '../utils/logger';
 
 // ── Storage Key ──
-const STORAGE_KEY = 'lifeos_rituals';
+const STORAGE_KEY = 'genesisOS_rituals';
 
 // ── Ritual Interface ──
 

@@ -1,4 +1,4 @@
-// LifeOS Social Library — Barrel Export
+// GenesisOS Social Library — Barrel Export
 
 export * from './types';
 export * from './profiles';

@@ -279,7 +279,7 @@ export function GuidedReview({ weekStart, weekEnd, onComplete, onCancel }: Guide
 
     setSaving(false);
     showToast('Review saved! 🎉', 'success');
-    window.dispatchEvent(new Event('lifeos-refresh'));
+    window.dispatchEvent(new Event('genesisOS-refresh'));
     onComplete();
   };
 

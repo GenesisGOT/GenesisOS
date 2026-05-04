@@ -28,7 +28,7 @@ export interface DailyPulse {
 }
 
 // ═══ Constants ═══
-const PULSE_CACHE_KEY = 'lifeos-daily-pulse-v3';
+const PULSE_CACHE_KEY = 'genesisOS-daily-pulse-v3';
 const PULSE_CACHE_TTL = 5 * 60 * 1000;
 
 const defaultPulse: DailyPulse = {

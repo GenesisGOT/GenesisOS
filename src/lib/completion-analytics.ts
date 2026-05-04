@@ -90,7 +90,7 @@ function getCategoryFromGoal(goal: Record<string, unknown>): string {
 // ── CACHE MANAGEMENT ─────────────────────────────────────────────────────────
 
 function getCacheKey(userId: string, type: string): string {
-  return `lifeos:completion:${userId}:${type}`;
+  return `genesisOS:completion:${userId}:${type}`;
 }
 
 function getCached<T>(userId: string, type: string): T | null {
@@ -378,7 +378,7 @@ export function invalidateCache(userId: string): void {
   try {
     const keys = Object.keys(localStorage);
     keys.forEach(key => {
-      if (key.startsWith(`lifeos:completion:${userId}:`)) {
+      if (key.startsWith(`genesisOS:completion:${userId}:`)) {
         localStorage.removeItem(key);
       }
     });

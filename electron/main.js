@@ -1,5 +1,5 @@
 /**
- * LifeOS Electron Main Process
+ * GenesisOS Electron Main Process
  *
  * Creates the BrowserWindow, initializes SQLite, registers IPC handlers,
  * and optionally initializes Steam (x86_64 only, graceful ARM64 fallback).
@@ -41,7 +41,7 @@ const isDev = !app.isPackaged;
 // Database
 // ═══════════════════════════════════════════════════════════════
 
-// On Linux use ~/.lifeos/data.db (shared with Flask fallback);
+// On Linux use ~/.genesisOS/data.db (shared with Flask fallback);
 // On Windows/macOS use standard Electron userData path
 const dbPath = process.platform === 'linux'
   ? getDbPath()
@@ -59,7 +59,7 @@ function createWindow() {
     height: 800,
     minWidth: 900,
     minHeight: 600,
-    title: 'LifeOS — Command Center',
+    title: 'GenesisOS — Command Center',
     icon: join(__dirname, '..', 'public', 'favicon.svg'),
     webPreferences: {
       preload: join(__dirname, 'preload.js'),
@@ -95,12 +95,12 @@ function createWindow() {
 // ═══════════════════════════════════════════════════════════════
 // Custom Protocol — serve media files (audio, images) from
 // allowed directories without going through IPC for large files.
-// URL: lifeos-media:///mnt/data/tmp/academy/study-music/file.mp3
+// URL: genesisOS-media:///mnt/data/tmp/academy/study-music/file.mp3
 // ═══════════════════════════════════════════════════════════════
 
 const ALLOWED_DIRS = [
   '/mnt/data/tmp/academy/',
-  '/mnt/data/prodigy/creative-engine/LifeOS/',
+  '/mnt/data/prodigy/creative-engine/GenesisOS/',
   '/home/tewedros/clawd/lifeOS_data/',
 ];
 
@@ -114,8 +114,8 @@ function isPathAllowed(filePath) {
 }
 
 function registerMediaProtocol() {
-  protocol.handle('lifeos-media', (request) => {
-    const filePath = decodeURIComponent(request.url.replace('lifeos-media://', ''));
+  protocol.handle('genesisOS-media', (request) => {
+    const filePath = decodeURIComponent(request.url.replace('genesisOS-media://', ''));
     if (!isPathAllowed(filePath) || !existsSync(filePath)) {
       return new Response('Not found', { status: 404 });
     }
@@ -204,16 +204,16 @@ function registerIpcHandlers() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// Deep Link Protocol — lifeos:// for Google OAuth callback
+// Deep Link Protocol — genesisOS:// for Google OAuth callback
 // ═══════════════════════════════════════════════════════════════
 
 if (process.defaultApp) {
   // Dev mode: need to pass the script path for protocol registration
   if (process.argv.length >= 2) {
-    app.setAsDefaultProtocolClient('lifeos', process.execPath, [resolve(process.argv[1])]);
+    app.setAsDefaultProtocolClient('genesisOS', process.execPath, [resolve(process.argv[1])]);
   }
 } else {
-  app.setAsDefaultProtocolClient('lifeos');
+  app.setAsDefaultProtocolClient('genesisOS');
 }
 
 // Single instance lock — second instance forwards deep link to first
@@ -222,7 +222,7 @@ if (!gotLock) {
   app.quit();
 } else {
   app.on('second-instance', (_event, commandLine) => {
-    const url = commandLine.find(arg => arg.startsWith('lifeos://'));
+    const url = commandLine.find(arg => arg.startsWith('genesisOS://'));
     if (url && mainWindow) {
       handleAuthCallback(url);
       if (mainWindow.isMinimized()) mainWindow.restore();
@@ -232,7 +232,7 @@ if (!gotLock) {
 }
 
 /**
- * Handle OAuth callback from lifeos:// deep link.
+ * Handle OAuth callback from genesisOS:// deep link.
  * Extracts access_token and refresh_token from the URL fragment,
  * then dispatches a CustomEvent to the renderer process.
  */

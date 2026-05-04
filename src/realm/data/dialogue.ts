@@ -102,7 +102,7 @@ const DIALOGUE: Record<string, DialogueFn> = {
 
     if (ctx.activeGoals.length === 0) {
       lines.push('The forge is cold. Bring me a goal to work on!');
-      lines.push('Without projects, my anvil gathers dust. Set a goal in LifeOS to ignite the flame.');
+      lines.push('Without projects, my anvil gathers dust. Set a goal in GenesisOS to ignite the flame.');
     } else {
       lines.push(`${ctx.activeGoals.length} project${ctx.activeGoals.length > 1 ? 's' : ''} at the forge! Which shall we hammer today?`);
 
@@ -167,7 +167,7 @@ const DIALOGUE: Record<string, DialogueFn> = {
       lines.push(`The coffers run low... ${Math.abs(ctx.netBalance).toLocaleString()} coins in the red this month.`);
       lines.push('Perhaps review your expenditures? Even merchants must watch the bottom line.');
     } else {
-      lines.push('I haven\'t seen your ledger yet. Track some expenses or income in LifeOS!');
+      lines.push('I haven\'t seen your ledger yet. Track some expenses or income in GenesisOS!');
     }
 
     if (ctx.habits.length > 0) {

@@ -63,9 +63,9 @@ export function SetupHub() {
             {overall}%
           </div>
           <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginTop: 4 }}>
-            {overall === 0 ? 'Personalize LifeOS to unlock its full power' :
-             overall >= 100 ? 'All set! Your LifeOS is fully configured.' :
-             'Keep going — each conversation makes LifeOS smarter'}
+            {overall === 0 ? 'Personalize GenesisOS to unlock its full power' :
+             overall >= 100 ? 'All set! Your GenesisOS is fully configured.' :
+             'Keep going — each conversation makes GenesisOS smarter'}
           </div>
         </div>
 
@@ -164,7 +164,7 @@ export function SetupHub() {
           background: 'rgba(0,212,255,0.04)', border: '1px solid rgba(0,212,255,0.1)',
           fontSize: 12, color: 'rgba(255,255,255,0.4)', lineHeight: 1.5,
         }}>
-          Tip: <strong style={{ color: 'rgba(255,255,255,0.6)' }}>Each conversation</strong> takes 5-10 minutes and deeply personalizes your LifeOS experience. Start with Life Foundation, then build on it with Health and Finance.
+          Tip: <strong style={{ color: 'rgba(255,255,255,0.6)' }}>Each conversation</strong> takes 5-10 minutes and deeply personalizes your GenesisOS experience. Start with Life Foundation, then build on it with Health and Finance.
         </div>
       </div>
     </div>

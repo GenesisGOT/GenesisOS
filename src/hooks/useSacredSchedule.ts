@@ -1,4 +1,4 @@
-// LifeOS Sacred Schedule Overlay — Spiritual events that merge with the physical timeline
+// GenesisOS Sacred Schedule Overlay — Spiritual events that merge with the physical timeline
 // Opacity scales with junction_xp: invisible at 0, max 80% at full mastery
 // RULE: Only timed prayer/meditation practices show as blocks on the schedule.
 //       Fasting, study, service, "any" time practices do NOT get schedule blocks.
