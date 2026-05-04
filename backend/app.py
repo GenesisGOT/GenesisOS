@@ -1822,3 +1822,173 @@ init_db()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)
+
+
+# ═══════════════════════════════════════════════════════════════
+# iCloud CalDAV Proxy
+# ═══════════════════════════════════════════════════════════════
+
+import xml.etree.ElementTree as _ET
+import re as _re
+from datetime import timedelta, timezone as _tz
+
+def _caldav_discover_home(apple_id, app_password):
+    auth = (apple_id, app_password)
+    r = http_requests.request(
+        'PROPFIND', 'https://caldav.icloud.com/.well-known/caldav',
+        auth=auth,
+        headers={'Content-Type': 'application/xml; charset=utf-8', 'Depth': '0'},
+        data='<?xml version="1.0"?><D:propfind xmlns:D="DAV:"><D:prop><D:current-user-principal/></D:prop></D:propfind>',
+        allow_redirects=True, timeout=15,
+    )
+    r.raise_for_status()
+    ns = {'D': 'DAV:', 'C': 'urn:ietf:params:xml:ns:caldav'}
+    root = _ET.fromstring(r.text)
+    href = root.findtext('.//D:current-user-principal/D:href', namespaces=ns)
+    if not href:
+        raise ValueError('Invalid Apple ID or app-specific password')
+    base = 'https://caldav.icloud.com'
+    principal = href if href.startswith('http') else base + href
+
+    r2 = http_requests.request(
+        'PROPFIND', principal, auth=auth,
+        headers={'Content-Type': 'application/xml; charset=utf-8', 'Depth': '0'},
+        data='<?xml version="1.0"?><D:propfind xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav"><D:prop><C:calendar-home-set/></D:prop></D:propfind>',
+        timeout=15,
+    )
+    r2.raise_for_status()
+    root2 = _ET.fromstring(r2.text)
+    home = root2.findtext('.//C:calendar-home-set/D:href', namespaces=ns)
+    if not home:
+        raise ValueError('Could not find calendar home')
+    return home if home.startswith('http') else base + home
+
+
+def _caldav_list_calendars(home_url, auth):
+    r = http_requests.request(
+        'PROPFIND', home_url, auth=auth,
+        headers={'Content-Type': 'application/xml; charset=utf-8', 'Depth': '1'},
+        data='<?xml version="1.0"?><D:propfind xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav"><D:prop><D:displayname/><D:resourcetype/></D:prop></D:propfind>',
+        timeout=15,
+    )
+    r.raise_for_status()
+    ns = {'D': 'DAV:', 'C': 'urn:ietf:params:xml:ns:caldav'}
+    root = _ET.fromstring(r.text)
+    base = 'https://caldav.icloud.com'
+    cals = []
+    for resp in root.findall('D:response', ns):
+        rt = resp.find('.//D:resourcetype', ns)
+        if rt is None or rt.find('C:calendar', ns) is None:
+            continue
+        href = resp.findtext('D:href', namespaces=ns) or ''
+        name = resp.findtext('.//D:displayname', namespaces=ns) or 'Calendar'
+        cals.append((href if href.startswith('http') else base + href, name))
+    return cals
+
+
+def _parse_ical_dt(raw):
+    if not raw:
+        return None, False
+    raw = raw.strip()
+    if _re.match(r'^\d{8}$', raw):
+        return f'{raw[:4]}-{raw[4:6]}-{raw[6:8]}', True
+    raw = raw.rstrip('Z')
+    for fmt in ('%Y%m%dT%H%M%S', '%Y%m%dT%H%M'):
+        try:
+            from datetime import datetime as _dt
+            d = _dt.strptime(raw, fmt).replace(tzinfo=_tz.utc)
+            return d.isoformat(), False
+        except ValueError:
+            pass
+    return raw, False
+
+
+def _parse_ical_events(ical_text, cal_name=''):
+    events = []
+    unfolded = _re.sub(r'\r?\n[ \t]', '', ical_text)
+    for block in _re.split(r'BEGIN:VEVENT', unfolded)[1:]:
+        end = block.find('END:VEVENT')
+        if end == -1:
+            continue
+        block = block[:end]
+
+        def get(name):
+            m = _re.search(rf'^{name}(?:;[^:]*)?:(.+)$', block, _re.MULTILINE | _re.IGNORECASE)
+            return m.group(1).strip() if m else None
+
+        start_iso, all_day = _parse_ical_dt(get('DTSTART'))
+        if not start_iso:
+            continue
+        end_iso, _ = _parse_ical_dt(get('DTEND'))
+        events.append({
+            'id': get('UID') or start_iso,
+            'summary': get('SUMMARY') or 'Untitled',
+            'description': get('DESCRIPTION'),
+            'start': start_iso,
+            'end': end_iso or start_iso,
+            'location': get('LOCATION'),
+            'calendarName': cal_name,
+            'allDay': all_day,
+        })
+    return events
+
+
+def _caldav_fetch_events(apple_id, app_password, days=14):
+    from datetime import datetime as _dt
+    auth = (apple_id, app_password)
+    home = _caldav_discover_home(apple_id, app_password)
+    cals = _caldav_list_calendars(home, auth)
+    now = _dt.now(_tz.utc)
+    end = now + timedelta(days=days)
+    t_start = now.strftime('%Y%m%dT%H%M%SZ')
+    t_end   = end.strftime('%Y%m%dT%H%M%SZ')
+    report = f'''<?xml version="1.0" encoding="utf-8"?>
+<C:calendar-query xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav">
+  <D:prop><D:getetag/><C:calendar-data/></D:prop>
+  <C:filter>
+    <C:comp-filter name="VCALENDAR">
+      <C:comp-filter name="VEVENT">
+        <C:time-range start="{t_start}" end="{t_end}"/>
+      </C:comp-filter>
+    </C:comp-filter>
+  </C:filter>
+</C:calendar-query>'''
+    all_events = []
+    ns = {'D': 'DAV:', 'C': 'urn:ietf:params:xml:ns:caldav'}
+    for cal_url, cal_name in cals:
+        try:
+            r = http_requests.request(
+                'REPORT', cal_url, auth=auth,
+                headers={'Content-Type': 'application/xml; charset=utf-8', 'Depth': '1'},
+                data=report, timeout=20,
+            )
+            if r.status_code == 207:
+                root = _ET.fromstring(r.text)
+                for resp in root.findall('D:response', ns):
+                    cal_data = resp.findtext('.//C:calendar-data', namespaces=ns)
+                    if cal_data:
+                        all_events.extend(_parse_ical_events(cal_data, cal_name))
+        except Exception:
+            continue
+    return all_events
+
+
+@app.route('/api/icloud-caldav', methods=['POST'])
+def icloud_caldav_proxy():
+    body = request.get_json(force=True) or {}
+    apple_id    = body.get('apple_id', '').strip()
+    app_password = body.get('app_password', '').strip()
+    if not apple_id or not app_password:
+        return jsonify({'error': 'Apple ID and app-specific password required'}), 400
+    try:
+        action = body.get('action', 'fetch_events')
+        if action == 'test_connection':
+            _caldav_discover_home(apple_id, app_password)
+            return jsonify({'success': True})
+        elif action == 'fetch_events':
+            events = _caldav_fetch_events(apple_id, app_password, int(body.get('days', 14)))
+            return jsonify({'events': events})
+        else:
+            return jsonify({'error': f'Unknown action: {action}'}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500

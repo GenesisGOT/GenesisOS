@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { supabase } from '../lib/data-access';
 import { useUserStore } from '../stores/useUserStore';
 import { getErrorMessage } from '../utils/error';
@@ -16,6 +16,8 @@ import { IntegrationCard } from '../components/settings/IntegrationCard';
 import '../components/settings/IntegrationCard.css';
 import { useGoogleIntegration } from '../hooks/useGoogleIntegration';
 import { useGoogleCalendar } from '../hooks/useGoogleCalendar';
+import { useICloudCalendar } from '../hooks/useICloudCalendar';
+import { saveICloudCredentials, clearICloudCredentials, testICloudConnection } from '../lib/integrations/icloud-calendar';
 import { getAISettings, saveAISettings, type AISettings } from '../lib/intent-engine';
 import { resetTours, startTourManually } from '../components/SpotlightTour';
 import { useSubscription } from '../hooks/useSubscription';
@@ -62,6 +64,11 @@ export function Settings() {
   const { tier, expiresAt, loading: subLoading, upgrade, manageSubscription } = useSubscription();
   const googleIntegration = useGoogleIntegration();
   const { eventCount: gcalEventCount, lastSynced: gcalLastSynced, refetch: gcalRefetch } = useGoogleCalendar();
+  const { eventCount: icloudEventCount, lastSynced: icloudLastSynced, isConnected: icloudConnected, connect: icloudConnect, disconnect: icloudDisconnect, refetch: icloudRefetch } = useICloudCalendar();
+  const [icloudAppleId, setIcloudAppleId] = useState('');
+  const [icloudAppPassword, setIcloudAppPassword] = useState('');
+  const [icloudConnecting, setIcloudConnecting] = useState(false);
+  const [icloudError, setIcloudError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<TabId>(() => {
     const params = new URLSearchParams(window.location.search);
     const tab = params.get('tab');
@@ -588,6 +595,89 @@ export function Settings() {
                           </div>
                         )}
                       </div>
+                    </IntegrationCard>
+
+                    <IntegrationCard
+                      service="iCloud Calendar"
+                      icon={<span style={{ fontSize: 16 }}>📅</span>}
+                      connected={icloudConnected}
+                      loading={icloudConnecting}
+                      description="Sync your iCloud Calendar events with GenesisOS"
+                      onConnect={() => {}}
+                      onDisconnect={() => { clearICloudCredentials(); icloudDisconnect(); }}
+                    >
+                      {!icloudConnected ? (
+                        <div style={{ fontSize: 13 }}>
+                          <p style={{ margin: '0 0 10px 0', color: 'rgba(255,255,255,0.6)' }}>
+                            Enter your Apple ID and an <strong>app-specific password</strong> (not your main Apple ID password).
+                            Generate one at{' '}
+                            <a href="https://appleid.apple.com/account/manage" target="_blank" rel="noreferrer"
+                               style={{ color: '#147EFB' }}>appleid.apple.com</a>{' '}
+                            → App-Specific Passwords.
+                          </p>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 10 }}>
+                            <input
+                              type="email"
+                              placeholder="Apple ID (e.g. you@icloud.com)"
+                              value={icloudAppleId}
+                              onChange={e => setIcloudAppleId(e.target.value)}
+                              style={{ padding: '8px 10px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.06)', color: '#fff', fontSize: 13 }}
+                            />
+                            <input
+                              type="password"
+                              placeholder="App-specific password (xxxx-xxxx-xxxx-xxxx)"
+                              value={icloudAppPassword}
+                              onChange={e => setIcloudAppPassword(e.target.value)}
+                              style={{ padding: '8px 10px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.06)', color: '#fff', fontSize: 13, fontFamily: 'monospace' }}
+                            />
+                          </div>
+                          {icloudError && (
+                            <p style={{ color: '#ff6b6b', fontSize: 12, margin: '0 0 8px 0' }}>{icloudError}</p>
+                          )}
+                          <button
+                            disabled={!icloudAppleId || !icloudAppPassword || icloudConnecting}
+                            onClick={async () => {
+                              setIcloudConnecting(true);
+                              setIcloudError(null);
+                              const creds = { appleId: icloudAppleId, appPassword: icloudAppPassword };
+                              const ok = await testICloudConnection(creds);
+                              if (ok) {
+                                saveICloudCredentials(creds);
+                                icloudConnect();
+                                icloudRefetch();
+                              } else {
+                                setIcloudError('Could not connect — check your Apple ID and app-specific password.');
+                              }
+                              setIcloudConnecting(false);
+                            }}
+                            style={{ padding: '7px 16px', borderRadius: 8, border: 'none', background: '#147EFB', color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', opacity: (!icloudAppleId || !icloudAppPassword || icloudConnecting) ? 0.5 : 1 }}
+                          >
+                            {icloudConnecting ? 'Connecting…' : 'Connect iCloud Calendar'}
+                          </button>
+                        </div>
+                      ) : (
+                        <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>
+                          <p style={{ margin: '0 0 8px 0' }}>iCloud Calendar is connected. GenesisOS can:</p>
+                          <ul style={{ margin: 0, paddingLeft: 16 }}>
+                            <li>Show your iCloud calendar events on the schedule</li>
+                            <li>Include iCloud events in AI context</li>
+                          </ul>
+                          {icloudEventCount > 0 && (
+                            <div style={{ marginTop: 10, padding: '8px 10px', background: 'rgba(20,126,251,0.08)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                              <div>
+                                <div style={{ fontWeight: 600, color: '#147EFB', fontSize: 12 }}>{icloudEventCount} events synced</div>
+                                {icloudLastSynced && <div style={{ fontSize: 11, marginTop: 2 }}>Last sync: {icloudLastSynced.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit', hour12: true })}</div>}
+                              </div>
+                              <button
+                                onClick={icloudRefetch}
+                                style={{ padding: '4px 10px', borderRadius: 6, border: '1px solid rgba(20,126,251,0.3)', background: 'transparent', color: '#147EFB', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}
+                              >
+                                Sync Now
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </IntegrationCard>
 
                     <IntegrationCard
