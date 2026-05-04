@@ -333,7 +333,10 @@ export function TimeBlockingModal({ onComplete, onDismiss }: TimeBlockingModalPr
     setSaving(true);
     try {
       await saveTimeBlocks(blocks);
-      // Trigger a store refresh so the schedule page updates
+      // Force the schedule store to re-read from local DB immediately
+      const { useScheduleStore } = await import('../stores/useScheduleStore');
+      useScheduleStore.getState().invalidate();
+      // Also broadcast for any other listeners
       window.dispatchEvent(new CustomEvent('genesisOS-refresh'));
       onComplete();
     } catch (err) {

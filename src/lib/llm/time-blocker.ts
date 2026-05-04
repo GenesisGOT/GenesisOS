@@ -146,7 +146,7 @@ export async function saveTimeBlocks(blocks: RawBlock[]): Promise<void> {
   // Remove any previously generated time-block events for this week
   // (identified by metadata.source === 'time-blocker')
   try {
-    const existing = await localGetAll<any>('schedule_events');
+    const existing = await localGetAll<any>('events');
     const monday = getThisMonday();
     const dates = new Set(weekDates(monday));
 
@@ -157,7 +157,7 @@ export async function saveTimeBlocks(blocks: RawBlock[]): Promise<void> {
         ev.metadata?.source === 'time-blocker'
       ) {
         // Soft-delete
-        await localInsert('schedule_events', { ...ev, is_deleted: true });
+        await localInsert('events', { ...ev, is_deleted: true });
       }
     }
   } catch {
@@ -167,7 +167,7 @@ export async function saveTimeBlocks(blocks: RawBlock[]): Promise<void> {
   const now = new Date().toISOString();
 
   for (const block of blocks) {
-    await localInsert('schedule_events', {
+    await localInsert('events', {
       id: crypto.randomUUID(),
       user_id: userId,
       title: block.title,
