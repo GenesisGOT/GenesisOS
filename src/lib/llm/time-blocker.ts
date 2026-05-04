@@ -7,6 +7,7 @@
  */
 
 import { callLLMProxy } from '../llm-proxy';
+import type { LLMMessage } from '../llm-proxy';
 import { localInsert, localGetAll } from '../local-db';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -190,6 +191,61 @@ export async function saveTimeBlocks(blocks: RawBlock[]): Promise<void> {
 
   // Mark this week as done
   localStorage.setItem(getWeekKey(), new Date().toISOString());
+}
+
+// ─── Image → Schedule text (Vision API) ──────────────────────────────────────
+
+/** Convert a File/Blob to a base64 data URL */
+function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+/**
+ * Send an image of a work schedule to Claude Vision and get back a plain-text
+ * schedule description (e.g. "9am-5pm Mon-Fri, 10am-2pm Sat") that can be
+ * dropped directly into the time-blocker textarea.
+ */
+export async function extractScheduleFromImage(file: File): Promise<string> {
+  const dataUrl = await fileToBase64(file);
+
+  const messages: LLMMessage[] = [
+    {
+      role: 'user',
+      content: [
+        {
+          type: 'image_url',
+          image_url: { url: dataUrl },
+        },
+        {
+          type: 'text',
+          text: `Look at this work schedule image and extract ONLY the work hours for each day of the week.
+
+Return a single plain-text line in this format (examples):
+"9am-5pm Mon-Fri"
+"Mon-Thu 8am-4pm, Fri 8am-12pm, Sat 10am-2pm"
+"Mon 9am-6pm, Tue 9am-6pm, Wed OFF, Thu 9am-6pm, Fri 9am-3pm"
+
+Rules:
+- Only include days that have work hours
+- Use 12-hour format (am/pm)
+- If a day is off, skip it entirely
+- Output ONLY the schedule string, nothing else — no explanation, no markdown`,
+        },
+      ],
+    },
+  ];
+
+  const response = await callLLMProxy(messages, {
+    model: 'anthropic/claude-sonnet-4',
+    timeoutMs: 30000,
+  });
+
+  return response.content.trim().replace(/^["']|["']$/g, '');
 }
 
 // ─── Group by day (UI helper) ─────────────────────────────────────────────────

@@ -8,7 +8,7 @@
  */
 
 import React, { useState, useRef, useCallback } from 'react';
-import { generateTimeBlocks, saveTimeBlocks, groupBlocksByDay, dayName } from '../lib/llm/time-blocker';
+import { generateTimeBlocks, saveTimeBlocks, groupBlocksByDay, dayName, extractScheduleFromImage } from '../lib/llm/time-blocker';
 import type { RawBlock } from '../lib/llm/time-blocker';
 
 // ─── Inline styles ────────────────────────────────────────────────────────────
@@ -297,7 +297,9 @@ export function TimeBlockingModal({ onComplete, onDismiss }: TimeBlockingModalPr
   const [blocks, setBlocks] = useState<RawBlock[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [imageLoading, setImageLoading] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const generate = useCallback(async (workSchedule: string) => {
     setError(null);
@@ -340,6 +342,24 @@ export function TimeBlockingModal({ onComplete, onDismiss }: TimeBlockingModalPr
     }
   }, [blocks, onComplete]);
 
+  const handleImageUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImageLoading(true);
+    setError(null);
+    try {
+      const extracted = await extractScheduleFromImage(file);
+      setSchedule(extracted);
+      textareaRef.current?.focus();
+    } catch (err) {
+      setError('Could not read the image. Try a clearer photo or type the schedule manually.');
+    } finally {
+      setImageLoading(false);
+      // Reset input so the same file can be re-uploaded if needed
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  }, []);
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleGenerate();
   };
@@ -370,22 +390,64 @@ export function TimeBlockingModal({ onComplete, onDismiss }: TimeBlockingModalPr
         {step === 'input' && (
           <>
             <div style={S.body}>
-              <label style={{ color: '#8BA4BE', fontSize: '13px', fontWeight: 500, display: 'block', marginBottom: '8px' }}>
-                Work schedule this week
-              </label>
+              {/* Label row with image upload button */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                <label style={{ color: '#8BA4BE', fontSize: '13px', fontWeight: 500 }}>
+                  Work schedule this week
+                </label>
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={imageLoading}
+                  title="Upload a photo of your schedule"
+                  style={{
+                    background: imageLoading ? 'rgba(0,212,255,0.06)' : 'rgba(0,212,255,0.1)',
+                    border: '1px solid rgba(0,212,255,0.25)',
+                    borderRadius: '8px',
+                    color: '#00D4FF',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    cursor: imageLoading ? 'not-allowed' : 'pointer',
+                    padding: '5px 12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    transition: 'opacity 0.15s',
+                    opacity: imageLoading ? 0.6 : 1,
+                    fontFamily: "'Poppins', sans-serif",
+                  }}
+                >
+                  {imageLoading ? (
+                    <>
+                      <span style={{ animation: 'spin 1s linear infinite', display: 'inline-block' }}>⏳</span>
+                      Reading…
+                    </>
+                  ) : (
+                    <>📷 Upload Photo</>
+                  )}
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  onChange={handleImageUpload}
+                />
+              </div>
+
               <textarea
                 ref={textareaRef}
                 style={S.textarea}
-                placeholder={"e.g. 9am-5pm Mon-Fri\nor: Mon-Thu 8am-4pm, Fri 8am-12pm\nor: Mon-Sat 10am-6pm"}
+                placeholder={"e.g. 9am-5pm Mon-Fri\nor: Mon-Thu 8am-4pm, Fri 8am-12pm\nor: Mon-Sat 10am-6pm\n\n↑ Or upload a photo of your schedule"}
                 value={schedule}
                 onChange={e => setSchedule(e.target.value)}
                 onKeyDown={handleKeyDown}
                 autoFocus
               />
               <div style={S.hint}>
-                Just start and end times — Claude handles the rest. Press ⌘↵ to generate.
+                Type your hours, or tap <strong style={{ color: '#00D4FF' }}>📷 Upload Photo</strong> to scan a schedule image. Press ⌘↵ to generate.
               </div>
               {error && <div style={S.errorBox}>⚠ {error}</div>}
+              <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
             </div>
             <div style={S.footer}>
               <button style={S.btnSecondary} onClick={onDismiss}>

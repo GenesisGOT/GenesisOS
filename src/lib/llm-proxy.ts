@@ -15,6 +15,17 @@ import { getErrorMessage, isAbortError } from '../utils/error';
 const PROXY_URL = '/api/llm-proxy.php';
 const DEFAULT_TIMEOUT_MS = 30000;
 
+/** A single part of a multimodal message (text or image) */
+export type MessageContentPart =
+  | { type: 'text'; text: string }
+  | { type: 'image_url'; image_url: { url: string } };
+
+/** A message can have a plain string body or a multimodal array */
+export type LLMMessage = {
+  role: string;
+  content: string | MessageContentPart[];
+};
+
 export interface LLMProxyOptions {
   provider?: string;
   model?: string;
@@ -55,7 +66,7 @@ function _getModel(opt: LLMProxyOptions): string {
 }
 
 async function _callDirect(
-  msgs: { role: string; content: string }[],
+  msgs: LLMMessage[],
   opt: LLMProxyOptions,
   key: string,
 ): Promise<LLMProxyResponse> {
@@ -96,7 +107,7 @@ async function _callDirect(
 }
 
 async function _callLLMProxyOnce(
-  input: string | { role: string; content: string }[],
+  input: string | LLMMessage[],
   options: LLMProxyOptions = {},
 ): Promise<LLMProxyResponse> {
   const {
@@ -186,7 +197,7 @@ async function _callLLMProxyOnce(
 }
 
 export async function callLLMProxy(
-  input: string | { role: string; content: string }[],
+  input: string | LLMMessage[],
   options: LLMProxyOptions = {},
 ): Promise<LLMProxyResponse> {
   try {

@@ -20,6 +20,8 @@ import { useICloudCalendar } from '../hooks/useICloudCalendar';
 import { saveICloudCredentials, clearICloudCredentials, testICloudConnection } from '../lib/integrations/icloud-calendar';
 import { getAISettings, saveAISettings, type AISettings } from '../lib/intent-engine';
 import { resetTours, startTourManually } from '../components/SpotlightTour';
+import { TipsLibrary } from '../components/TipsLibrary';
+import { getWeekKey } from '../lib/llm/time-blocker';
 import { useSubscription } from '../hooks/useSubscription';
 import { ClassRoleSelector } from '../components/ClassRoleSelector';
 import { CLASS_ICONS, CLASS_NAMES, CLASS_DESCRIPTIONS, ROLE_ARCHETYPES, type ClassKey, type RoleKey } from '../lib/gamification/class-quests';
@@ -918,10 +920,26 @@ export function Settings() {
                       <Swords size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} />Character
                     </button>
                   </div>
-                  <div style={{ marginTop: 16 }}>
-                    <button className="set-btn" style={{ width: '100%' }} onClick={() => { resetTours(); window.location.reload(); }}>
+                  <div style={{ marginTop: 16, display: 'flex', gap: 8 }}>
+                    <button className="set-btn" style={{ flex: 1 }} onClick={() => { resetTours(); window.location.reload(); }}>
                       <RotateCcw size={12} style={{ marginRight: 6, verticalAlign: 'middle' }} />Reset All Tours
                     </button>
+                    <button className="set-btn" style={{ flex: 1 }} onClick={() => {
+                      localStorage.removeItem(getWeekKey());
+                      alert('Time-blocker reset — reopen the app on Monday to regenerate your week.');
+                    }}>
+                      ⚡ Reset Week Block
+                    </button>
+                  </div>
+
+                  {/* Tips Library */}
+                  <div style={{ marginTop: 28 }}>
+                    <div className="set-section-header" style={{ marginBottom: 12 }}>
+                      <span style={{ fontSize: 16 }}>💡</span>
+                      <h2>Tips Library</h2>
+                    </div>
+                    <p className="set-section-desc">All GenesisOS tips. Dismissed tips are marked as read and won't reappear in the app.</p>
+                    <TipsLibrary />
                   </div>
                 </section>
               )}
