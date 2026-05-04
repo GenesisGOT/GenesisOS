@@ -137,6 +137,9 @@ function getTimeIcon() {
 
 export function DashboardMorningBrief() {
   const user = useUserStore(s => s.user);
+  const localUserId = useUserStore(s => s.localUserId);
+  // Works in both auth mode (user.id) and local/offline mode (localUserId)
+  const effectiveUserId = user?.id || localUserId;
   const firstName = useUserStore(s => s.firstName);
   const navigate = useNavigate();
 
@@ -152,7 +155,7 @@ export function DashboardMorningBrief() {
 
   const today = localDateStr();
 
-  // Award check-in XP (once per day)
+  // Award check-in XP (once per day) — only in synced mode
   const awardCheckinXP = useCallback(async () => {
     if (!user?.id || xpAwardedRef.current || hasAwardedXPToday(user.id, today)) return;
     xpAwardedRef.current = true;
@@ -168,11 +171,11 @@ export function DashboardMorningBrief() {
 
   // Generate the brief
   const generateBrief = useCallback(async (forceRefresh = false) => {
-    if (!user?.id) return;
+    if (!effectiveUserId) return;
 
     // Check cache first (unless forcing refresh)
     if (!forceRefresh) {
-      const cached = getCachedBrief(user.id, today);
+      const cached = getCachedBrief(effectiveUserId, today);
       if (cached) {
         setBriefData(cached.briefData);
         setAiSummary(cached.aiSummary);
@@ -192,7 +195,7 @@ export function DashboardMorningBrief() {
       setError(null);
 
       // Step 1: Gather data from across GenesisOS
-      const data = await generateMorningBrief(user.id, supabase);
+      const data = await generateMorningBrief(effectiveUserId, supabase);
       setBriefData(data);
 
       // Step 2: Check if data is entirely empty (first-time user) — skip LLM
@@ -203,56 +206,30 @@ export function DashboardMorningBrief() {
         && data.xpToday === 0;
 
       if (isEmpty) {
-        const summary = `Hey ${firstName || 'there'}! Welcome — your dashboard is a blank canvas right now. Start by setting a goal or adding a habit, and this brief will light up with your day ahead.`;
+        const summary = `Hey ${firstName || 'Mikiel'}! Your AI brief is live. Start logging habits and your day ahead will show up here.`;
         setAiSummary(summary);
-        setCachedBrief(user.id, today, data, summary);
+        setCachedBrief(effectiveUserId, today, data, summary);
         awardCheckinXP();
         return;
       }
 
-      // Step 3: Call ZeroClaw first, fall back to LLM proxy, then static
+      // Step 3: Skip ZeroClaw (local server), go straight to LLM proxy
       let summary: string;
       try {
-        const zcOnline = await agentHealthCheck();
-        if (zcOnline) {
-          const prompt = buildBriefPrompt(data, firstName || 'there');
-          const zcRes = await agentChat({
-            userId: user.id,
-            message: prompt,
-            context: { currentPage: 'dashboard' },
-          });
-          summary = zcRes.message;
-          // Try to extract a primary action from ZeroClaw's response
-          if (!data.primaryAction && zcRes.actions?.length) {
-            const navAction = zcRes.actions.find(a => a.type === 'navigate');
-            if (navAction?.payload?.path) {
-              data.primaryAction = {
-                label: navAction.label,
-                path: navAction.payload.path as string,
-              };
-            }
-          }
-        } else {
-          throw new Error('ZeroClaw offline');
-        }
+        const prompt = buildBriefPrompt(data, firstName || 'Mikiel');
+        summary = await callLLMSimple(prompt, { timeoutMs: 20000 });
       } catch {
-        // ZeroClaw unavailable — fall back to LLM proxy
-        try {
-          const prompt = buildBriefPrompt(data, firstName || 'there');
-          summary = await callLLMSimple(prompt, { timeoutMs: 15000 });
-        } catch {
-          summary = buildFallbackSummary(data, firstName || 'there');
-        }
+        summary = buildFallbackSummary(data, firstName || 'Mikiel');
       }
 
       setAiSummary(summary);
-      setCachedBrief(user.id, today, data, summary);
+      setCachedBrief(effectiveUserId, today, data, summary);
       awardCheckinXP();
     } catch (err) {
       logger.error('[MorningBrief] Generation failed:', err);
       setError('Could not load your morning brief');
       // Try to show cached version even if stale
-      const cached = getCachedBrief(user.id, today);
+      const cached = getCachedBrief(effectiveUserId, today);
       if (cached) {
         setBriefData(cached.briefData);
         setAiSummary(cached.aiSummary);
@@ -263,7 +240,7 @@ export function DashboardMorningBrief() {
       // Animate in after a short delay
       setTimeout(() => setVisible(true), 100);
     }
-  }, [user?.id, today, firstName, awardCheckinXP]);
+  }, [effectiveUserId, today, firstName, awardCheckinXP]);
 
   useEffect(() => {
     generateBrief();

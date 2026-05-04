@@ -158,6 +158,8 @@ interface HealthAIProps {
 
 export function HealthAI({ onTabChange }: HealthAIProps) {
   const user = useUserStore(s => s.user);
+  const localUserId = useUserStore(s => s.localUserId);
+  const effectiveUserId = user?.id || localUserId;
   const { tier } = useSubscription();
   const [expanded, setExpanded] = useState(() => {
     // First visit: expanded. After first visit: collapsed.
@@ -180,12 +182,12 @@ export function HealthAI({ onTabChange }: HealthAIProps) {
   }, []);
 
   const fetchSummary = useCallback(async (force = false) => {
-    if (!user?.id) return;
+    if (!effectiveUserId) return;
     if (!canAccess('health_analytics', tier)) return;
 
     // Check cache first
     if (!force) {
-      const cached = getCached(user.id);
+      const cached = getCached(effectiveUserId);
       if (cached) {
         if (mountedRef.current) setSummary(cached.summary);
         return;
@@ -194,7 +196,7 @@ export function HealthAI({ onTabChange }: HealthAIProps) {
 
     setLoading(true);
     try {
-      const snapshot = await loadHealthSnapshot(user.id);
+      const snapshot = await loadHealthSnapshot(effectiveUserId);
       if (!mountedRef.current) return;
 
       const prompt = `You are a holistic health AI for a personal life management app called GenesisOS. Analyze this user's health data from the past week and provide a brief, friendly summary (3-5 sentences). Be specific about what's going well and what needs attention. Use a warm, encouraging tone.
@@ -217,28 +219,28 @@ Give a holistic summary touching on sleep, nutrition, exercise, and mental welln
       if (!mountedRef.current) return;
       const sanitized = sanitizeLLMResponse(result);
       setSummary(sanitized);
-      setCache(user.id, sanitized);
+      setCache(effectiveUserId, sanitized);
     } catch (err) {
       logger.error('[HealthAI] Summary failed:', err);
       if (mountedRef.current) setSummary('Unable to generate health summary right now. Try refreshing later.');
     } finally {
       if (mountedRef.current) setLoading(false);
     }
-  }, [user?.id, tier]);
+  }, [effectiveUserId, tier]);
 
   useEffect(() => {
     fetchSummary();
   }, [fetchSummary]);
 
   const handleAsk = async () => {
-    if (!askInput.trim() || asking || !user?.id) return;
+    if (!askInput.trim() || asking || !effectiveUserId) return;
     if (!canAccess('unlimited_ai', tier)) return;
 
     setAsking(true);
     setAskAnswer(null);
 
     try {
-      const snapshot = await loadHealthSnapshot(user.id);
+      const snapshot = await loadHealthSnapshot(effectiveUserId);
 
       const prompt = `You are a holistic health AI assistant for GenesisOS. Answer the user's health question based on their recent data. Be helpful, specific, and concise (2-4 sentences).
 
@@ -263,8 +265,8 @@ Respond directly and helpfully. No markdown formatting.`;
     }
   };
 
-  // Don't render if no user or not Pro
-  if (!user?.id || !canAccess('health_analytics', tier)) return null;
+  // Don't render if no user or not on an eligible tier
+  if (!effectiveUserId || !canAccess('health_analytics', tier)) return null;
 
   return (
     <div className={`health-ai-card${expanded ? '' : ' hai-collapsed'}`}>

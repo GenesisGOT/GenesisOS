@@ -165,6 +165,8 @@ interface FinanceAIHoloProps {
 
 export function FinanceAIHolo({ onSwitchTab, onFormMode }: FinanceAIHoloProps) {
   const user = useUserStore(s => s.user);
+  const localUserId = useUserStore(s => s.localUserId);
+  const effectiveUserId = user?.id || localUserId;
   const { tier } = useSubscription();
   // Collapsed by default after first view
   const [expanded, setExpanded] = useState(() => {
@@ -185,12 +187,12 @@ export function FinanceAIHolo({ onSwitchTab, onFormMode }: FinanceAIHoloProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const fetchSummary = useCallback(async (force = false) => {
-    if (!user?.id) return;
+    if (!effectiveUserId) return;
     if (!canAccess('finances', tier)) return;
 
     // Check cache first
     if (!force) {
-      const cached = getCached(user.id);
+      const cached = getCached(effectiveUserId);
       if (cached) {
         setSummary(cached.summary);
         setSuggestions(cached.suggestions);
@@ -200,7 +202,7 @@ export function FinanceAIHolo({ onSwitchTab, onFormMode }: FinanceAIHoloProps) {
 
     setLoading(true);
     try {
-      const snapshot = await loadFinanceSnapshot(user.id);
+      const snapshot = await loadFinanceSnapshot(effectiveUserId);
 
       const prompt = `You are a financial advisor AI for a personal life management app called GenesisOS. Analyze this user's financial data and provide:
 1. A brief financial health summary (2-3 sentences).
@@ -240,7 +242,7 @@ Be specific with numbers. Be encouraging but honest. Use Australian dollars.`;
 
       setSummary(parsedSummary);
       setSuggestions(parsedSuggestions);
-      setCache(user.id, parsedSummary, parsedSuggestions);
+      setCache(effectiveUserId, parsedSummary, parsedSuggestions);
     } catch (err) {
       logger.error('[FinanceAI] Summary failed:', err);
       setSummary('Unable to generate financial summary right now. Try refreshing later.');
@@ -273,7 +275,7 @@ Be specific with numbers. Be encouraging but honest. Use Australian dollars.`;
     setAskAnswer(null);
 
     try {
-      const snapshot = await loadFinanceSnapshot(user.id);
+      const snapshot = await loadFinanceSnapshot(effectiveUserId);
 
       const prompt = `You are a financial AI assistant for GenesisOS. Answer the user's finance question based on their data. Be helpful, specific, and concise (2-4 sentences). Use Australian dollars.
 
@@ -304,7 +306,7 @@ Respond directly and helpfully. No markdown formatting.`;
   };
 
   // Don't render if no user or not accessible
-  if (!user?.id || !canAccess('finances', tier)) return null;
+  if (!effectiveUserId || !canAccess('finances', tier)) return null;
 
   return (
     <div className="finance-ai-holo-card">
