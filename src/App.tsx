@@ -1,4 +1,4 @@
-import { useEffect, useState, lazy, Suspense } from 'react';
+﻿import { useEffect, useState, lazy, Suspense } from 'react';
 import { BrowserRouter, HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 declare const __IS_TAURI__: boolean;
@@ -236,9 +236,10 @@ function AppRoutes() {
   // 1. Wait for auth to resolve
   if (authLoading) return showSpinner;
 
-  // 2. No user → show login (desktop users can choose "Use Offline" from Login page)
+  // 2. No user → auto-activate local mode (single-user app, no login needed)
   if (!user && mode !== 'local') {
-    return <Suspense fallback={showSpinner}><Login /></Suspense>;
+    useUserStore.getState().initLocalMode();
+    return showSpinner;
   }
 
   // 2b. User exists but email not confirmed (synced mode only) → show confirmation notice
