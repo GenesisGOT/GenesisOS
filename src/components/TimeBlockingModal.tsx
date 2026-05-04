@@ -352,7 +352,8 @@ export function TimeBlockingModal({ onComplete, onDismiss }: TimeBlockingModalPr
       setSchedule(extracted);
       textareaRef.current?.focus();
     } catch (err) {
-      setError('Could not read the image. Try a clearer photo or type the schedule manually.');
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(`Image read failed: ${msg}. Try a clearer photo or type the schedule manually.`);
     } finally {
       setImageLoading(false);
       // Reset input so the same file can be re-uploaded if needed

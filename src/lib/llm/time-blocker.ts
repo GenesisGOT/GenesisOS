@@ -195,12 +195,30 @@ export async function saveTimeBlocks(blocks: RawBlock[]): Promise<void> {
 
 // ─── Image → Schedule text (Vision API) ──────────────────────────────────────
 
-/** Convert a File/Blob to a base64 data URL */
-function fileToBase64(file: File): Promise<string> {
+/**
+ * Resize + compress an image to a JPEG data URL small enough for the API.
+ * iPhone screenshots are 3-5 MB; we cap at 1024px wide, JPEG 0.75 quality
+ * which brings them down to ~150-300 KB — well within OpenRouter's limits.
+ */
+function compressImage(file: File, maxWidth = 1024, quality = 0.75): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onload = () => resolve(reader.result as string);
     reader.onerror = reject;
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onerror = reject;
+      img.onload = () => {
+        const scale = Math.min(1, maxWidth / img.width);
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        const ctx = canvas.getContext('2d');
+        if (!ctx) { reject(new Error('Canvas unavailable')); return; }
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.src = e.target?.result as string;
+    };
     reader.readAsDataURL(file);
   });
 }
@@ -211,7 +229,8 @@ function fileToBase64(file: File): Promise<string> {
  * dropped directly into the time-blocker textarea.
  */
 export async function extractScheduleFromImage(file: File): Promise<string> {
-  const dataUrl = await fileToBase64(file);
+  // Compress before sending — raw phone screenshots exceed API limits
+  const dataUrl = await compressImage(file);
 
   const messages: LLMMessage[] = [
     {
@@ -242,10 +261,12 @@ Rules:
 
   const response = await callLLMProxy(messages, {
     model: 'anthropic/claude-sonnet-4',
-    timeoutMs: 30000,
+    timeoutMs: 45000,
   });
 
-  return response.content.trim().replace(/^["']|["']$/g, '');
+  const result = response.content.trim().replace(/^["']|["']$/g, '');
+  if (!result) throw new Error('No schedule text found in image');
+  return result;
 }
 
 // ─── Group by day (UI helper) ─────────────────────────────────────────────────
