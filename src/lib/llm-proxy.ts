@@ -30,6 +30,8 @@ export interface LLMProxyOptions {
   provider?: string;
   model?: string;
   timeoutMs?: number;
+  /** Cap output tokens — reduces cost for short responses (default: no cap) */
+  maxTokens?: number;
   /** If true, skips Supabase auth token (for unauthenticated flows) */
   skipAuth?: boolean;
   /** Response format: 'text' (default) or 'json'. Controls provider-level JSON mode. */
@@ -75,6 +77,7 @@ async function _callDirect(
   const t = setTimeout(() => ctrl.abort(), opt.timeoutMs ?? DEFAULT_TIMEOUT_MS);
   const body: Record<string, unknown> = { model, messages: msgs };
   if (opt.format === 'json') body.response_format = { type: 'json_object' };
+  if (opt.maxTokens) body.max_tokens = opt.maxTokens;
   try {
     const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',

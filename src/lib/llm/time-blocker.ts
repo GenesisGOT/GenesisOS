@@ -200,7 +200,7 @@ export async function saveTimeBlocks(blocks: RawBlock[]): Promise<void> {
  * iPhone screenshots are 3-5 MB; we cap at 1024px wide, JPEG 0.75 quality
  * which brings them down to ~150-300 KB — well within OpenRouter's limits.
  */
-function compressImage(file: File, maxWidth = 1024, quality = 0.75): Promise<string> {
+function compressImage(file: File, maxWidth = 800, quality = 0.65): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onerror = reject;
@@ -262,6 +262,7 @@ Rules:
   const response = await callLLMProxy(messages, {
     model: 'anthropic/claude-sonnet-4',
     timeoutMs: 45000,
+    maxTokens: 120,  // schedule text is ~20-50 tokens — cap tight to save credits
   });
 
   const result = response.content.trim().replace(/^["']|["']$/g, '');
