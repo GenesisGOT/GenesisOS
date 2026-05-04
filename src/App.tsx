@@ -49,6 +49,8 @@ import './styles/onboarding-animations.css';
 import './realm/onboarding/onboarding.css';
 import { logger } from './utils/logger';
 import { seedMikielProfile } from './lib/seed-mikiel';
+import { TimeBlockingModal } from './components/TimeBlockingModal';
+import { useWeeklyTimeBlock } from './hooks/useWeeklyTimeBlock';
 
 // Lazy load pages (with retry on chunk load failure)
 const Login = lazyRetry(() => import('./pages/Login').then(m => ({ default: m.Login })));
@@ -174,6 +176,7 @@ function AppRoutes() {
   const profile = useUserStore(s => s.profile);
   const profileLoading = useUserStore(s => s.profileLoading);
   const refreshProfile = useUserStore(s => s.fetchProfile);
+  const { shouldPrompt: showTimeBlocker, dismiss: dismissTimeBlocker, complete: completeTimeBlocker } = useWeeklyTimeBlock();
 
   // Initialize auth listener (single subscription for whole app)
   useEffect(() => {
@@ -381,6 +384,12 @@ function AppRoutes() {
       <Suspense fallback={null}><LazyFeedbackButton /></Suspense>
       <Suspense fallback={null}><LazyFlipperCheckin /></Suspense>
       <Suspense fallback={null}><LazyLifePulseModal /></Suspense>
+      {showTimeBlocker && (
+        <TimeBlockingModal
+          onComplete={completeTimeBlocker}
+          onDismiss={dismissTimeBlocker}
+        />
+      )}
     </ErrorBoundary>
   );
 }
