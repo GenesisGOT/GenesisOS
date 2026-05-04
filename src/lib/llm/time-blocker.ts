@@ -138,13 +138,14 @@ export async function generateTimeBlocks(workSchedule: string): Promise<RawBlock
 
 // ─── Save to DB ───────────────────────────────────────────────────────────────
 
-/** Deletes AI-generated blocks for the week and inserts the new set */
-export async function saveTimeBlocks(blocks: RawBlock[]): Promise<void> {
+/** Deletes AI-generated blocks for the week and inserts the new set.
+ *  Returns the full saved event objects so the caller can inject them
+ *  directly into the schedule store without waiting for a DB re-fetch. */
+export async function saveTimeBlocks(blocks: RawBlock[]): Promise<any[]> {
   const userId =
     localStorage.getItem('genesisOS_local_user_id') || 'local-user-001';
 
   // Remove any previously generated time-block events for this week
-  // (identified by metadata.source === 'time-blocker')
   try {
     const existing = await localGetAll<any>('events');
     const monday = getThisMonday();
@@ -156,18 +157,18 @@ export async function saveTimeBlocks(blocks: RawBlock[]): Promise<void> {
         dates.has(ev.date) &&
         ev.metadata?.source === 'time-blocker'
       ) {
-        // Soft-delete
         await localInsert('events', { ...ev, is_deleted: true });
       }
     }
   } catch {
-    // Non-fatal — old events may linger but new ones will be added
+    // Non-fatal
   }
 
   const now = new Date().toISOString();
+  const saved: any[] = [];
 
   for (const block of blocks) {
-    await localInsert('events', {
+    const ev = {
       id: crypto.randomUUID(),
       user_id: userId,
       title: block.title,
@@ -186,11 +187,14 @@ export async function saveTimeBlocks(blocks: RawBlock[]): Promise<void> {
       created_at: now,
       updated_at: now,
       synced: false,
-    });
+    };
+    await localInsert('events', ev);
+    saved.push(ev);
   }
 
   // Mark this week as done
   localStorage.setItem(getWeekKey(), new Date().toISOString());
+  return saved;
 }
 
 // ─── Image → Schedule text (Vision API) ──────────────────────────────────────

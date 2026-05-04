@@ -332,11 +332,21 @@ export function TimeBlockingModal({ onComplete, onDismiss }: TimeBlockingModalPr
   const handleConfirm = useCallback(async () => {
     setSaving(true);
     try {
-      await saveTimeBlocks(blocks);
-      // Force the schedule store to re-read from local DB immediately
+      const savedEvents = await saveTimeBlocks(blocks);
+
+      // Directly inject into the schedule store's in-memory events array —
+      // bypasses waitForInitialSync so blocks appear instantly in Schedule tab
       const { useScheduleStore } = await import('../stores/useScheduleStore');
-      useScheduleStore.getState().invalidate();
-      // Also broadcast for any other listeners
+      const store = useScheduleStore.getState();
+      const existing = store.events.filter(
+        (e: any) => !(e.metadata?.source === 'time-blocker')
+      );
+      useScheduleStore.setState({
+        events: [...existing, ...savedEvents],
+        lastFetched: Date.now(),
+      });
+
+      // Also fire refresh for week/month views
       window.dispatchEvent(new CustomEvent('genesisOS-refresh'));
       onComplete();
     } catch (err) {
