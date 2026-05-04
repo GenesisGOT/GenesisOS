@@ -1,4 +1,4 @@
-/**
+﻿/**
  * LLM Proxy Client — ALL LLM calls go through the server-side proxy.
  * 
  * This ensures:
@@ -37,6 +37,64 @@ export interface LLMProxyResponse {
  * Call the LLM via the server-side proxy.
  * Accepts either a simple prompt string or structured messages.
  */
+// ── Direct OpenRouter (bypasses PHP proxy when API key is configured) ────────
+function _getApiKey(): string {
+  try {
+    const s = localStorage.getItem('genesisOS-ai-settings');
+    if (s) { const p = JSON.parse(s); if (p.apiKey) return p.apiKey; }
+  } catch { /* ignore */ }
+  return (import.meta as any).env?.VITE_OPENROUTER_API_KEY || '';
+}
+
+function _getModel(opt: LLMProxyOptions): string {
+  try {
+    const s = localStorage.getItem('genesisOS-ai-settings');
+    if (s) { const p = JSON.parse(s); if (p.model) return opt.model || p.model; }
+  } catch { /* ignore */ }
+  return opt.model || 'anthropic/claude-sonnet-4';
+}
+
+async function _callDirect(
+  msgs: { role: string; content: string }[],
+  opt: LLMProxyOptions,
+  key: string,
+): Promise<LLMProxyResponse> {
+  const model = _getModel(opt);
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), opt.timeoutMs ?? DEFAULT_TIMEOUT_MS);
+  const body: Record<string, unknown> = { model, messages: msgs };
+  if (opt.format === 'json') body.response_format = { type: 'json_object' };
+  try {
+    const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${key}`,
+        'HTTP-Referer': window.location.origin,
+        'X-Title': 'GenesisOS',
+      },
+      body: JSON.stringify(body),
+      signal: ctrl.signal,
+    });
+    clearTimeout(t);
+    if (!r.ok) {
+      const e = await r.json().catch(() => ({ error: { message: `HTTP ${r.status}` } }));
+      throw new Error(e.error?.message || `OpenRouter ${r.status}`);
+    }
+    const d = await r.json();
+    return {
+      content: d.choices?.[0]?.message?.content || '',
+      provider: 'openrouter',
+      model: d.model || model,
+      usage: { input_tokens: d.usage?.prompt_tokens ?? null, output_tokens: d.usage?.completion_tokens ?? null },
+    };
+  } catch (err: unknown) {
+    clearTimeout(t);
+    if (isAbortError(err)) throw new Error('LLM request timed out');
+    throw err;
+  }
+}
+
 async function _callLLMProxyOnce(
   input: string | { role: string; content: string }[],
   options: LLMProxyOptions = {},
@@ -48,6 +106,13 @@ async function _callLLMProxyOnce(
     skipAuth = false,
     format = 'text',
   } = options;
+
+  // If a direct API key is available, bypass the PHP proxy entirely
+  const _directKey = _getApiKey();
+  if (_directKey) {
+    const _msgs = typeof input === 'string' ? [{ role: 'user', content: input }] : input;
+    return _callDirect(_msgs, options, _directKey);
+  }
 
   // Build messages array
   const messages = typeof input === 'string'

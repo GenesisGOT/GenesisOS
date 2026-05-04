@@ -48,6 +48,7 @@ import './styles/tour.css';
 import './styles/onboarding-animations.css';
 import './realm/onboarding/onboarding.css';
 import { logger } from './utils/logger';
+import { seedMikielProfile } from './lib/seed-mikiel';
 
 // Lazy load pages (with retry on chunk load failure)
 const Login = lazyRetry(() => import('./pages/Login').then(m => ({ default: m.Login })));
@@ -207,6 +208,11 @@ function AppRoutes() {
     ]).then(() => {
       import('./lib/sync-engine').then(m => m.syncNowImmediate(user.id)).catch(e => logger.warn('[app] initial sync failed:', e));
     });
+  }, [user?.id]);
+
+  // Seed Mikiel's profile + habits on first boot (guarded by localStorage key)
+  useEffect(() => {
+    if (user) seedMikielProfile().catch(e => logger.warn('[seed] failed:', e));
   }, [user?.id]);
 
   // Listen for genesisOS-refresh events and invalidate all stores (debounced)
